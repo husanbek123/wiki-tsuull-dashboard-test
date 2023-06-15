@@ -10,8 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^4.29.13",
+    "antd": "^5.6.1",
+    "axios": "^1.4.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-i18next": "^13.0.0",
+    "react-router-dom": "^6.13.0",
+    "react-select": "^5.7.3",
+    "sass": "^1.63.4",
+    "zustand": "^4.3.8"
   },
   "devDependencies": {
     "@types/react": "^18.0.37",
