@@ -1,3 +1,9 @@
+import { useTranslation } from "react-i18next";
 export default function Words() {
-  return <div>Words</div>;
+  let { t } = useTranslation();
+  return (
+    <div className="words-page">
+      <h1>{t("Words")}</h1>
+    </div>
+  );
 }
