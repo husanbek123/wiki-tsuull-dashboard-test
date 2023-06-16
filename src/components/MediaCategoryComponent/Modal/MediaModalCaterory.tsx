@@ -10,7 +10,6 @@ import SuccessToastify from "../../toastify/Success";
 import { useState } from "react";
 import ErrorToastify from "../../toastify/Error";
 const MediaModalCaterory: React.FC = () => {
-  // For Input Value
   // t function
   let { t } = useTranslation();
 
