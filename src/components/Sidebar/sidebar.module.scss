@@ -1,0 +1,51 @@
+.sidebar {
+  background-color: #2f4050;
+  width: 350px;
+  height: 100vh;
+
+  .sidebarNav {
+    width: 100%;
+    height: auto;
+    padding: 0;
+
+    .logo{
+        text-align: center;
+        padding: 30px 0;
+        text-transform: uppercase;
+        font-size: 2.3rem;
+        letter-spacing: 2px;
+        color: #fff;
+    }
+    // ul li Items
+    #activeLink {
+      background-color: #293846;
+      cursor: pointer;
+    }
+    .listItem {
+      width: 100%;
+      height: 70px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      margin: 0%;
+      color: white;
+      #icon {
+        flex: 30%;
+        display: grid;
+        place-items: center;
+        font-size: 1.9rem;
+      }
+      #link {
+        color: #fff;
+        flex: 70%;
+        font-size: 1.3rem;
+        text-transform: capitalize;
+      }
+      &:hover {
+        background-color: #293846;
+        cursor: pointer;
+      }
+    }
+  }
+}
