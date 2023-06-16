@@ -1,8 +1,9 @@
 .sidebar {
   background-color: #2f4050;
   width: 350px;
-  height: 1000vh;
-
+  height: 100vh;
+  position: fixed;
+  z-index: 100;
   .sidebarNav {
     width: 100%;
     height: auto;

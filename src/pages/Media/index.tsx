@@ -1,14 +1,16 @@
-import { changeLanguage } from "i18next";
-import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useGetData } from "../../utils/hooks/useGet";
+import styles from "./index.module.scss";
+const dataCRUDname = "media";
 export default function Media() {
-  let { t } = useTranslation();
-
+  const useGet = useGetData([dataCRUDname], `/${dataCRUDname}`, {});
+  if (useGet.isSuccess) {
+    console.log(useGet.data.data);
+  }
   return (
-    <div className="media-page">
-        <h1>
-          {t("Media")}
-        </h1>
+    <div className={styles.Main}>
+      <div className={styles.container}>
+        <div className={styles.table}></div>
+      </div>
     </div>
   );
 }

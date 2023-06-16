@@ -21,7 +21,7 @@ export default function Login() {
     });
   };
 
-  const onFinishFailed = (errorInfo: any) => {
+  const onFinishFailed = () => {
     ErrorToastify();
   };
 

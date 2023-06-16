@@ -1,5 +1,7 @@
 import * as React from "react";
 import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Media,
   MediaCategory,
@@ -13,6 +15,18 @@ import Login from "./pages/Login";
 export default function App() {
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <React.Suspense fallback={<Loading />}>
         <Routes>
           <Route path="/" element={<Media />}></Route>
@@ -21,7 +35,7 @@ export default function App() {
           <Route path="/pharse" element={<Pharse />}></Route>
           <Route path="/pharse/:id" element={<SinglePharse />}></Route>
           <Route path="/words" element={<Words />}></Route>
-          <Route path='*' element={<NotFound />}/>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </React.Suspense>
     </>
