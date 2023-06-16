@@ -7,7 +7,8 @@ import { BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
 import { useTheme } from "../../utils/zustand/useTheme";
 import UzFlag from "../../images/icons/flag-uzbekistan.webp";
 import EnFlag from "../../images/icons/enFlag.webp";
-import {changeLanguage as i18nChangeLanguage} from "i18next"
+import { changeLanguage as i18nChangeLanguage } from "i18next";
+import { Link } from "react-router-dom";
 const items: LanguageItemsProps[] = [
   {
     key: "1",
@@ -28,16 +29,15 @@ export default function Sidebar() {
     setOpen(!open);
   };
 
-
   const changeLanguage = (language: string) => {
     let langugeLowercase = language.toLowerCase();
-    console.log(langugeLowercase)
-    if(langugeLowercase === 'english') {
-      return i18nChangeLanguage("en")
-    }else if (langugeLowercase === "uzbek") {
+    console.log(langugeLowercase);
+    if (langugeLowercase === "english") {
+      return i18nChangeLanguage("en");
+    } else if (langugeLowercase === "uzbek") {
       return i18nChangeLanguage("uz");
     }
-  }
+  };
   return (
     <header className={style.sidebar}>
       <nav className={`${style.sidebarNav}`}>
@@ -48,15 +48,17 @@ export default function Sidebar() {
         </div>
         <ul className={style.listItems}>
           {listItems?.map(({ icon, url, title }, index) => (
-            <li
-              id={window.location.pathname == url ? style.activeLink : ""}
-              onClick={() => (window.location.pathname = url)}
-              key={index}
-              className={style.listItem}
-            >
-              <div id={style.icon}>{icon}</div>
-              <span id={style.link}>{title}</span>
-            </li>
+            <Link to={url}>
+              <li
+                id={window.location.pathname == url ? style.activeLink : ""}
+                // onClick={() => (window.location.pathname = url)}
+                key={index}
+                className={style.listItem}
+              >
+                <div id={style.icon}>{icon}</div>
+                <span id={style.link}>{title}</span>
+              </li>
+            </Link>
           ))}
         </ul>
         <div className={style.Language_themeContainer}>
@@ -74,8 +76,12 @@ export default function Sidebar() {
               {open ? (
                 <div className={style.DropdownList}>
                   {items?.map(({ img, key, label }) => (
-                    <div  onClick={() => changeLanguage(label)} className={style.DropdownItem} key={key}>
-                      <div  className="drob-img">
+                    <div
+                      onClick={() => changeLanguage(label)}
+                      className={style.DropdownItem}
+                      key={key}
+                    >
+                      <div className="drob-img">
                         <img
                           src={img}
                           width={70}
@@ -93,12 +99,18 @@ export default function Sidebar() {
           </div>
           <div className={style.theme}>
             {theme === "light" ? (
-              <div  onClick={() => changeThemeFunction() } className={style.lightTheme}>
-                <BsFillSunFill /> 
+              <div
+                onClick={() => changeThemeFunction()}
+                className={style.lightTheme}
+              >
+                <BsFillSunFill />
               </div>
             ) : (
-              <div onClick={() => changeThemeFunction()} className={style.darkTheme}>
-                <BsFillMoonFill /> 
+              <div
+                onClick={() => changeThemeFunction()}
+                className={style.darkTheme}
+              >
+                <BsFillMoonFill />
               </div>
             )}
           </div>
