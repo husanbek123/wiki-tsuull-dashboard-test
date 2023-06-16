@@ -1,4 +1,3 @@
-import { useGetData } from "../../utils/hooks/useGet";
 import { Button, Form, Input } from "antd";
 import styles from "./index.module.scss";
 import SuccessToastify from "../../components/toastify/Success";
