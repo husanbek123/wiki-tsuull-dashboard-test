@@ -14,7 +14,7 @@ export const listItems: listItemType[] = [
   {
     icon: <DiHtml5Multimedia />,
     url: "/media-category",
-    title: "Media-category",
+    title: "Meadia-Category",
   },
   {
     icon: <BsFillDatabaseFill />,
