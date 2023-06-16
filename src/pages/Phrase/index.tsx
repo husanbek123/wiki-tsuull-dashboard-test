@@ -1,4 +1,9 @@
+import { useTranslation } from "react-i18next";
 export default function Pharse() {
-    return <div>Pharse</div>;
-  }
-  
+  let { t } = useTranslation();
+  return (
+    <div className="pharse-page">
+      <h1>{t("Pharse")}</h1>
+    </div>
+  );
+}
