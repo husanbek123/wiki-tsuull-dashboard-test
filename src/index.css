@@ -14,3 +14,11 @@ img {
   max-width: 100%;
   max-height: 100%;
 }
+#dark {
+  background: #0d171f;
+  color: #d3d3d3;
+}
+#light{
+  background-color: inherit;
+  color: inherit;
+}
