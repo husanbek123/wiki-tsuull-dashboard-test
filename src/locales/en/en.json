@@ -2,5 +2,7 @@
     "Media" :"Media" ,
     "MediaCategory" :"Media-Category",
     "Words" :  "Words",
-    "Pharse": "Pharse"
+    "Pharse": "Pharse",
+    "add" : "add",
+    "Words-Modal": "WordsModal"
 }

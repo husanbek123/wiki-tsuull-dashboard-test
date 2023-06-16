@@ -1,6 +1,8 @@
 {
-    "Media" :"Media",
-    "MediaCategory" : "Media toifasi" ,
-    "Words" :  "So'zlar",
-    "Pharse": "Iboralar"
+  "Media": "Media",
+  "MediaCategory": "Media toifasi",
+  "Words": "So'zlar",
+  "Pharse": "Iboralar",
+  "add": "qo'hish",
+  "Words-Modal": "So'lar Qo'shish"
 }

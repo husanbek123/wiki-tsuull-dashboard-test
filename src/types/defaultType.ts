@@ -18,3 +18,19 @@ export interface zustandProps {
   theme: string;
   changeTheme: () => void;
 }
+
+export interface image {
+  _id: string;
+  path: string;
+}
+
+export interface WordProps {
+  comment_uz: string;
+  _id : string;
+  comment_en?: string;
+  description_uz: string;
+  description_en?: string;
+  image: image;
+  title_en: string;
+  title_uz: string;
+}

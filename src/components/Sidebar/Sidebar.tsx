@@ -52,7 +52,7 @@ export default function Sidebar() {
               id={window.location.pathname == url ? style.activeLink : ""}
               onClick={() => (window.location.pathname = url)}
               key={index}
-              className={style.listItem}
+              className={`${style.listItem} font-mono`}
             >
               <div id={style.icon}>{icon}</div>
               <span id={style.link}>{title}</span>
@@ -74,7 +74,10 @@ export default function Sidebar() {
               {open ? (
                 <div className={style.DropdownList}>
                   {items?.map(({ img, key, label }) => (
-                    <div  onClick={() => changeLanguage(label)} className={style.DropdownItem} key={key}>
+                    <div  onClick={() => {
+                      setOpen(!open);
+                      changeLanguage(label)
+                    }} className={style.DropdownItem} key={key}>
                       <div  className="drob-img">
                         <img
                           src={img}
