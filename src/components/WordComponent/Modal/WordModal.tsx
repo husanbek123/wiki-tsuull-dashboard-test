@@ -44,7 +44,6 @@ export default function WordModal() {
     setFileList(newFileList);
     setPhotoId(file?.response);
   };
-
   return (
     <div className={style.wordModal}>
       <Button onClick={showModal} className={style.WordModal}>

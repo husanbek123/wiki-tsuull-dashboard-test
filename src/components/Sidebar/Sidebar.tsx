@@ -7,7 +7,8 @@ import { BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
 import { useTheme } from "../../utils/zustand/useTheme";
 import UzFlag from "../../images/icons/flag-uzbekistan.webp";
 import EnFlag from "../../images/icons/enFlag.webp";
-import {changeLanguage as i18nChangeLanguage} from "i18next"
+import { changeLanguage as i18nChangeLanguage } from "i18next";
+import { Link } from "react-router-dom";
 const items: LanguageItemsProps[] = [
   {
     key: "1",
@@ -28,16 +29,15 @@ export default function Sidebar() {
     setOpen(!open);
   };
 
-
   const changeLanguage = (language: string) => {
     let langugeLowercase = language.toLowerCase();
-    console.log(langugeLowercase)
-    if(langugeLowercase === 'english') {
-      return i18nChangeLanguage("en")
-    }else if (langugeLowercase === "uzbek") {
+    console.log(langugeLowercase);
+    if (langugeLowercase === "english") {
+      return i18nChangeLanguage("en");
+    } else if (langugeLowercase === "uzbek") {
       return i18nChangeLanguage("uz");
     }
-  }
+  };
   return (
     <header className={style.sidebar}>
       <nav className={`${style.sidebarNav}`}>
@@ -96,12 +96,18 @@ export default function Sidebar() {
           </div>
           <div className={style.theme}>
             {theme === "light" ? (
-              <div  onClick={() => changeThemeFunction() } className={style.lightTheme}>
-                <BsFillSunFill /> 
+              <div
+                onClick={() => changeThemeFunction()}
+                className={style.lightTheme}
+              >
+                <BsFillSunFill />
               </div>
             ) : (
-              <div onClick={() => changeThemeFunction()} className={style.darkTheme}>
-                <BsFillMoonFill /> 
+              <div
+                onClick={() => changeThemeFunction()}
+                className={style.darkTheme}
+              >
+                <BsFillMoonFill />
               </div>
             )}
           </div>
@@ -110,3 +116,4 @@ export default function Sidebar() {
     </header>
   );
 }
+
