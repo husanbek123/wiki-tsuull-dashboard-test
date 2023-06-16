@@ -7,7 +7,7 @@ import { useToken } from "../../utils/zustand/useStore";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const useCheckUser = usePostData("/user/login", ["userlogin"]);
+  const useCheckUser = usePostData("/user/login");
   const setToken = useToken((state) => state.setToken);
   const navigator = useNavigate();
   const onFinish = (values: any) => {
