@@ -4,18 +4,8 @@ import style from "./WordModal.module.scss";
 import { useTranslation } from "react-i18next";
 import { UploadOutlined } from "@ant-design/icons";
 import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
-async function createSubject(data: WordPost) {
-  return axios.post("http://13.50.238.54/word", data);
-}
-
-interface WordPost {
-  name_uz: string;
-  name_ru: string;
-  name_en: string;
-  image: image;
-}
-
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { usePostData } from "../../../utils/hooks/usePost";
 interface image {
   image: {
     path: string;
@@ -23,13 +13,25 @@ interface image {
   };
 }
 
+interface WordPost {
+  title_uz: string;
+  title_en: string;
+  description_uz: string;
+  description_en: string;
+  comment_uz: string;
+  comment_en: string;
+  image: image;
+}
+
+
+
 export default function WordModal() {
   let { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-
+  let queryClient = useQueryClient();
   const showModal = () => setIsModalOpen((prew) => !prew);
   const handleCancel = () => setIsModalOpen(false);
-
+  let wordPost = usePostData('/word', {});
   const [fileList, setFileList] = React.useState([]);
   const [PhotoId, setPhotoId] = React.useState({} as image);
   let [values, setValue] = React.useState({
@@ -44,6 +46,29 @@ export default function WordModal() {
     setFileList(newFileList);
     setPhotoId(file?.response);
   };
+
+  // const mutations = useMutation(
+  //   (newSubject: WordPost) => createWord(newSubject),
+  //   {
+  //     onSuccess: (data) => {
+  //       console.log(data);
+  //     },
+  //   }
+  // );
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    let result: WordPost = {
+      ...values,
+      image: PhotoId,
+    };
+    wordPost.mutate(result, {
+      onSuccess: (data) => {
+        console.log(data)
+      }
+    });
+  };
+
   return (
     <div className={style.wordModal}>
       <Button onClick={showModal} className={style.WordModal}>
@@ -54,10 +79,7 @@ export default function WordModal() {
         onCancel={handleCancel}
         title={t("Words-Modal")}
       >
-        <form onClick={(e) => {
-          e.preventDefault();
-
-        }}>
+        <form onSubmit={(e) => handleSubmit(e)}>
           <Input
             type="text"
             placeholder="Title_uz"
@@ -114,3 +136,5 @@ export default function WordModal() {
     </div>
   );
 }
+
+
