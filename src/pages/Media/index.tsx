@@ -7,6 +7,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import TOOLTIP from "../../components/Tooltip";
 import { useState } from "react";
 import { InputTableFilter } from "../../components/Inputs/InputTableFilter";
+import { CRUDNavigator } from "../../components/CRUDNavigator";
 const dataCRUDname = "media";
 
 const columns = [
@@ -27,14 +28,31 @@ export default function Media() {
   const [success, setSuccess] = useState<boolean>(false);
   const [value, setValue] = useState("");
   const [dataSource, setDataSource] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalParametrs, setModalParametrs] = useState<{
+    status: any;
+    id?: any;
+  }>({
+    status: null,
+    id: null,
+  });
 
   if (useGet.isSuccess && !success) {
     setDataSource(() => useGet.data.data);
     setSuccess(() => true);
   }
+
   return (
     <div className={styles.Main}>
       <div className={styles.container}>
+        {isModalOpen && (
+          <CRUDNavigator
+            option={modalParametrs.status}
+            id={modalParametrs.id}
+            setIsModalOpen={setIsModalOpen}
+            isModalOpen={isModalOpen}
+          />
+        )}
         <div className={styles.Add}>
           <InputTableFilter
             value={value}
@@ -55,10 +73,15 @@ export default function Media() {
                 justifyContent: "center",
                 alignItems: "center",
               }}
+              onClick={() => {
+                setModalParametrs({
+                  status: "Add",
+                });
+                setIsModalOpen(true);
+              }}
             >
               <p>
-                {" "}
-                Add <AiOutlinePlus />{" "}
+                Add <AiOutlinePlus />
               </p>
             </Button>
           </TOOLTIP>
@@ -124,6 +147,13 @@ export default function Media() {
                         justifyContent: "center",
                         alignItems: "center",
                       }}
+                      onClick={() => {
+                        setModalParametrs({
+                          status: "Delete",
+                          id: item._id,
+                        });
+                        setIsModalOpen(true);
+                      }}
                     >
                       <BsFillTrashFill></BsFillTrashFill>
                     </Button>
@@ -140,6 +170,13 @@ export default function Media() {
                         flexDirection: "column",
                         justifyContent: "center",
                         alignItems: "center",
+                      }}
+                      onClick={() => {
+                        setModalParametrs({
+                          status: "Update",
+                          id: item._id,
+                        });
+                        setIsModalOpen(true);
                       }}
                     >
                       <BsPencilSquare />
