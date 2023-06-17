@@ -8,7 +8,7 @@ export const listItems: listItemType[] = [
   },
   {
     url: "/media-category",
-    title: "Meadia-Category",
+    title: "Meadia category",
   },
   {
     url: "/pharse",

@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
-import "./index.css";
+import "./index.scss";
 import Layout from "./layout/Layout.tsx";
 // Translation functions start
 import i18n from "i18next";

@@ -15,7 +15,7 @@ export interface LanguageItemsProps {
 
 export interface zustandProps {
   theme: string;
-  changeTheme: () => void;
+  setTheme: (mode:string) => void;
 }
 
 export interface image {
