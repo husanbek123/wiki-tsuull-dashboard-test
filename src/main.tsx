@@ -11,6 +11,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import uz from "./locales/uz/uz.json";
 import en from "./locales/en/en.json";
 import TanstackQueryProvider from "./query/tanstack.tsx";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 i18n
   .use(LanguageDetector)
   .use(initReactI18next) // passes i18n down to react-i18next
@@ -34,6 +35,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         <Layout>
           <App />
         </Layout>
+        <ReactQueryDevtools></ReactQueryDevtools>
       </TanstackQueryProvider>
     </BrowserRouter>
   </React.StrictMode>

@@ -8,7 +8,6 @@ import TOOLTIP from "../../components/Tooltip";
 import { useState } from "react";
 import { InputTableFilter } from "../../components/Inputs/InputTableFilter";
 import { CRUDNavigator } from "../../components/CRUDNavigator";
-const dataCRUDname = "media";
 
 const columns = [
   { title: "TITLE UZ", dataIndex: "title_uz", key: "title_uz" },
@@ -24,7 +23,7 @@ const columns = [
 ];
 
 export default function Media() {
-  const useGet = useGetData([dataCRUDname], `/${dataCRUDname}`, {});
+  const useGet = useGetData(["media"], `/media`, {});
   const [success, setSuccess] = useState<boolean>(false);
   const [value, setValue] = useState("");
   const [dataSource, setDataSource] = useState([]);
@@ -36,7 +35,6 @@ export default function Media() {
     status: null,
     id: null,
   });
-
   if (useGet.isSuccess && !success) {
     setDataSource(() => useGet.data.data);
     setSuccess(() => true);
@@ -47,6 +45,7 @@ export default function Media() {
       <div className={styles.container}>
         {isModalOpen && (
           <CRUDNavigator
+            postUrl={"/media"}
             option={modalParametrs.status}
             id={modalParametrs.id}
             setIsModalOpen={setIsModalOpen}
@@ -94,7 +93,7 @@ export default function Media() {
             dataSource={dataSource.map((item: any, index: any) => ({
               key: index + 1,
               title_uz: item.title_uz.substring(0, 15) + "...",
-              title_en: item.title_uz.substring(0, 15) + "...",
+              title_en: item.title_en.substring(0, 15) + "...",
               // frame: (
               //   <div
               //     style={{
@@ -107,7 +106,7 @@ export default function Media() {
               // ),
               category_uz: (
                 <div>
-                  {useGet.data?.data[index]?.category?.map(
+                  {useGet?.data?.data[index]?.category?.map(
                     (item: any, index: any) => (
                       <p key={index}>
                         {item.title_uz.substring(0, 15) + "..."}

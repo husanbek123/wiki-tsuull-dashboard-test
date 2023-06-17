@@ -1,13 +1,39 @@
 import { Modal } from "antd";
+import { useDelete } from "../../../utils/hooks/useDelete";
+import SuccessToastify from "../../toastify/Success";
+import { useQueryClient } from "@tanstack/react-query";
+import ErrorToastify from "../../toastify/Error";
 
 export function Delete(props: {
   id: number | string;
   setIsModalOpen: (bool: boolean) => void;
   isModalOpen: boolean;
+  postUrl: "/media" | "/phrase" | "/word" | "/media-category";
 }) {
-  const { id, setIsModalOpen, isModalOpen } = props;
+  const { id, setIsModalOpen, isModalOpen, postUrl } = props;
+  const useDeleteData = useDelete(`${props.postUrl}`);
+  const queryClient = useQueryClient();
+  console.log(
+    postUrl
+      .split("")
+      .filter((i) => i != "/")
+      .join("")
+  );
+
   const handleOk = () => {
-    setIsModalOpen(false);
+    useDeleteData.mutate(`${id}`, {
+      onSuccess: () => {
+        SuccessToastify("Deleted!");
+        queryClient.invalidateQueries([
+          postUrl
+            .split("")
+            .filter((i) => i != "/")
+            .join(""),
+        ]);
+        setIsModalOpen(false);
+      },
+      onError: () => ErrorToastify("Not deleted"),
+    });
   };
 
   const handleCancel = () => {
@@ -15,12 +41,10 @@ export function Delete(props: {
   };
   return (
     <Modal
-      title="Basic Modal"
+      title="Do you want delete this ?"
       open={isModalOpen}
       onOk={handleOk}
       onCancel={handleCancel}
-    >
-      <p>id {id}</p>
-    </Modal>
+    ></Modal>
   );
 }

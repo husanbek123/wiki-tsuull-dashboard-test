@@ -8,7 +8,7 @@ export default function Layout(props: ChildrenType): React.ReactElement {
   return (
     <section id={theme} className={style.layoutWrapper}>
       <Sidebar />
-      <main className={style.page}>{props?.children}</main>
+      <div className={style.page}>{props?.children}</div>
     </section>
   );
 }
