@@ -90,7 +90,6 @@ export default function Media() {
           <Table
             columns={columns}
             // locale={{ emptyText: "xxx" }}
-
             dataSource={dataSource.map((item: any, index: any) => ({
               key: index + 1,
               title_uz: item.title_uz.substring(0, 15) + "...",

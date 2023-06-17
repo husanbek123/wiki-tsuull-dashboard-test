@@ -88,7 +88,7 @@ const MediaModalCaterory: React.FC = () => {
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>
+      <Button type="primary" className={style.addBtn} onClick={showModal}>
         {t("add")}
       </Button>
 
