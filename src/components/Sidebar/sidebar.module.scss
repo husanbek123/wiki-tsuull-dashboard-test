@@ -2,11 +2,9 @@
   background-color: #2f4050;
   width: 350px;
   height: 100vh;
-  
   .sidebarNav {
     width: 100%;
     height: auto;
-    padding: 0;
 
     // Logo
     .logo {
@@ -40,7 +38,7 @@
       #link {
         color: #fff;
         flex: 70%;
-        font-size: 1.3rem;
+        font-size:18px;
         text-transform: capitalize;
       }
       &:hover {

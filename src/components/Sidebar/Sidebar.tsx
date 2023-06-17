@@ -1,14 +1,14 @@
 import * as React from "react";
+import { changeLanguage as i18nChangeLanguage } from "i18next";
 import { listItems } from "../../utils/routes/listItems";
 import { CaretDownOutlined, GlobalOutlined } from "@ant-design/icons";
 import { LanguageItemsProps } from "../../types/defaultType";
 import style from "./sidebar.module.scss";
 import { BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
-import { useTheme } from "../../utils/zustand/useTheme";
+// Icons Flag
 import UzFlag from "../../images/icons/flag-uzbekistan.webp";
 import EnFlag from "../../images/icons/enFlag.webp";
-import { changeLanguage as i18nChangeLanguage } from "i18next";
-import { Link } from "react-router-dom";
+import { useTheme } from "../../utils/zustand/useTheme";
 const items: LanguageItemsProps[] = [
   {
     key: "1",
@@ -28,7 +28,6 @@ export default function Sidebar() {
   const handleOpen = () => {
     setOpen(!open);
   };
-
   const changeLanguage = (language: string) => {
     let langugeLowercase = language.toLowerCase();
     console.log(langugeLowercase);
@@ -38,6 +37,8 @@ export default function Sidebar() {
       return i18nChangeLanguage("uz");
     }
   };
+
+  
   return (
     <header className={style.sidebar}>
       <nav className={`${style.sidebarNav}`}>

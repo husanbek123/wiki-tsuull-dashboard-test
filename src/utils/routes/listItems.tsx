@@ -1,28 +1,25 @@
 // Список мне нужны иконки
-import { SiVlcmediaplayer } from "react-icons/si";
-import { DiHtml5Multimedia } from "react-icons/di";
-import { BsFillDatabaseFill } from "react-icons/bs";
-import { BiData } from "react-icons/bi";
+import {GiHamburgerMenu} from "react-icons/gi"
 import { listItemType } from "../../types/defaultType";
 // данные ListItems
 export const listItems: listItemType[] = [
   {
-    icon: <SiVlcmediaplayer />,
+    icon: <GiHamburgerMenu />,
     url: "/",
     title: "Meadia",
   },
   {
-    icon: <DiHtml5Multimedia />,
+    icon: <GiHamburgerMenu />,
     url: "/media-category",
-    title: "Media-category",
+    title: "Meadia-Category",
   },
   {
-    icon: <BsFillDatabaseFill />,
+    icon: <GiHamburgerMenu />,
     url: "/pharse",
     title: "Pharse",
   },
   {
-    icon: <BiData />,
+    icon: <GiHamburgerMenu />,
     url: "/words",
     title: "Words",
   },
