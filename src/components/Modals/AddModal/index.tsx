@@ -153,7 +153,11 @@ export function Add(props: {
           name="title_uz"
           rules={[{ required: true, message: "Please enter" }]}
         >
-          <Input />
+          <Input
+            style={{
+              width: "100%",
+            }}
+          />
         </Form.Item>
 
         <Form.Item
@@ -166,7 +170,11 @@ export function Add(props: {
 
         {props.postUrl == "/media" && (
           <>
-            <Form.Item label="Frame" name="frame">
+            <Form.Item
+              label="Frame"
+              name="frame"
+              rules={[{ required: true, message: "Please enter" }]}
+            >
               <Input />
             </Form.Item>
             <Form.Item label="Category" name="category">

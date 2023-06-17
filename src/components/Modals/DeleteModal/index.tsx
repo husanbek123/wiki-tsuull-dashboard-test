@@ -19,17 +19,13 @@ export function Delete(props: {
       .filter((i) => i != "/")
       .join("")
   );
-
+    console.log([`${postUrl.split('/').join('')}`]);
+    
   const handleOk = () => {
     useDeleteData.mutate(`${id}`, {
       onSuccess: () => {
         SuccessToastify("Deleted!");
-        queryClient.invalidateQueries([
-          postUrl
-            .split("")
-            .filter((i) => i != "/")
-            .join(""),
-        ]);
+        queryClient.invalidateQueries({queryKey:[`media`]});
         setIsModalOpen(false);
       },
       onError: () => ErrorToastify("Not deleted"),

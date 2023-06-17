@@ -53,12 +53,12 @@ export default function Media() {
           />
         )}
         <div className={styles.Add}>
-          <InputTableFilter
+          {/* <InputTableFilter
             value={value}
             setValue={setValue}
             setDataSource={setDataSource}
             zaprosData={useGet?.data?.data}
-          ></InputTableFilter>
+          ></InputTableFilter> */}
           <TOOLTIP title={"Add"} key={"Add"} color="blue">
             <Button
               type="primary"
@@ -88,21 +88,11 @@ export default function Media() {
         <div className={styles.table}>
           <Table
             columns={columns}
-            // locale={{ emptyText: "xxx" }}
-            dataSource={dataSource.map((item: any, index: any) => ({
+            dataSource={useGet.data?.data.map((item: any, index: any) => ({
               key: index + 1,
-              title_uz: item.title_uz.substring(0, 15) + "...",
-              title_en: item.title_en.substring(0, 15) + "...",
-              // frame: (
-              //   <div
-              //     style={{
-              //       width: "40px",
-              //       height: "40px",
-              //     }}
-              //   >
-              //     {parse(item.frame)}
-              //   </div>
-              // ),
+              title_uz: <p>{item.title_uz}</p>,
+              title_en: <p>{item.title_en}</p>,
+              frame: <p>{item.frame}</p>,
               category_uz: (
                 <div>
                   {useGet?.data?.data[index]?.category?.map(

@@ -3,7 +3,6 @@ export interface ChildrenType {
   children?: React.ReactNode | React.ReactElement;
 }
 export interface listItemType {
-  icon: React.ReactElement;
   url: string;
   title: string;
 }
@@ -26,7 +25,7 @@ export interface image {
 
 export interface WordProps {
   comment_uz: string;
-  _id : string;
+  _id: string;
   comment_en?: string;
   description_uz: string;
   description_en?: string;
