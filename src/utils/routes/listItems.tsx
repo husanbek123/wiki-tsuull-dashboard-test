@@ -11,7 +11,7 @@ export const listItems: listItemType[] = [
     title: "Meadia category",
   },
   {
-    url: "/pharse",
+    url: "/phrase",
     title: "Phrase",
   },
   {

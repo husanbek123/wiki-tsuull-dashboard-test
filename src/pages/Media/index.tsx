@@ -4,23 +4,19 @@ import { Button } from "antd";
 import { useGetData } from "../../utils/hooks/useGet";
 import styles from "./index.module.scss";
 import { BsFillEyeFill, BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
-import { AiOutlinePlus, AiOutlineStar } from "react-icons/ai";
+import { AiOutlinePlus } from "react-icons/ai";
 import TOOLTIP from "../../components/Tooltip";
 import { useState } from "react";
 import { CRUDNavigator } from "../../components/CRUDNavigator";
-<<<<<<< HEAD
 import videoIcon from "../../../public/videoIco.png";
 import Table, { ColumnsType } from "antd/es/table";
+import { useTranslation } from "react-i18next";
 
 interface DataType {
   key: React.Key;
 }
 
 const columns: ColumnsType<DataType> = [
-=======
-import { useTranslation } from "react-i18next";
-const columns = [
->>>>>>> 151356f7cff733c258bfd9a8bc64109dfc583cde
   { title: "TITLE UZ", dataIndex: "title_uz", key: "title_uz" },
   { title: "TITLE EN", dataIndex: "title_en", key: "title_uz" },
   { title: "FRAME", dataIndex: "frame", key: "frame" },
@@ -37,11 +33,8 @@ const columns = [
 
 export default function Media() {
   const useGet = useGetData(["media"], `/media`, {});
-<<<<<<< HEAD
-=======
   const [success, setSuccess] = useState<boolean>(false);
   const [dataSource, setDataSource] = useState([]);
->>>>>>> 151356f7cff733c258bfd9a8bc64109dfc583cde
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalParametrs, setModalParametrs] = useState<{
     status: any;
@@ -52,7 +45,7 @@ export default function Media() {
     id: null,
   });
 
-  let {t} = useTranslation()
+  const { t } = useTranslation();
 
   return (
     <div className={styles.Main}>
@@ -69,17 +62,7 @@ export default function Media() {
         )}
 
         <div className={styles.Add}>
-<<<<<<< HEAD
           <TOOLTIP title={"Add"} key={"Add"} color="blue">
-=======
-          {/* <InputTableFilter
-            value={value}
-            setValue={setValue}
-            setDataSource={setDataSource}
-            zaprosData={useGet?.data?.data}
-          ></InputTableFilter> */}
-          <TOOLTIP title={t("add")} key={"Add"} color="blue">
->>>>>>> 151356f7cff733c258bfd9a8bc64109dfc583cde
             <Button
               type="primary"
               style={{

@@ -44,7 +44,7 @@ export default function Sidebar() {
               {/* {item.title.toUpperCase()} */}
               {item.title === "Media" ? t("Media") : null}
               {item.title === "Meadia category" ? t("MediaCategory") : null}
-              {item.title === "Pharse" ? t("Pharse") : null}
+              {item.title === "Phrase" ? t("Phrase") : null}
               {item.title === "Words" ? t("Words") : null}
             </NavLink>
           ))}
