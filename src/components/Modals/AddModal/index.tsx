@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Button,
   Checkbox,
@@ -14,31 +15,34 @@ import { useState } from "react";
 import { usePostData } from "../../../utils/hooks/usePost";
 import SuccessToastify from "../../toastify/Success";
 import ErrorToastify from "../../toastify/Error";
-import { BiPlus } from "react-icons/bi";
 import { api } from "../../../utils/axios";
 import { useToken } from "../../../utils/zustand/useStore";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { RichText } from "../../RichText";
+import { postUrl } from "../../../types/defaultType";
 
 interface IData {
-  label: string;
-  value: string;
+  label: string | null;
+  value: string | null;
   isFixed?: boolean;
 }
 
 export function Add(props: {
   setIsModalOpen: (bool: boolean) => void;
   isModalOpen: boolean;
-  postUrl: "/media" | "/phrase" | "/word" | "/media-category";
+  postUrl: postUrl;
 }) {
   const { setIsModalOpen, isModalOpen } = props;
   const useGetCategory = useGetData(["category"], "/media-category", {});
   const usePost = usePostData(`${props.postUrl}`);
   const [data, setDatas] = useState<IData[] | null>(null);
-  const [categoryData, setCategoryData] = useState([]);
+  const [categoryData, setCategoryData] = useState<IData>({
+    value: null,
+    label: null,
+  });
   const [isMain, setisMain] = useState(false);
-  const [photoId, setPhotoId] = useState([]);
+  const [photoId, setPhotoId] = useState("");
   const [descriptionUz, setDescriptionUz] = useState("");
   const [descriptionEn, setDescriptionEn] = useState("");
   const [comentUz, setComentUz] = useState("");
@@ -67,7 +71,7 @@ export function Add(props: {
       usePost.mutate(
         {
           ...values,
-          category: categoryData.map((i: { value: string }) => i.value),
+          category: categoryData.value,
         },
         {
           onSuccess: () => {
@@ -90,6 +94,8 @@ export function Add(props: {
           comment_en: comentEn,
           description_uz: descriptionUz,
           description_en: descriptionEn,
+          informations: values.informations || [],
+          writers: values.writers || [],
           isMain,
           image: photoId,
         },
@@ -107,6 +113,17 @@ export function Add(props: {
         }
       );
     }
+    console.log({
+      ...values,
+      comment_uz: comentUz,
+      comment_en: comentEn,
+      description_uz: descriptionUz,
+      description_en: descriptionEn,
+      informations: values.informations || [],
+      writers: values.writers || [],
+      isMain,
+      image: photoId,
+    });
 
     setDatas(null);
   };
@@ -135,7 +152,6 @@ export function Add(props: {
       );
     }
   }
-
   return (
     <Modal title="Add" open={isModalOpen} onCancel={handleCancel} footer={null}>
       <Form
@@ -143,7 +159,6 @@ export function Add(props: {
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600 }}
-        initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
@@ -377,7 +392,7 @@ export function Add(props: {
                 Authorization: `Bearer ${token}`,
               }}
             >
-              <Button icon={<BiPlus />}>Click to Upload</Button>
+              <Button>Click to Upload</Button>
             </Upload>
           </>
         )}

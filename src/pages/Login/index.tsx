@@ -7,14 +7,16 @@ import { useToken } from "../../utils/zustand/useStore";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const useCheckUser = usePostData("/user/login",{});
+  const useCheckUser = usePostData("/user/login", {});
   const setToken = useToken((state) => state.setToken);
+  const setName = useToken((state) => state.setName);
   const navigator = useNavigate();
   const onFinish = (values: any) => {
     useCheckUser.mutate(values, {
       onSuccess: (data) => {
         SuccessToastify();
         setToken(data.data.token);
+        setName(values.userName);
         navigator("/");
       },
       onError: () => ErrorToastify(),

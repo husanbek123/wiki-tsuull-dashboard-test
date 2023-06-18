@@ -7,6 +7,8 @@ import { useTheme } from "../../utils/zustand/useTheme";
 import { NavLink } from "react-router-dom";
 import { Button, Dropdown, Switch } from "antd";
 import { useLanguage } from "../../utils/zustand/useLanguage";
+import { useGetData } from "../../utils/hooks/useGet";
+import { useToken } from "../../utils/zustand/useStore";
 const items = [
   {
     key: "uz",
@@ -22,13 +24,14 @@ export default function Sidebar() {
   const setTheme = useTheme((state) => state.setTheme);
   const language = useLanguage((state) => state.langauge);
   const setLanguage = useLanguage((state) => state.setLangauge);
+  const name = useToken((state) => state.name);
   return (
     <header className={style.header}>
       <nav className={style.navbar}>
         <div className={style.userMe}>
-          <div className={style.ProfilePhoto}></div>
+          <div className={style.ProfilePhoto}>{name?.[0]}</div>
           <div className={style.userTitles}>
-            <h2>John Doe</h2>
+            <h2>{name}</h2>
             <p>admin</p>
           </div>
         </div>
@@ -52,7 +55,7 @@ export default function Sidebar() {
               placement="bottom"
               arrow={{ pointAtCenter: true }}
             >
-              <Button >{language}</Button>
+              <Button>{language}</Button>
             </Dropdown>
           </div>
           <div className={style.theme}>

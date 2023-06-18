@@ -10,11 +10,9 @@ export default function SELECT(props: {
 }) {
   return (
     <Select
-      //   closeMenuOnSelect={false}
       options={props.data}
       components={animatedComponents}
       defaultValue={props.defaultValue || []}
-      isMulti
       onChange={(e) => props.setCategoryData(e)}
     />
   );

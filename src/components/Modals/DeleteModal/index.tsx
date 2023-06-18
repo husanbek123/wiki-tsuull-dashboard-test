@@ -3,29 +3,26 @@ import { useDelete } from "../../../utils/hooks/useDelete";
 import SuccessToastify from "../../toastify/Success";
 import { useQueryClient } from "@tanstack/react-query";
 import ErrorToastify from "../../toastify/Error";
+import { postUrl } from "../../../types/defaultType";
 
 export function Delete(props: {
   id: number | string;
   setIsModalOpen: (bool: boolean) => void;
   isModalOpen: boolean;
-  postUrl: "/media" | "/phrase" | "/word" | "/media-category";
+  postUrl: postUrl;
 }) {
   const { id, setIsModalOpen, isModalOpen, postUrl } = props;
   const useDeleteData = useDelete(`${props.postUrl}`);
   const queryClient = useQueryClient();
-  console.log(
-    postUrl
-      .split("")
-      .filter((i) => i != "/")
-      .join("")
-  );
-    console.log([`${postUrl.split('/').join('')}`]);
-    
+
+
   const handleOk = () => {
     useDeleteData.mutate(`${id}`, {
       onSuccess: () => {
         SuccessToastify("Deleted!");
-        queryClient.invalidateQueries({queryKey:[`media`]});
+        queryClient.invalidateQueries({
+          queryKey: [`${postUrl.slice(1)}`],
+        });
         setIsModalOpen(false);
       },
       onError: () => ErrorToastify("Not deleted"),

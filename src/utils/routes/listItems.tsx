@@ -12,7 +12,7 @@ export const listItems: listItemType[] = [
   },
   {
     url: "/pharse",
-    title: "Pharse",
+    title: "Phrase",
   },
   {
     url: "/words",
