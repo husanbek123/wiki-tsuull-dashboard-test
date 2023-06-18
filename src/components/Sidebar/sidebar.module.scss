@@ -1,5 +1,6 @@
 $orange-color: #ec781c;
 $blue-color: #124a85;
+
 .header {
   background: $blue-color;
   width: 100%;
@@ -19,8 +20,8 @@ $blue-color: #124a85;
         color: white;
         cursor: pointer;
         font-size: 15px;
-        &:hover{
-          transition: .3s;
+        &:hover {
+          transition: 0.3s;
           color: $orange-color;
         }
       }
@@ -29,5 +30,31 @@ $blue-color: #124a85;
       display: flex;
       gap: 10px;
     }
+
+    .theme{
+      .ThemContainerSun{
+        background-color: #022c58;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        border-radius: 10px;
+        .SunIcon {
+          font-size: 1.7rem;
+        }
+      }
+      .ThemeContainerMoon{
+        background-color: #022c58;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        border-radius: 10px;
+        .MoonIcon{
+          font-size: 1.6rem;
+        }
+      }
+    }
   }
 }
+

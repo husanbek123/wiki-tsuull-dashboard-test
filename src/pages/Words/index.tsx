@@ -16,10 +16,10 @@ import { useGetData } from "../../utils/hooks/useGet";
 const columns = [
   { title: "Title Uz", dataIndex: "title_uz", key: "title_uz" },
   { title: "Title En", dataIndex: "title_en", key: "title_uz" },
+  { title: "Comment UZ", dataIndex: "comment_uz", key: "comment_uz" },
   { title: "Comment En", dataIndex: "comment_en", key: "comment_en" },
   { title: "Description En", dataIndex: "description_en" },
   { title: "Description Uz", dataIndex: "description_uz" },
-  { title: "Comment UZ", dataIndex: "comment_uz" },
   { title: "Img", dataIndex: "image" },
   { title: "", dataIndex: "buttons" },
 ];
@@ -49,7 +49,7 @@ export default function Words() {
     status: null,
     id: null,
   });
-  const [dataSource, setDataSource] = useState([]);
+  const [_, setDataSource] = useState([]);
   let useGet = useGetData(["word"], "/word", {});
   const [success, setSuccess] = useState<boolean>(false);
   if (useGet.isSuccess && !success) {
@@ -100,13 +100,14 @@ export default function Words() {
 
         <div className={style.table}>
           <Table
+            loading={useGet?.isLoading}
             columns={columns}
             dataSource={dataResult?.map((item: WordProps, index: any) => ({
               key: index + 1,
               title_uz: <p>{item?.title_uz}</p>,
               title_en: <p>{item?.title_en}</p>,
               comment_en: <p>{item?.comment_uz}</p>,
-              comment_uz: <p></p>,
+              comment_uz: <p>{item?.comment_uz}</p>,
               description_en: <p>{item?.description_uz}</p>,
               description_uz: <p>{item?.description_uz}</p>,
               buttons: (
@@ -171,7 +172,7 @@ export default function Words() {
                   <div>
                     <img
                       width={89}
-                      src={`http://13.50.238.54/file/${item?.image?._id}`}
+                      src={`http://13.50.238.54/file/${item?.image?.path}`}
                       alt={"word-img"}
                     />
                   </div>

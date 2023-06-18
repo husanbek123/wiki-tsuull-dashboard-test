@@ -1,7 +1,3 @@
-import * as React from "react";
-export interface ChildrenType {
-  children?: React.ReactNode | React.ReactElement;
-}
 export interface listItemType {
   url: string;
   title: string;

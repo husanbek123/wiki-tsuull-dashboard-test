@@ -18,7 +18,7 @@ export function Delete(props: {
     useDeleteData.mutate(`${id}`, {
       onSuccess: () => {
         SuccessToastify("Deleted!");
-        queryClient.invalidateQueries({ queryKey: [validateQuery] });
+        queryClient.invalidateQueries({ queryKey: validateQuery });
         setIsModalOpen(false);
       },
       onError: () => ErrorToastify("Not deleted"),

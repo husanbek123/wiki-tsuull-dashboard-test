@@ -1,10 +1,11 @@
-import { changeLanguage, changeLanguage as i18nChangeLanguage } from "i18next";
+import { changeLanguage } from "i18next";
 import { listItems } from "../../utils/routes/listItems";
 import style from "./sidebar.module.scss";
 import { useTheme } from "../../utils/zustand/useTheme";
 import { NavLink } from "react-router-dom";
-import { Button, Dropdown, Switch } from "antd";
+import { Button, Dropdown, theme } from "antd";
 import { useLanguage } from "../../utils/zustand/useLanguage";
+import { BsFillSunFill, BsFillMoonFill } from "react-icons/bs";
 import { t } from "i18next";
 const items = [
   {
@@ -17,7 +18,7 @@ const items = [
   },
 ];
 export default function Sidebar() {
-  const theme = useTheme((state) => state.theme);
+  let theme = useTheme((state) => state.theme);
   const setTheme = useTheme((state) => state.setTheme);
   const language = useLanguage((state) => state.langauge);
   const setLanguage = useLanguage((state) => state.setLangauge);
@@ -26,8 +27,6 @@ export default function Sidebar() {
   } else {
     changeLanguage("en");
   }
-  let itemsLanguageChange = (item: string) => {};
-
   return (
     <header className={style.header}>
       <nav className={style.navbar}>
@@ -41,11 +40,10 @@ export default function Sidebar() {
         <div className={style.links}>
           {listItems.map((item, index) => (
             <NavLink to={`${item.url}`} key={index}>
-              {/* {item.title.toUpperCase()} */}
               {item.title === "Media" ? t("Media") : null}
-              {item.title === "Meadia category" ?  t("MediaCategory") : null}
-              {item.title ===  "Pharse" ?  t("Pharse") : null}
-              {item.title ===  "Words" ?  t("Words") : null}
+              {item.title === "Meadia category" ? t("MediaCategory") : null}
+              {item.title === "Pharse" ? t("Pharse") : null}
+              {item.title === "Words" ? t("Words") : null}
             </NavLink>
           ))}
         </div>
@@ -66,10 +64,15 @@ export default function Sidebar() {
             </Dropdown>
           </div>
           <div className={style.theme}>
-            <Switch
-              defaultChecked
-              onChange={(e) => setTheme(e ? "dark" : "light")}
-            />
+            {theme === "light" ? (
+              <div className={style.ThemContainerSun}>
+                <BsFillSunFill className={style.SunIcon} onClick={setTheme} />
+              </div>
+            ) : (
+              <div className={style.ThemeContainerMoon}>
+                <BsFillMoonFill className={style.MoonIcon}  onClick={setTheme} />
+              </div>
+            )}
           </div>
         </div>
       </nav>
