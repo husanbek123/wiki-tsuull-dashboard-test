@@ -1,8 +1,12 @@
 {
-    "Media" :"Media" ,
-    "MediaCategory" :"Media-Category",
-    "Words" :  "Words",
-    "Pharse": "Pharse",
-    "add" : "add",
-    "Words-Modal": "WordsModal"
+  "Media": "Media",
+  "MediaCategory": "Media-Category",
+  "Words": "Words",
+  "Pharse": "Pharse",
+  "add": "Add",
+  "Words-Modal": "WordsModal",
+  "title_uz": "Title Uz",
+  "title_en": "Title En",
+  "description_uz": "Description Uz",
+  "delete":  "Delete"
 }

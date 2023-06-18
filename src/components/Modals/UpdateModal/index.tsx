@@ -27,14 +27,25 @@ export function Update(props: {
   setIsModalOpen: (bool: boolean) => void;
   postUrl: postUrl;
 }) {
+  // Props
   const { id, setIsModalOpen, isModalOpen } = props;
-  const useMediaPatch = usePatchData(`/media/${id}`, {});
-  const usePhrasePatch = usePatchData(`/phrase/${id}`, {});
+  // Media
   const useGetMedia = useGetData(["media"], "/media", {});
+  // Details Media
+  const useMediaPatch = usePatchData(`/media/${id}`, {});
+  // Phrase dedatils
+  const usePhrasePatch = usePatchData(`/phrase/${id}`, {});
+  // All phrase
   const useGetPhrase = useGetData(["phrase"], "/phrase", {});
-  const [category, setCategory] = useState<{ value: string; label: string }[]>(
-    []
-  );
+  // Media Catgory
+  // const useMediaCategory = usePatchData(`/media-category/${id}`, {});
+  //
+  // let useMediaGetCategory = useGetData(["media-category"], "/media-category");
+  // const [fileList, setFileList] = useState([]);
+  // let useWordGet = useGetData(["word"], "/word", {});
+  // const [category, setCategory] = useState<{ value: string; label: string }[]>(
+  //   []
+  // );
 
   const token = useToken((state) => state.token);
   const uploadProp: UploadProps = {
@@ -74,7 +85,7 @@ export function Update(props: {
           title_uz: values.title_uz || dataMedia.title_uz,
           title_en: values.title_en || dataMedia.title_en,
           frame: values.frame || dataMedia.frame,
-          category: category.length ? category : dataMedia.category,
+          category: dataMedia.category,
         },
         {
           onSuccess: () => {
@@ -144,9 +155,6 @@ export function Update(props: {
   const dataMedia = useGetMedia?.data?.data?.find(
     (item: { _id: string }) => item._id === id
   );
-  const dataPhrase = useGetPhrase?.data?.data?.find(
-    (item: { _id: string }) => item._id === id
-  );
 
   if (useGetPhrase.isSuccess && photoId?.trim() == "") {
     setPhotoId(
@@ -157,7 +165,7 @@ export function Update(props: {
     );
   }
 
-  return  (
+  return (
     <Modal
       title="Basic Modal"
       open={isModalOpen}
@@ -209,7 +217,6 @@ export function Update(props: {
                     value: i._id,
                     label: i.title_uz,
                   }))}
-                setCategoryData={setCategory}
                 defaultValue={dataMedia.category.map(
                   (i: { _id: string; title_uz: string }) => ({
                     value: i._id,

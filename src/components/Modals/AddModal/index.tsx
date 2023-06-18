@@ -21,6 +21,7 @@ import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { RichText } from "../../RichText";
 import { postUrl } from "../../../types/defaultType";
+import { useTranslation } from "react-i18next";
 
 interface IData {
   label: string | null;
@@ -33,8 +34,9 @@ export function Add(props: {
   isModalOpen: boolean;
   postUrl: postUrl;
 }) {
+  const { t } = useTranslation();
   const { setIsModalOpen, isModalOpen } = props;
-  const useGetCategory = useGetData(["category"], "/media-category", {});
+  const useGetCategory = useGetData(["media-category"], "/media-category", {});
   const usePost = usePostData(`${props.postUrl}`);
   const [data, setDatas] = useState<IData[] | null>(null);
   const [categoryData, setCategoryData] = useState<IData>({
@@ -66,7 +68,9 @@ export function Add(props: {
       }
     },
   };
+
   const onFinish = (values: any) => {
+    // media
     if (props.postUrl == "/media") {
       usePost.mutate(
         {
@@ -86,7 +90,9 @@ export function Add(props: {
           },
         }
       );
-    } else if (props.postUrl == "/phrase") {
+    }
+    // phrase
+    else if (props.postUrl == "/phrase") {
       usePost.mutate(
         {
           ...values,
@@ -113,17 +119,6 @@ export function Add(props: {
         }
       );
     }
-    console.log({
-      ...values,
-      comment_uz: comentUz,
-      comment_en: comentEn,
-      description_uz: descriptionUz,
-      description_en: descriptionEn,
-      informations: values.informations || [],
-      writers: values.writers || [],
-      isMain,
-      image: photoId,
-    });
 
     setDatas(null);
   };
@@ -153,7 +148,12 @@ export function Add(props: {
     }
   }
   return (
-    <Modal title="Add" open={isModalOpen} onCancel={handleCancel} footer={null}>
+    <Modal
+      title={t("add")}
+      open={isModalOpen}
+      onCancel={handleCancel}
+      footer={null}
+    >
       <Form
         name="add_media"
         labelCol={{ span: 8 }}
@@ -164,7 +164,7 @@ export function Add(props: {
         autoComplete="off"
       >
         <Form.Item
-          label="Title uz"
+          label={t("title_uz")}
           name="title_uz"
           rules={[{ required: true, message: "Please enter" }]}
         >
@@ -176,7 +176,7 @@ export function Add(props: {
         </Form.Item>
 
         <Form.Item
-          label="Title en"
+          label={t("title_en")}
           name="title_en"
           rules={[{ required: true, message: "Please enter" }]}
         >
@@ -193,7 +193,7 @@ export function Add(props: {
               <Input />
             </Form.Item>
             <Form.Item label="Category" name="category">
-              <SELECT data={data} setCategoryData={setCategoryData} />
+              <SELECT data={data} />
             </Form.Item>
           </>
         )}
@@ -394,6 +394,46 @@ export function Add(props: {
             >
               <Button>Click to Upload</Button>
             </Upload>
+          </>
+        )}
+
+        {props?.postUrl == "/word" && (
+          <>
+            <Form.Item
+              label={t("description_uz")}
+              name="description_uz"
+              rules={[{ required: true, message: "Please enter" }]}
+            >
+              <Input
+                style={{
+                  width: "100%",
+                }}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Description EN"
+              name="description_en"
+              rules={[{ required: true, message: "Please enter" }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item name={"comment_uz"} label="Comment Uz">
+              <Input
+                style={{
+                  width: "100%",
+                }}
+              />
+            </Form.Item>
+
+            <Form.Item label="Comment EN" name={"comment_en"}>
+              <Input
+                style={{
+                  width: "100%",
+                }}
+              />
+            </Form.Item>
           </>
         )}
         <div

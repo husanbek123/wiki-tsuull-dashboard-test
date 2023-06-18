@@ -1,8 +1,12 @@
 {
   "Media": "Media",
-  "MediaCategory": "Media toifasi",
+  "MediaCategory": "Media Toifasi",
   "Words": "So'zlar",
   "Pharse": "Iboralar",
-  "add": "qo'hish",
-  "Words-Modal": "So'lar Qo'shish"
+  "add": "Malimot Qo'shish",
+  "Words-Modal": "So'lar Qo'shish",
+  "title_uz" :"Sarlavha Uz",
+  "title_en": "Sarlavha EN",
+  "description_uz" :"Tavsifi Uz",
+  "delete":  "O'chirish" 
 }

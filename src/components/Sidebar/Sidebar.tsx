@@ -1,14 +1,12 @@
-import * as React from "react";
-import { changeLanguage as i18nChangeLanguage } from "i18next";
+import { changeLanguage } from "i18next";
 import { listItems } from "../../utils/routes/listItems";
 import style from "./sidebar.module.scss";
-
 import { useTheme } from "../../utils/zustand/useTheme";
 import { NavLink } from "react-router-dom";
 import { Button, Dropdown, Switch } from "antd";
 import { useLanguage } from "../../utils/zustand/useLanguage";
-import { useGetData } from "../../utils/hooks/useGet";
 import { useToken } from "../../utils/zustand/useStore";
+import { t } from "i18next";
 const items = [
   {
     key: "uz",
@@ -20,11 +18,16 @@ const items = [
   },
 ];
 export default function Sidebar() {
-  const theme = useTheme((state) => state.theme);
   const setTheme = useTheme((state) => state.setTheme);
   const language = useLanguage((state) => state.langauge);
   const setLanguage = useLanguage((state) => state.setLangauge);
   const name = useToken((state) => state.name);
+  if (language === "uz") {
+    changeLanguage("uz");
+  } else {
+    changeLanguage("en");
+  }
+
   return (
     <header className={style.header}>
       <nav className={style.navbar}>
@@ -38,7 +41,11 @@ export default function Sidebar() {
         <div className={style.links}>
           {listItems.map((item, index) => (
             <NavLink to={`${item.url}`} key={index}>
-              {item.title.toUpperCase()}
+              {/* {item.title.toUpperCase()} */}
+              {item.title === "Media" ? t("Media") : null}
+              {item.title === "Meadia category" ? t("MediaCategory") : null}
+              {item.title === "Pharse" ? t("Pharse") : null}
+              {item.title === "Words" ? t("Words") : null}
             </NavLink>
           ))}
         </div>
