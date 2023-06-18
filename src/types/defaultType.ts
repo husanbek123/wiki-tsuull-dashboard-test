@@ -3,6 +3,8 @@ export interface listItemType {
   title: string;
 }
 
+export type postUrl = "/media" | "/phrase" | "/word" | "/media-category";
+
 export interface LanguageItemsProps {
   key: string;
   label: string;
@@ -11,7 +13,7 @@ export interface LanguageItemsProps {
 
 export interface zustandProps {
   theme: string;
-  setTheme: (mode:string) => void;
+  setTheme: (mode: string) => void;
 }
 
 export interface image {

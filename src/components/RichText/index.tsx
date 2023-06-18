@@ -2,12 +2,12 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 export function RichText(props: {
-  value: string;
-  setValue: (str: string) => void;
+  value: any;
+  setValue: (str:any) => void;
 }) {
   const { value, setValue } = props;
 
-  function handleChange(newValue:string) {
+  function handleChange(newValue: string) {
     setValue(newValue);
   }
 

@@ -3,10 +3,11 @@ import { listItems } from "../../utils/routes/listItems";
 import style from "./sidebar.module.scss";
 import { useTheme } from "../../utils/zustand/useTheme";
 import { NavLink } from "react-router-dom";
-import { Button, Dropdown, theme } from "antd";
+import { Button, Dropdown } from "antd";
 import { useLanguage } from "../../utils/zustand/useLanguage";
 import { BsFillSunFill, BsFillMoonFill } from "react-icons/bs";
 import { t } from "i18next";
+import { useToken } from "../../utils/zustand/useStore";
 const items = [
   {
     key: "uz",
@@ -22,6 +23,7 @@ export default function Sidebar() {
   const setTheme = useTheme((state) => state.setTheme);
   const language = useLanguage((state) => state.langauge);
   const setLanguage = useLanguage((state) => state.setLangauge);
+  const name = useToken((state) => state.name);
   if (language === "uz") {
     changeLanguage("uz");
   } else {
@@ -31,9 +33,9 @@ export default function Sidebar() {
     <header className={style.header}>
       <nav className={style.navbar}>
         <div className={style.userMe}>
-          <div className={style.ProfilePhoto}></div>
+          <div className={style.ProfilePhoto}>{name?.[0]}</div>
           <div className={style.userTitles}>
-            <h2>John Doe</h2>
+            <h2>{name}</h2>
             <p>admin</p>
           </div>
         </div>

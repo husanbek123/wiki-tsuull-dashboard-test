@@ -1,15 +1,26 @@
-import { Button, Input, Table } from "antd";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from "react";
+import { Button } from "antd";
 import { useGetData } from "../../utils/hooks/useGet";
 import styles from "./index.module.scss";
-import parse from "html-react-parser";
-import { BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
-import { AiOutlinePlus } from "react-icons/ai";
+import { BsFillEyeFill, BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
+import { AiOutlinePlus, AiOutlineStar } from "react-icons/ai";
 import TOOLTIP from "../../components/Tooltip";
 import { useState } from "react";
-import { InputTableFilter } from "../../components/Inputs/InputTableFilter";
 import { CRUDNavigator } from "../../components/CRUDNavigator";
+<<<<<<< HEAD
+import videoIcon from "../../../public/videoIco.png";
+import Table, { ColumnsType } from "antd/es/table";
+
+interface DataType {
+  key: React.Key;
+}
+
+const columns: ColumnsType<DataType> = [
+=======
 import { useTranslation } from "react-i18next";
 const columns = [
+>>>>>>> 151356f7cff733c258bfd9a8bc64109dfc583cde
   { title: "TITLE UZ", dataIndex: "title_uz", key: "title_uz" },
   { title: "TITLE EN", dataIndex: "title_en", key: "title_uz" },
   { title: "FRAME", dataIndex: "frame", key: "frame" },
@@ -19,25 +30,27 @@ const columns = [
     title: "",
     dataIndex: "buttons",
     key: "buttons",
+    fixed: "right",
+    width: 100,
   },
 ];
 
 export default function Media() {
   const useGet = useGetData(["media"], `/media`, {});
+<<<<<<< HEAD
+=======
   const [success, setSuccess] = useState<boolean>(false);
   const [dataSource, setDataSource] = useState([]);
+>>>>>>> 151356f7cff733c258bfd9a8bc64109dfc583cde
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalParametrs, setModalParametrs] = useState<{
     status: any;
     id?: any;
+    url?: string;
   }>({
     status: null,
     id: null,
   });
-  if (useGet.isSuccess && !success) {
-    setDataSource(() => useGet.data.data);
-    setSuccess(() => true);
-  }
 
   let {t} = useTranslation()
 
@@ -51,9 +64,14 @@ export default function Media() {
             id={modalParametrs.id}
             setIsModalOpen={setIsModalOpen}
             isModalOpen={isModalOpen}
+            url={`${modalParametrs.url}`}
           />
         )}
+
         <div className={styles.Add}>
+<<<<<<< HEAD
+          <TOOLTIP title={"Add"} key={"Add"} color="blue">
+=======
           {/* <InputTableFilter
             value={value}
             setValue={setValue}
@@ -61,12 +79,12 @@ export default function Media() {
             zaprosData={useGet?.data?.data}
           ></InputTableFilter> */}
           <TOOLTIP title={t("add")} key={"Add"} color="blue">
+>>>>>>> 151356f7cff733c258bfd9a8bc64109dfc583cde
             <Button
               type="primary"
               style={{
                 width: "100%",
                 height: "40px",
-
                 fontSize: "15px",
                 display: "flex",
                 flexDirection: "column",
@@ -93,7 +111,26 @@ export default function Media() {
               key: index + 1,
               title_uz: <p>{item.title_uz}</p>,
               title_en: <p>{item.title_en}</p>,
-              frame: <p>{item.frame}</p>,
+              frame: (
+                <div
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                  }}
+                  onClick={() => {
+                    setModalParametrs({ status: "Frame", id: item._id });
+                    setIsModalOpen(true);
+                  }}
+                >
+                  <img
+                    src={videoIcon}
+                    alt=""
+                    style={{
+                      cursor: "pointer",
+                    }}
+                  />
+                </div>
+              ),
               category_uz: (
                 <div>
                   {useGet?.data?.data[index]?.category?.map(
@@ -169,6 +206,31 @@ export default function Media() {
                       }}
                     >
                       <BsPencilSquare />
+                    </Button>
+                  </TOOLTIP>
+                  <TOOLTIP title={`Single`} color={"green"} key={"3"}>
+                    <Button
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        fontSize: "15px",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderColor: "green",
+                        color: "green",
+                      }}
+                      onClick={() => {
+                        setModalParametrs({
+                          status: "Single",
+                          id: item._id,
+                          url: "/media",
+                        });
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      <BsFillEyeFill />
                     </Button>
                   </TOOLTIP>
                 </div>

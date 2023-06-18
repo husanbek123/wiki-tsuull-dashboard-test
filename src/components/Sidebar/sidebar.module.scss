@@ -13,6 +13,20 @@ $blue-color: #124a85;
     color: white;
     justify-content: space-between;
     align-items: center;
+    .userMe {
+      display: flex;
+      gap: 10px;
+      .ProfilePhoto {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #ec781c;
+        font-size: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
     .links {
       display: flex;
       gap: 20px;

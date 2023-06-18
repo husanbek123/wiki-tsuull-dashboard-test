@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Button,
   Checkbox,
@@ -8,44 +9,40 @@ import {
   UploadProps,
   Space,
 } from "antd";
-import ImgCrop from "antd-img-crop";
 import SELECT from "../../Select";
 import { useGetData } from "../../../utils/hooks/useGet";
 import { useState } from "react";
 import { usePostData } from "../../../utils/hooks/usePost";
 import SuccessToastify from "../../toastify/Success";
 import ErrorToastify from "../../toastify/Error";
-import { BiPlus } from "react-icons/bi";
 import { api } from "../../../utils/axios";
 import { useToken } from "../../../utils/zustand/useStore";
-import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { RichText } from "../../RichText";
-import { RcFile } from "antd/es/upload";
-import {useTranslation} from "react-i18next"
-interface IData {
-  label: string;
-  value: string;
-  isFixed?: boolean;
-}
+import { postUrl } from "../../../types/defaultType";
+import { useTranslation } from "react-i18next";
 
-interface image {
-    path: string;
-    _id: string;
+interface IData {
+  label: string | null;
+  value: string | null;
+  isFixed?: boolean;
 }
 
 export function Add(props: {
   setIsModalOpen: (bool: boolean) => void;
   isModalOpen: boolean;
-  postUrl: "/media" | "/phrase" | "/word" | "/media-category";
+  postUrl: postUrl;
 }) {
-  let {t} =  useTranslation()
+  const { t } = useTranslation();
   const { setIsModalOpen, isModalOpen } = props;
   const useGetCategory = useGetData(["media-category"], "/media-category", {});
   const usePost = usePostData(`${props.postUrl}`);
   const [data, setDatas] = useState<IData[] | null>(null);
-  const [categoryData, setCategoryData] = useState([]);
-  const [fileList, setFileList] = useState([]);
+  const [categoryData, setCategoryData] = useState<IData>({
+    value: null,
+    label: null,
+  });
   const [isMain, setisMain] = useState(false);
   const [photoId, setPhotoId] = useState("");
   const [descriptionUz, setDescriptionUz] = useState("");
@@ -58,7 +55,6 @@ export function Add(props: {
     setDatas(null);
   };
   const queryClient = useQueryClient();
-  let [newUploadId, setnewUploadId] = useState({} as image);
   const uploadProp: UploadProps = {
     onChange(info) {
       if (info.file.status !== "uploading") {
@@ -73,18 +69,13 @@ export function Add(props: {
     },
   };
 
-  const uploadOnChange = ({ fileList: newFileList, file }: any) => {
-    setFileList(newFileList);
-    setnewUploadId(file?.response);
-  };
-
   const onFinish = (values: any) => {
     // media
     if (props.postUrl == "/media") {
       usePost.mutate(
         {
           ...values,
-          category: categoryData.map((i: { value: string }) => i.value),
+          category: categoryData.value,
         },
         {
           onSuccess: () => {
@@ -109,6 +100,8 @@ export function Add(props: {
           comment_en: comentEn,
           description_uz: descriptionUz,
           description_en: descriptionEn,
+          informations: values.informations || [],
+          writers: values.writers || [],
           isMain,
           image: photoId,
         },
@@ -126,66 +119,8 @@ export function Add(props: {
         }
       );
     }
-    // media-category
-    else if (props.postUrl == "/media-category") {
-      usePost.mutate(
-        {
-          ...values,
-        },
-        {
-          onSuccess: () => {
-            SuccessToastify();
-            setIsModalOpen(false);
-            queryClient.invalidateQueries({
-              queryKey: ["media-category"],
-            });
-          },
-          onError: () => {
-            ErrorToastify();
-          },
-        }
-      );
-    }
-    // Word
-    else if (props.postUrl == "/word") {
-      let result = {
-        ...values,
-        image: newUploadId?._id,
-      };
 
-      console.log(result);
-      usePost.mutate(
-        result,
-        {
-          onSuccess: () => {
-            SuccessToastify();
-            setIsModalOpen(false);
-            queryClient.invalidateQueries({
-              queryKey: ["word"],
-            });
-          },
-          onError: () => {
-            ErrorToastify();
-          },
-        }
-      );
-    }
     setDatas(null);
-  };
-
-  const onPreview = async (file: any) => {
-    let src = file.url as string;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj as RcFile);
-        reader.onload = () => resolve(reader.result as string);
-      });
-    }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -213,13 +148,17 @@ export function Add(props: {
     }
   }
   return (
-    <Modal title={t("add")} open={isModalOpen} onCancel={handleCancel} footer={null}>
+    <Modal
+      title={t("add")}
+      open={isModalOpen}
+      onCancel={handleCancel}
+      footer={null}
+    >
       <Form
         name="add_media"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600 }}
-        initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
@@ -254,7 +193,7 @@ export function Add(props: {
               <Input />
             </Form.Item>
             <Form.Item label="Category" name="category">
-              <SELECT data={data} setCategoryData={setCategoryData} />
+              <SELECT data={data} />
             </Form.Item>
           </>
         )}
@@ -453,7 +392,7 @@ export function Add(props: {
                 Authorization: `Bearer ${token}`,
               }}
             >
-              <Button icon={<BiPlus />}>Click to Upload</Button>
+              <Button>Click to Upload</Button>
             </Upload>
           </>
         )}
@@ -495,17 +434,6 @@ export function Add(props: {
                 }}
               />
             </Form.Item>
-            <ImgCrop rotationSlider>
-              <Upload
-                action={"http://13.50.238.54/file"}
-                name="photo"
-                fileList={fileList}
-                onChange={uploadOnChange}
-                onPreview={onPreview}
-              >
-                <Button icon={<UploadOutlined />}>Upload</Button>
-              </Upload>
-            </ImgCrop>
           </>
         )}
         <div
