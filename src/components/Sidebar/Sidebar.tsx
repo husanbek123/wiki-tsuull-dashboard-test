@@ -44,7 +44,7 @@ export default function Sidebar() {
             <NavLink to={`${item.url}`} key={index}>
               {item.title === "Media" ? t("Media") : null}
               {item.title === "Meadia category" ? t("MediaCategory") : null}
-              {item.title === "Pharse" ? t("Pharse") : null}
+              {item.title === "Phrase" ? t("Phrase") : null}
               {item.title === "Words" ? t("Words") : null}
             </NavLink>
           ))}
