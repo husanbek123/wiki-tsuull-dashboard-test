@@ -8,7 +8,7 @@ import TOOLTIP from "../../components/Tooltip";
 import { useState } from "react";
 import { InputTableFilter } from "../../components/Inputs/InputTableFilter";
 import { CRUDNavigator } from "../../components/CRUDNavigator";
-
+import { useTranslation } from "react-i18next";
 const columns = [
   { title: "TITLE UZ", dataIndex: "title_uz", key: "title_uz" },
   { title: "TITLE EN", dataIndex: "title_en", key: "title_uz" },
@@ -25,7 +25,6 @@ const columns = [
 export default function Media() {
   const useGet = useGetData(["media"], `/media`, {});
   const [success, setSuccess] = useState<boolean>(false);
-  const [value, setValue] = useState("");
   const [dataSource, setDataSource] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalParametrs, setModalParametrs] = useState<{
@@ -39,6 +38,8 @@ export default function Media() {
     setDataSource(() => useGet.data.data);
     setSuccess(() => true);
   }
+
+  let {t} = useTranslation()
 
   return (
     <div className={styles.Main}>
@@ -59,11 +60,11 @@ export default function Media() {
             setDataSource={setDataSource}
             zaprosData={useGet?.data?.data}
           ></InputTableFilter> */}
-          <TOOLTIP title={"Add"} key={"Add"} color="blue">
+          <TOOLTIP title={t("add")} key={"Add"} color="blue">
             <Button
               type="primary"
               style={{
-                width: "100px",
+                width: "100%",
                 height: "40px",
 
                 fontSize: "15px",
@@ -80,7 +81,7 @@ export default function Media() {
               }}
             >
               <p>
-                Add <AiOutlinePlus />
+                {t("add")} <AiOutlinePlus />
               </p>
             </Button>
           </TOOLTIP>

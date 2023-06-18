@@ -1,12 +1,11 @@
-import * as React from "react";
-import { changeLanguage as i18nChangeLanguage } from "i18next";
+import { changeLanguage, changeLanguage as i18nChangeLanguage } from "i18next";
 import { listItems } from "../../utils/routes/listItems";
 import style from "./sidebar.module.scss";
-
 import { useTheme } from "../../utils/zustand/useTheme";
 import { NavLink } from "react-router-dom";
 import { Button, Dropdown, Switch } from "antd";
 import { useLanguage } from "../../utils/zustand/useLanguage";
+import { t } from "i18next";
 const items = [
   {
     key: "uz",
@@ -22,6 +21,13 @@ export default function Sidebar() {
   const setTheme = useTheme((state) => state.setTheme);
   const language = useLanguage((state) => state.langauge);
   const setLanguage = useLanguage((state) => state.setLangauge);
+  if (language === "uz") {
+    changeLanguage("uz");
+  } else {
+    changeLanguage("en");
+  }
+  let itemsLanguageChange = (item: string) => {};
+
   return (
     <header className={style.header}>
       <nav className={style.navbar}>
@@ -35,7 +41,11 @@ export default function Sidebar() {
         <div className={style.links}>
           {listItems.map((item, index) => (
             <NavLink to={`${item.url}`} key={index}>
-              {item.title.toUpperCase()}
+              {/* {item.title.toUpperCase()} */}
+              {item.title === "Media" ? t("Media") : null}
+              {item.title === "Meadia category" ?  t("MediaCategory") : null}
+              {item.title ===  "Pharse" ?  t("Pharse") : null}
+              {item.title ===  "Words" ?  t("Words") : null}
             </NavLink>
           ))}
         </div>
@@ -52,7 +62,7 @@ export default function Sidebar() {
               placement="bottom"
               arrow={{ pointAtCenter: true }}
             >
-              <Button >{language}</Button>
+              <Button>{language}</Button>
             </Dropdown>
           </div>
           <div className={style.theme}>

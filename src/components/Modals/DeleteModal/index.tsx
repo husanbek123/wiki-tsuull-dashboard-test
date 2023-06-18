@@ -13,25 +13,17 @@ export function Delete(props: {
   const { id, setIsModalOpen, isModalOpen, postUrl } = props;
   const useDeleteData = useDelete(`${props.postUrl}`);
   const queryClient = useQueryClient();
-  console.log(
-    postUrl
-      .split("")
-      .filter((i) => i != "/")
-      .join("")
-  );
-    console.log([`${postUrl.split('/').join('')}`]);
-    
+  let validateQuery = [`${postUrl.slice(1)}`];
   const handleOk = () => {
     useDeleteData.mutate(`${id}`, {
       onSuccess: () => {
         SuccessToastify("Deleted!");
-        queryClient.invalidateQueries({queryKey:[`media`]});
+        queryClient.invalidateQueries({ queryKey: [validateQuery] });
         setIsModalOpen(false);
       },
       onError: () => ErrorToastify("Not deleted"),
     });
   };
-
   const handleCancel = () => {
     setIsModalOpen(false);
   };
