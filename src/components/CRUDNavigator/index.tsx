@@ -48,7 +48,6 @@ export function CRUDNavigator(props: {
   }
   return (
     <Add
-      id={`${id}`}
       postUrl={props.postUrl}
       isModalOpen
       setIsModalOpen={setIsModalOpen}
