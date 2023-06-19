@@ -5,8 +5,16 @@
   "Phrase": "Iboralar",
   "add": "Malimot Qo'shish",
   "Words-Modal": "So'lar Qo'shish",
-  "title_uz" :"Sarlavha Uz",
+  "title_uz": "Sarlavha Uz",
   "title_en": "Sarlavha EN",
-  "description_uz" :"Tavsifi Uz",
-  "delete":  "O'chirish" 
+  "description_uz": "Tavsifi Uz",
+  "description_en": "Tavsifi En",
+  "delete": "O'chirish",
+  "frame": "Frame Manzil",
+  "category_uz": "Kategoriya Uz",
+  "category_en": "Kategoriya En",
+  "comment_uz": "Izoh Uz",
+  "comment_en": "Izoh En",
+  "writers": "Yozuvchilar",
+  "informations": "Ma'lumotlar"
 }

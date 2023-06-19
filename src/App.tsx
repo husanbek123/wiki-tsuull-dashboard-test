@@ -2,17 +2,16 @@ import * as React from "react";
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 import {
   Media,
   MediaCategory,
   Pharse,
-  SinglePharse,
   Words,
 } from "./utils/routes/dynamicRoutes/Dynamic";
 import Loading from "./components/Loading/Loading";
 import NotFound from "./pages/NotFound/NotFound";
 import Login from "./pages/Login";
-import { useToken } from "./utils/zustand/useStore";
 import Protected from "./utils/ProtectedRoute";
 export default function App() {
   return (
@@ -49,14 +48,13 @@ export default function App() {
             }
           ></Route>
           <Route
-            path="/pharse"
+            path="/phrase"
             element={
               <Protected>
                 <Pharse />
               </Protected>
             }
           ></Route>
-          {/* <Route path="/pharse/:id" element={<SinglePharse />}></Route> */}
           <Route
             path="/words"
             element={

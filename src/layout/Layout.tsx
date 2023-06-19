@@ -1,16 +1,16 @@
 import * as React from "react";
-import { ChildrenType } from "../types/defaultType";
 import Sidebar from "../components/Sidebar/Sidebar";
-import style from "./layout.module.scss";
 import { useTheme } from "../utils/zustand/useTheme";
+import "./index.css";
 export default function Layout(props: {
   children: React.ReactNode;
 }): React.ReactElement {
   const theme = useTheme((state) => state.theme);
+  document.querySelector("body")?.setAttribute("data-theme", theme);
   return (
-    <div id={theme} className={style.layoutWrapper}>
+    <>
       <Sidebar />
-      <div className={style.page}>{props?.children}</div>
-    </div>
+      <div>{props?.children}</div>
+    </>
   );
 }

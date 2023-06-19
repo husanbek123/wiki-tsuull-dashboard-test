@@ -5,7 +5,7 @@ export const useTheme = create<zustandProps>()(
   persist(
     (set) => ({
       theme: "light" || "dark",
-      changeTheme: () =>
+      setTheme: () =>
         set((state) => ({ theme: state.theme === "light" ? "dark" : "light" })),
     }),
     {

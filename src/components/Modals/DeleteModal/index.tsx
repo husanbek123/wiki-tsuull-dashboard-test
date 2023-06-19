@@ -15,7 +15,6 @@ export function Delete(props: {
   const useDeleteData = useDelete(`${props.postUrl}`);
   const queryClient = useQueryClient();
 
-
   const handleOk = () => {
     useDeleteData.mutate(`${id}`, {
       onSuccess: () => {
@@ -32,7 +31,8 @@ export function Delete(props: {
     setIsModalOpen(false);
   };
   return (
-    <Modal
+    <Modal  
+      width={1000}
       title="Do you want delete this ?"
       open={isModalOpen}
       onOk={handleOk}

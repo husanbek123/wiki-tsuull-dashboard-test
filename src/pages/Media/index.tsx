@@ -11,30 +11,14 @@ import { CRUDNavigator } from "../../components/CRUDNavigator";
 import videoIcon from "../../../public/videoIco.png";
 import Table, { ColumnsType } from "antd/es/table";
 import { useTranslation } from "react-i18next";
-
 interface DataType {
   key: React.Key;
 }
 
-const columns: ColumnsType<DataType> = [
-  { title: "TITLE UZ", dataIndex: "title_uz", key: "title_uz" },
-  { title: "TITLE EN", dataIndex: "title_en", key: "title_uz" },
-  { title: "FRAME", dataIndex: "frame", key: "frame" },
-  { title: "CATEGORY UZ", dataIndex: "category_uz", key: "category_uz" },
-  { title: "CATEGORY EN", dataIndex: "category_en", key: "category_uz" },
-  {
-    title: "",
-    dataIndex: "buttons",
-    key: "buttons",
-    fixed: "right",
-    width: 100,
-  },
-];
+
 
 export default function Media() {
   const useGet = useGetData(["media"], `/media`, {});
-  const [success, setSuccess] = useState<boolean>(false);
-  const [dataSource, setDataSource] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalParametrs, setModalParametrs] = useState<{
     status: any;
@@ -46,6 +30,23 @@ export default function Media() {
   });
 
   const { t } = useTranslation();
+
+  const columns: ColumnsType<DataType> = [
+    { title: t("title_uz"), dataIndex: "title_uz", key: "title_uz" },
+    { title: t("title_en"), dataIndex: "title_en", key: "title_uz" },
+    { title: t("frame"), dataIndex: "frame", key: "frame" },
+    { title: t("category_uz"), dataIndex: "category_uz", key: "category_uz" },
+    { title: t("category_en"), dataIndex: "category_en", key: "category_uz" },
+    {
+      title: "Crud Buttons",
+      dataIndex: "buttons",
+      key: "buttons",
+      fixed: "right",
+      width: 100,
+    },
+  ];
+
+
 
   return (
     <div className={styles.Main}>
@@ -87,6 +88,7 @@ export default function Media() {
             </Button>
           </TOOLTIP>
         </div>
+
         <div className={styles.table}>
           <Table
             columns={columns}
@@ -94,6 +96,7 @@ export default function Media() {
               key: index + 1,
               title_uz: <p>{item.title_uz}</p>,
               title_en: <p>{item.title_en}</p>,
+              
               frame: (
                 <div
                   style={{

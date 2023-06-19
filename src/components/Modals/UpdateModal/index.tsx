@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import ImgCrop from "antd-img-crop";
 import {
   Button,
   Checkbox,
@@ -7,6 +7,7 @@ import {
   Modal,
   Space,
   Upload,
+  UploadFile,
   UploadProps,
 } from "antd";
 import { useGetData } from "../../../utils/hooks/useGet";
@@ -21,6 +22,8 @@ import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { RichText } from "../../RichText";
 import { api } from "../../../utils/axios";
 import { useToken } from "../../../utils/zustand/useStore";
+import { useTranslation } from "react-i18next";
+import { RcFile } from "antd/es/upload";
 export function Update(props: {
   id: string | number;
   isModalOpen: boolean;
@@ -37,21 +40,14 @@ export function Update(props: {
   const usePhrasePatch = usePatchData(`/phrase/${id}`, {});
   // All phrase
   const useGetPhrase = useGetData(["phrase"], "/phrase", {});
-  // Media Catgory
-  // const useMediaCategory = usePatchData(`/media-category/${id}`, {});
-  //
-  // let useMediaGetCategory = useGetData(["media-category"], "/media-category");
-  // const [fileList, setFileList] = useState([]);
-  // let useWordGet = useGetData(["word"], "/word", {});
-  // const [category, setCategory] = useState<{ value: string; label: string }[]>(
-  //   []
-  // );
-
+  // useTranslation Hook  React-i18next
+  let { t } = useTranslation();
+  // Token For Header
   const token = useToken((state) => state.token);
+  // Upload Props
   const uploadProp: UploadProps = {
     onChange(info) {
       if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
         setPhotoId(info?.file?.response?._id);
       }
       if (info.file.status === "done") {
@@ -62,6 +58,13 @@ export function Update(props: {
     },
   };
 
+  // all Word Data
+
+  const useWordData = useGetData(["word"], "/word", {});
+  const useWordPatch = usePatchData(`/word/${id}`, {});
+  const useMediaCategoryPatch = usePatchData(`/media-category/${id}`, {});
+  const useMediaCategory = useGetData(["media-category"], '/media-category')
+  // Data States
   const [isMain, setisMain] = useState(false);
   const [photoId, setPhotoId] = useState("");
   const [descriptionUz, setDescriptionUz] = useState(null);
@@ -69,15 +72,12 @@ export function Update(props: {
   const [comentUz, setComentUz] = useState(null);
   const [comentEn, setComentEn] = useState(null);
 
+  // QueryClient For Real Time
   const queryClient = useQueryClient();
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
+  // Modal Functions
+  const handleOk = () => setIsModalOpen(false);
+  const handleCancel = () => setIsModalOpen(false);
   const onFinish = (values: any) => {
     if (props.postUrl === "/media") {
       useMediaPatch.mutate(
@@ -125,34 +125,61 @@ export function Update(props: {
         }
       );
     }
-    console.log({
-      title_uz: values.title_uz,
-      title_en: values.title_en,
-      description_uz:
-        descriptionUz ||
-        useGetPhrase.data?.data.find((item: any) => item._id == id)
-          ?.destiption_uz,
-      description_en:
-        descriptionEn ||
-        useGetPhrase.data?.data.find((item: any) => item._id == id)
-          ?.description_en,
-      comment_uz:
-        comentUz ||
-        useGetPhrase.data?.data.find((item: any) => item._id == id)?.comment_uz,
-      comment_en:
-        comentEn ||
-        useGetPhrase.data?.data.find((item: any) => item._id == id)?.comment_en,
-      writers: values.writers,
-      informations: values.informations,
-      image: photoId,
-      isMain: isMain,
-    });
+    if (props.postUrl === "/word") {
+      useWordPatch.mutate(
+        {
+          title_uz: values.title_uz,
+          title_en: values.title_en,
+          description_uz: values?.descriptionUz,
+          description_en: values?.descriptionEn,
+          comment_uz: values?.comment_uz,
+          comment_en: values?.comment_en,
+          image: photoId,
+        },
+        {
+          onSuccess: () => {
+            SuccessToastify();
+            queryClient.invalidateQueries({ queryKey: ["word"] });
+            setIsModalOpen(false);
+          },
+          onError: () => {
+            ErrorToastify();
+          },
+        }
+      );
+    }
+    if (props.postUrl === "/media-category") {
+      useMediaCategoryPatch.mutate(
+        {
+          title_uz: values.title_uz,
+          title_en: values.title_en,
+        },
+        {
+          onSuccess: () => {
+            SuccessToastify();
+            queryClient.invalidateQueries({ queryKey: ["media-category"] });
+            setIsModalOpen(false);
+          },
+          onError: () => {
+            ErrorToastify();
+          },
+        }
+      );
+    }
   };
+
+  const useWordGetData = useWordData?.data?.data?.find(
+    (item: { _id: string }) => item._id === id
+  );
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
   const dataMedia = useGetMedia?.data?.data?.find(
+    (item: { _id: string }) => item._id === id
+  );
+
+  const useMediaCategoryDataId =useMediaCategory?.data?.data?.find(
     (item: { _id: string }) => item._id === id
   );
 
@@ -165,10 +192,42 @@ export function Update(props: {
     );
   }
 
+  const [fileList, setFileList] = useState<UploadFile[]>([
+    {
+      uid: useWordGetData?._id,
+      name: "image.png",
+      status: "done",
+      url: `${api}/file/${useWordGetData?.image?.path}`,
+    },
+  ]);
+
+  const onPreview = async (file: UploadFile) => {
+    let src = file.url as string;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj as RcFile);
+        reader.onload = () => resolve(reader.result as string);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
+  };
+
+  const onChange = ({ fileList: newFileList, file }: any) => {
+    setFileList(newFileList);
+    setPhotoId(file?.response?._id);
+  };
+
+  console.log(useMediaCategoryDataId)
+
   return (
     <Modal
       title="Basic Modal"
       open={isModalOpen}
+      width={1000}
       onOk={handleOk}
       onCancel={handleCancel}
       footer={null}
@@ -476,6 +535,112 @@ export function Update(props: {
             </>
           </>
         )}
+
+        {props.postUrl == "/word" && (
+          <>
+            <Form.Item label={t("title_uz")} name={"title_uz"}>
+              <Input
+                defaultValue={useWordGetData?.title_uz}
+                style={{
+                  width: "100%",
+                }}
+              />
+            </Form.Item>
+            <Form.Item label={t("title_en")} name={"title_en"}>
+              <Input
+                defaultValue={useWordGetData?.title_en}
+                style={{
+                  width: "100%",
+                }}
+                required
+              />
+            </Form.Item>
+
+            <Form.Item label={t("comment_en")} name={"comment_en"}>
+              <Input
+                defaultValue={useWordGetData?.comment_en}
+                style={{
+                  width: "100%",
+                }}
+                required
+              />
+            </Form.Item>
+
+            <Form.Item label={t("comment_uz")} name={"comment_uz"}>
+              <Input
+                defaultValue={useWordGetData?.comment_uz}
+                style={{
+                  width: "100%",
+                }}
+                required
+              />
+            </Form.Item>
+
+            <Form.Item
+              rules={[{ required: true, message: "Missing" }]}
+              label={t("description_en")}
+              name={"description_en"}
+            >
+              <Input
+                defaultValue={useWordGetData?.description_en}
+                style={{
+                  width: "100%",
+                }}
+                required
+              />
+            </Form.Item>
+
+            <Form.Item label={t("description_uz")} name={"description_uz"}>
+              <Input
+                defaultValue={useWordGetData?.description_uz}
+                style={{
+                  width: "100%",
+                }}
+              />
+            </Form.Item>
+
+            <Form.Item
+              required
+              rules={[{ required: true, message: "Missing" }]}
+            >
+              <Upload
+                action={api + "/file"}
+                listType="picture-card"
+                fileList={fileList}
+                onChange={onChange}
+                name="photo"
+                onPreview={onPreview}
+              >
+                {fileList.length < 2 && "+ Upload"}
+              </Upload>
+            </Form.Item>
+          </>
+        )}
+
+        {props?.postUrl == "/media-category" && (
+          <>
+            <Form.Item name={"title_uz"} label={t("title_uz")} required>
+              <Input
+                defaultValue={useMediaCategoryDataId?.title_uz}
+                required
+                style={{
+                  width: "100%",
+                }}
+              />
+            </Form.Item>
+
+            <Form.Item name={"title_en"} label={t("title_en")} required>
+              <Input
+                defaultValue={useMediaCategoryDataId?.title_en}
+                required
+                style={{
+                  width: "100%",
+                }}
+              />
+            </Form.Item>
+          </>
+        )}
+
         <div
           style={{
             display: "flex",

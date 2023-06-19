@@ -1,20 +1,16 @@
-// ChildrenType for Children
-import { ChildrenType } from "../types/defaultType";
 // QueryClient and  QueryClientProvider for Data Fetching
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // Create a client
 const queryClient = new QueryClient({
-  defaultOptions : {
-    queries :{
-      refetchOnWindowFocus : false
-    }
-  }
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
 });
 // TanstackQueryProvider
-export default function TanstackQueryProvider(props: ChildrenType) {
+export default function TanstackQueryProvider({ children }: any) {
   return (
-    <QueryClientProvider client={queryClient}>
-      {props?.children}
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 }

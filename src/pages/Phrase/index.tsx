@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { Button, Dropdown, Table } from "antd";
+import { Button, Table } from "antd";
 import { useGetData } from "../../utils/hooks/useGet";
 import styles from "./index.module.scss";
 import { BsFillEyeFill, BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
@@ -11,35 +11,11 @@ import { CRUDNavigator } from "../../components/CRUDNavigator";
 import { ColumnsType } from "antd/es/table";
 import parse from "html-react-parser";
 import { useLanguage } from "../../utils/zustand/useLanguage";
+import { useTranslation } from "react-i18next";
 interface DataType {
   key: React.Key;
   title: string;
 }
-
-const columns: ColumnsType<DataType> = [
-  { title: "TITLE UZ", dataIndex: "title_uz", key: "title_uz" },
-  { title: "TITLE EN", dataIndex: "title_en", key: "title_uz" },
-  {
-    title: "DESCRIPTION UZ",
-    dataIndex: "description_uz",
-    key: "description_uz",
-  },
-  {
-    title: "DESCRIPTION EN",
-    dataIndex: "description_en",
-    key: "description_en",
-  },
-  { title: "COMMENT UZ ", dataIndex: "comment_uz", key: "comment_uz" },
-  { title: "COMMENT EN ", dataIndex: "comment_en", key: "comment_en" },
-  { title: "WRITERS ", dataIndex: "writers", key: "writers", width: 400 },
-  { title: "INFORMATIONS ", dataIndex: "informations", key: "informations" },
-  {
-    title: "",
-    dataIndex: "buttons",
-    key: "buttons",
-    fixed: "right",
-  },
-];
 
 export default function Phrase() {
   const useGet = useGetData(["phrase"], `/phrase`, {});
@@ -52,6 +28,34 @@ export default function Phrase() {
     status: null,
     id: null,
   });
+
+  let { t } = useTranslation();
+  // Table data
+  const columns: ColumnsType<DataType> = [
+    { title: t("title_uz"), dataIndex: "title_uz", key: "title_uz" },
+    { title: t("title_en"), dataIndex: "title_en", key: "title_uz" },
+    {
+      title: t("description_uz"),
+      dataIndex: "description_uz",
+      key: "description_uz",
+    },
+    {
+      title: t("description_en"),
+      dataIndex: "description_en",
+      key: "description_en",
+    },
+    { title: t("comment_uz"), dataIndex: "comment_uz", key: "comment_uz" },
+    { title: t("comment_en"), dataIndex: "comment_en", key: "comment_en" },
+    { title: t("writers"), dataIndex: "writers", key: "writers", width: 400 },
+    { title: t("informations"), dataIndex: "informations", key: "informations" },
+    {
+      title: "",
+      dataIndex: "buttons",
+      key: "buttons",
+      fixed: "right",
+    },
+  ];
+
   const language = useLanguage((state) => state.langauge);
   return (
     <div className={styles.Main}>
@@ -88,7 +92,7 @@ export default function Phrase() {
               }}
             >
               <p>
-                Add <AiOutlinePlus />
+                {t("add")} <AiOutlinePlus />
               </p>
             </Button>
           </TOOLTIP>
@@ -114,7 +118,7 @@ export default function Phrase() {
                   }}
                 >
                   {item?.writers?.map((item: any, index: number) => (
-                    <Button key={index} href={item.link}>
+                    <Button key={index} target="blank" href={item.link}>
                       {item.name}
                     </Button>
                   ))}

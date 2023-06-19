@@ -6,10 +6,10 @@ export default function TOOLTIP(props: {
   key: string;
   children: React.ReactNode;
 }) {
-  const { title, color, key, children } = props;
+  const {  color, key, children } = props;
  
   return (
-    <Tooltip title={title} color={color} key={key}>
+    <Tooltip  color={color} key={key}>
       {children}
     </Tooltip>
   );
