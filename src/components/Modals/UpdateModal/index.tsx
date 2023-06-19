@@ -1,14 +1,14 @@
-import ImgCrop from "antd-img-crop";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Button,
   Checkbox,
+  Collapse,
   Form,
   Input,
   Modal,
   Space,
   Upload,
   UploadFile,
-  UploadProps,
 } from "antd";
 import { useGetData } from "../../../utils/hooks/useGet";
 import { useState } from "react";
@@ -24,6 +24,8 @@ import { api } from "../../../utils/axios";
 import { useToken } from "../../../utils/zustand/useStore";
 import { useTranslation } from "react-i18next";
 import { RcFile } from "antd/es/upload";
+import styles from "./index.module.scss";
+import ImgCrop from "antd-img-crop";
 export function Update(props: {
   id: string | number;
   isModalOpen: boolean;
@@ -41,29 +43,17 @@ export function Update(props: {
   // All phrase
   const useGetPhrase = useGetData(["phrase"], "/phrase", {});
   // useTranslation Hook  React-i18next
-  let { t } = useTranslation();
+  const { t } = useTranslation();
   // Token For Header
   const token = useToken((state) => state.token);
   // Upload Props
-  const uploadProp: UploadProps = {
-    onChange(info) {
-      if (info.file.status !== "uploading") {
-        setPhotoId(info?.file?.response?._id);
-      }
-      if (info.file.status === "done") {
-        SuccessToastify(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === "error") {
-        ErrorToastify(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
 
   // all Word Data
 
   const useWordData = useGetData(["word"], "/word", {});
   const useWordPatch = usePatchData(`/word/${id}`, {});
   const useMediaCategoryPatch = usePatchData(`/media-category/${id}`, {});
-  const useMediaCategory = useGetData(["media-category"], '/media-category')
+  const useMediaCategory = useGetData(["media-category"], "/media-category");
   // Data States
   const [isMain, setisMain] = useState(false);
   const [photoId, setPhotoId] = useState("");
@@ -104,10 +94,22 @@ export function Update(props: {
         {
           title_uz: values.title_uz,
           title_en: values.title_en,
-          description_uz: descriptionUz,
-          description_en: descriptionEn,
-          comment_uz: comentUz,
-          comment_en: comentEn,
+          description_uz:
+            descriptionUz ||
+            useGetPhrase.data?.data.find((item: any) => item._id == id)
+              ?.description_uz,
+          description_en:
+            descriptionEn ||
+            useGetPhrase.data?.data.find((item: any) => item._id == id)
+              ?.description_en,
+          comment_uz:
+            comentUz ||
+            useGetPhrase.data?.data.find((item: any) => item._id == id)
+              ?.comments_uz,
+          comment_en:
+            comentEn ||
+            useGetPhrase.data?.data.find((item: any) => item._id == id)
+              ?.comments_en,
           writers: values.writers,
           informations: values.informations,
           image: photoId,
@@ -179,7 +181,7 @@ export function Update(props: {
     (item: { _id: string }) => item._id === id
   );
 
-  const useMediaCategoryDataId =useMediaCategory?.data?.data?.find(
+  const useMediaCategoryDataId = useMediaCategory?.data?.data?.find(
     (item: { _id: string }) => item._id === id
   );
 
@@ -191,15 +193,6 @@ export function Update(props: {
       useGetPhrase.data?.data.find((item: any) => item._id == id)?.isMain
     );
   }
-
-  const [fileList, setFileList] = useState<UploadFile[]>([
-    {
-      uid: useWordGetData?._id,
-      name: "image.png",
-      status: "done",
-      url: `${api}/file/${useWordGetData?.image?.path}`,
-    },
-  ]);
 
   const onPreview = async (file: UploadFile) => {
     let src = file.url as string;
@@ -216,18 +209,43 @@ export function Update(props: {
     imgWindow?.document.write(image.outerHTML);
   };
 
+  const [fileListPhrase, setFileListPhrase] = useState<UploadFile[]>([
+    {
+      uid: "0",
+      name: "image.png",
+      status: "done",
+      url:
+        api +
+        "/file/" +
+        useGetPhrase.data?.data.find((item: any) => item._id == id)?.image
+          ?.path,
+    },
+  ]);
+  const [fileListWords, setFileListWords] = useState<UploadFile[]>([
+    {
+      uid: "0",
+      name: "image.png",
+      status: "done",
+      url:
+        api +
+        "/file/" +
+        useWordData.data?.data.find((item: any) => item._id == id)?.image?.path,
+    },
+  ]);
   const onChange = ({ fileList: newFileList, file }: any) => {
-    setFileList(newFileList);
+    if (props.postUrl === "/phrase") {
+      setFileListPhrase(newFileList);
+    } else if (props.postUrl == "/media-category") {
+      setFileListWords(newFileList);
+    }
     setPhotoId(file?.response?._id);
   };
 
-  console.log(useMediaCategoryDataId)
-
   return (
     <Modal
-      title="Basic Modal"
+      title="Update"
       open={isModalOpen}
-      width={1000}
+      width={700}
       onOk={handleOk}
       onCancel={handleCancel}
       footer={null}
@@ -236,7 +254,7 @@ export function Update(props: {
         name="basic"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600 }}
+        style={{ maxWidth: 700, width: "80%", margin: "0 auto" }}
         initialValues={{
           writers: useGetPhrase.data?.data.find((item: any) => item._id == id)
             ?.writers,
@@ -250,370 +268,524 @@ export function Update(props: {
       >
         {props.postUrl == "/media" && (
           <>
-            <Form.Item label="Title uz" name="title_uz">
-              <Input defaultValue={dataMedia?.title_uz} />
-            </Form.Item>
-            <Form.Item label="Title en" name="title_en">
-              <Input defaultValue={dataMedia?.title_en} />
-            </Form.Item>
-            <Form.Item
-              label="Frame"
-              name="frame"
-              rules={[{ required: true, message: "Missing" }]}
-            >
-              <Input defaultValue={dataMedia.frame} />
-            </Form.Item>
-            <Form.Item
-              label="Category"
-              name="category"
-              rules={[{ required: true, message: "Missing" }]}
-            >
-              <SELECT
-                data={useGetMedia?.data?.data
-                  .map((i: { category: any }) => i.category)
-                  .flat(2)
-                  .map((i: { _id: string; title_uz: string }) => ({
-                    value: i._id,
-                    label: i.title_uz,
-                  }))}
-                defaultValue={dataMedia.category.map(
-                  (i: { _id: string; title_uz: string }) => ({
-                    value: i._id,
-                    label: i.title_uz,
-                  })
-                )}
-              />
-            </Form.Item>
+            <Collapse
+              items={[
+                {
+                  key: "1",
+                  label: "Titles",
+                  children: (
+                    <div className={styles.titles}>
+                      <Form.Item label="Title uz" name="title_uz">
+                        <Input defaultValue={dataMedia.title_uz} />
+                      </Form.Item>
+                      <Form.Item label="Title en" name="title_en">
+                        <Input defaultValue={dataMedia.title_en} />
+                      </Form.Item>
+                    </div>
+                  ),
+                },
+                {
+                  key: "2",
+                  label: "Others",
+                  children: (
+                    <>
+                      <Form.Item name="frame">
+                        <Input
+                          placeholder="Frame"
+                          defaultValue={dataMedia.frame}
+                        />
+                      </Form.Item>
+                      <Form.Item name="category">
+                        <SELECT
+                          data={useGetMedia?.data?.data
+                            .map((i: { category: any }) => i.category)
+                            .flat(2)
+                            .map((i: { _id: string; title_uz: string }) => ({
+                              value: i._id,
+                              label: i.title_uz,
+                            }))}
+                          defaultValue={dataMedia.category.map(
+                            (i: { _id: string; title_uz: string }) => ({
+                              value: i._id,
+                              label: i.title_uz,
+                            })
+                          )}
+                        />
+                      </Form.Item>
+                    </>
+                  ),
+                },
+              ]}
+            />
           </>
         )}
 
         {props.postUrl == "/phrase" && (
           <>
             <>
-              <Form.List name="writers">
-                {(fields, { add, remove }) => (
-                  <>
-                    {fields.map(({ key, name, ...restField }) => (
-                      <Space
-                        key={key}
-                        style={{
-                          display: "grid",
-                          marginBottom: 8,
-                          justifyContent: "center",
-                          alignItems: "center",
-                          gridTemplateColumns: "repeat(1,1fr)",
-                          position: "relative",
-                          paddingLeft: "40px",
-                        }}
-                        align="baseline"
-                      >
-                        <Form.Item
-                          {...restField}
-                          name={[name, "name"]}
-                          rules={[{ required: true, message: "Missing" }]}
-                        >
-                          <Input placeholder="Name" />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "link"]}
-                          rules={[{ required: true, message: "Missing " }]}
-                        >
-                          <Input placeholder="Link" />
-                        </Form.Item>
-                        <MinusCircleOutlined
-                          style={{
-                            position: "absolute",
-                            right: "20%",
-                            top: "35%",
-                            fontSize: "22px",
-                          }}
-                          onClick={() => remove(name)}
-                        />
-                      </Space>
-                    ))}
-                    <Form.Item
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Button
-                        type="dashed"
-                        onClick={() => add()}
-                        block
-                        icon={<PlusOutlined />}
-                        style={{
-                          width: "400px",
-                          margin: "0 auto",
-                        }}
-                      >
-                        Add writer
-                      </Button>
-                    </Form.Item>
-                  </>
-                )}
-              </Form.List>
-              <Form.List name="informations">
-                {(fields, { add, remove }) => (
-                  <>
-                    {fields.map(({ key, name, ...restField }) => (
-                      <Space
-                        key={key}
-                        style={{
-                          display: "grid",
-                          marginBottom: 8,
-                          gridTemplateColumns: "repeat(1,1fr)",
-                          margin: "0 auto",
-                          position: "relative",
-                          paddingLeft: "40px",
-                        }}
-                        align="baseline"
-                      >
-                        <Form.Item
-                          {...restField}
-                          name={[name, "name_uz"]}
-                          rules={[{ required: true, message: "Missing" }]}
-                        >
-                          <Input placeholder="Name uz" />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "name_en"]}
-                          rules={[{ required: true, message: "Missing " }]}
-                        >
-                          <Input placeholder="Name en" />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "info_uz"]}
-                          rules={[{ required: true, message: "Missing " }]}
-                        >
-                          <Input placeholder="Info uz" />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "info_en"]}
-                          rules={[{ required: true, message: "Missing " }]}
-                        >
-                          <Input placeholder="Info en" />
-                        </Form.Item>
-
-                        <MinusCircleOutlined
-                          style={{
-                            position: "absolute",
-                            right: "20%",
-                            top: "45%",
-                            fontSize: "22px",
-                          }}
-                          onClick={() => remove(name)}
-                        />
-                      </Space>
-                    ))}
-                    <Form.Item
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Button
-                        type="dashed"
-                        onClick={() => add()}
-                        block
-                        style={{
-                          width: "400px",
-                          margin: "0 auto",
-                        }}
-                        icon={<PlusOutlined />}
-                      >
-                        Add information
-                      </Button>
-                    </Form.Item>
-                  </>
-                )}
-              </Form.List>
-              <div
-                style={{
-                  margin: "20px 0px",
-                }}
-              >
-                Description uz
-                <RichText
-                  value={
-                    descriptionUz == null
-                      ? useGetPhrase.data?.data.find(
-                          (item: any) => item._id == id
-                        )?.description_uz
-                      : descriptionUz
-                  }
-                  setValue={setDescriptionUz}
-                ></RichText>
-              </div>
-              <div
-                style={{
-                  margin: "20px 0px",
-                }}
-              >
-                Description en
-                <RichText
-                  value={
-                    descriptionEn == null
-                      ? useGetPhrase.data?.data.find(
-                          (item: any) => item._id == id
-                        )?.description_en
-                      : descriptionEn
-                  }
-                  setValue={setDescriptionEn}
-                ></RichText>
-              </div>
-              <div
-                style={{
-                  margin: "20px 0px",
-                }}
-              >
-                Comment uz
-                <RichText
-                  value={
-                    comentUz == null
-                      ? useGetPhrase.data?.data.find(
-                          (item: any) => item._id == id
-                        )?.comment_uz
-                      : comentUz
-                  }
-                  setValue={setComentUz}
-                ></RichText>
-              </div>
-              <div
-                style={{
-                  margin: "20px 0px",
-                }}
-              >
-                Comment en
-                <RichText
-                  value={
-                    comentEn == null
-                      ? useGetPhrase.data?.data.find(
-                          (item: any) => item._id == id
-                        )?.comment_en
-                      : comentEn
-                  }
-                  setValue={setComentEn}
-                ></RichText>
-              </div>
-              <Form.Item>
-                <Checkbox
-                  checked={isMain}
-                  onChange={(e) => setisMain(e.target.checked)}
-                >
-                  is Main
-                </Checkbox>
-              </Form.Item>
-              <Upload
-                {...uploadProp}
-                action={api + "/file"}
-                name={"photo"}
-                defaultFileList={[
+              <Collapse
+                items={[
                   {
-                    uid: "0",
-                    name: "image",
-                    status: "done",
-                    url:
-                      api +
-                      "/file/" +
-                      useGetPhrase.data?.data.find(
-                        (item: any) => item._id == id
-                      ).image.path,
+                    key: "1",
+                    label: "Titles",
+                    children: (
+                      <div className={styles.inputWrapper}>
+                        <Form.Item
+                          label="Title uz"
+                          name="title_uz"
+                          className={styles.Input}
+                        >
+                          <Input
+                            defaultValue={
+                              useGetPhrase.data?.data.find(
+                                (item: any) => item._id == id
+                              )?.title_uz
+                            }
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          label="Title en"
+                          name="title_en"
+                          className={styles.Input}
+                        >
+                          <Input
+                            defaultValue={
+                              useGetPhrase.data?.data.find(
+                                (item: any) => item._id == id
+                              )?.title_en
+                            }
+                          />
+                        </Form.Item>
+                      </div>
+                    ),
+                  },
+                  {
+                    key: "2",
+                    label: "Writers",
+                    children: (
+                      <Form.List name="writers">
+                        {(fields, { add, remove }) => (
+                          <div
+                            className={styles.inputWrapper}
+                            style={{
+                              display: "grid",
+                            }}
+                          >
+                            {fields.map(({ key, name, ...restField }) => (
+                              <Space
+                                key={key}
+                                style={{
+                                  width: "100%",
+                                  display: "flex",
+                                  justifyContent: "space-around",
+                                  alignContent: "center",
+                                }}
+                                align="baseline"
+                              >
+                                <Form.Item
+                                  {...restField}
+                                  name={[name, "name"]}
+                                  label={`name`}
+                                  rules={[
+                                    { required: true, message: "Missing" },
+                                  ]}
+                                >
+                                  <Input placeholder="Name" />
+                                </Form.Item>
+                                <Form.Item
+                                  {...restField}
+                                  label={`link`}
+                                  name={[name, "link"]}
+                                  rules={[
+                                    { required: true, message: "Missing " },
+                                  ]}
+                                >
+                                  <Input placeholder="Link" />
+                                </Form.Item>
+                                <MinusCircleOutlined
+                                  style={{
+                                    fontSize: "22px",
+                                  }}
+                                  onClick={() => remove(name)}
+                                />
+                              </Space>
+                            ))}
+                            <Form.Item
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Button
+                                type="dashed"
+                                onClick={() => add()}
+                                block
+                                icon={<PlusOutlined />}
+                                style={{
+                                  width: "400px",
+                                  margin: "0 auto",
+                                }}
+                              >
+                                Add writer
+                              </Button>
+                            </Form.Item>
+                          </div>
+                        )}
+                      </Form.List>
+                    ),
+                  },
+                  {
+                    key: "3",
+                    label: "Informations",
+                    children: (
+                      <Form.List name="informations">
+                        {(fields, { add, remove }) => (
+                          <div>
+                            {fields.map(({ key, name, ...restField }) => (
+                              <Space
+                                key={key}
+                                style={{
+                                  display: "grid",
+                                  marginBottom: 8,
+                                  gridTemplateColumns: "repeat(1,1fr)",
+                                  margin: "0 auto",
+                                  position: "relative",
+                                  paddingLeft: "40px",
+                                }}
+                                align="baseline"
+                              >
+                                <Form.Item
+                                  {...restField}
+                                  name={[name, "name_uz"]}
+                                  rules={[
+                                    { required: true, message: "Missing" },
+                                  ]}
+                                >
+                                  <Input placeholder="Name uz" />
+                                </Form.Item>
+                                <Form.Item
+                                  {...restField}
+                                  name={[name, "name_en"]}
+                                  rules={[
+                                    { required: true, message: "Missing " },
+                                  ]}
+                                >
+                                  <Input placeholder="Name en" />
+                                </Form.Item>
+                                <Form.Item
+                                  {...restField}
+                                  name={[name, "info_uz"]}
+                                  rules={[
+                                    { required: true, message: "Missing " },
+                                  ]}
+                                >
+                                  <Input placeholder="Info uz" />
+                                </Form.Item>
+                                <Form.Item
+                                  {...restField}
+                                  name={[name, "info_en"]}
+                                  rules={[
+                                    { required: true, message: "Missing " },
+                                  ]}
+                                >
+                                  <Input placeholder="Info en" />
+                                </Form.Item>
+
+                                <MinusCircleOutlined
+                                  style={{
+                                    position: "absolute",
+                                    right: "20%",
+                                    top: "45%",
+                                    fontSize: "22px",
+                                  }}
+                                  onClick={() => remove(name)}
+                                />
+                              </Space>
+                            ))}
+                            <Form.Item
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Button
+                                type="dashed"
+                                onClick={() => add()}
+                                block
+                                style={{
+                                  width: "400px",
+                                  margin: "0 auto",
+                                }}
+                                icon={<PlusOutlined />}
+                              >
+                                Add information
+                              </Button>
+                            </Form.Item>
+                          </div>
+                        )}
+                      </Form.List>
+                    ),
+                  },
+                  {
+                    key: "4",
+                    label: "Descriptions",
+                    children: (
+                      <>
+                        <div
+                          style={{
+                            margin: "20px 0px",
+                          }}
+                        >
+                          Description uz
+                          <RichText
+                            value={
+                              descriptionUz == null
+                                ? useGetPhrase.data?.data.find(
+                                    (item: any) => item._id == id
+                                  )?.description_uz
+                                : descriptionUz
+                            }
+                            setValue={setDescriptionUz}
+                          ></RichText>
+                        </div>
+                        <div
+                          style={{
+                            margin: "20px 0px",
+                          }}
+                        >
+                          Description en
+                          <RichText
+                            value={
+                              descriptionEn == null
+                                ? useGetPhrase.data?.data.find(
+                                    (item: any) => item._id == id
+                                  )?.description_en
+                                : descriptionEn
+                            }
+                            setValue={setDescriptionEn}
+                          ></RichText>
+                        </div>
+                      </>
+                    ),
+                  },
+                  {
+                    key: "5",
+                    label: "Comments",
+                    children: (
+                      <>
+                        <div
+                          style={{
+                            margin: "20px 0px",
+                          }}
+                        >
+                          Comment uz
+                          <RichText
+                            value={
+                              comentUz == null
+                                ? useGetPhrase.data?.data.find(
+                                    (item: any) => item._id == id
+                                  )?.comment_uz
+                                : comentUz
+                            }
+                            setValue={setComentUz}
+                          ></RichText>
+                        </div>
+                        <div
+                          style={{
+                            margin: "20px 0px",
+                          }}
+                        >
+                          Comment en
+                          <RichText
+                            value={
+                              comentEn == null
+                                ? useGetPhrase.data?.data.find(
+                                    (item: any) => item._id == id
+                                  )?.comment_en
+                                : comentEn
+                            }
+                            setValue={setComentEn}
+                          ></RichText>
+                        </div>
+                      </>
+                    ),
+                  },
+                  {
+                    key: "6",
+                    label: "Is main",
+                    children: (
+                      <Form.Item>
+                        <Checkbox
+                          checked={isMain}
+                          onChange={(e) => setisMain(e.target.checked)}
+                        >
+                          is Main
+                        </Checkbox>
+                      </Form.Item>
+                    ),
+                  },
+                  {
+                    key: "7",
+                    label: "Image",
+                    children: (
+                      <ImgCrop rotationSlider>
+                        <Upload
+                          headers={{
+                            Authorization: `Bearer ${token}`,
+                          }}
+                          action={api + "/file"}
+                          listType="picture-card"
+                          fileList={fileListPhrase}
+                          onChange={onChange}
+                          onPreview={onPreview}
+                          name="photo"
+                        >
+                          {fileListPhrase.length < 1 && "+ Upload"}
+                        </Upload>
+                      </ImgCrop>
+                    ),
                   },
                 ]}
-                maxCount={1}
-                headers={{
-                  Authorization: `Bearer ${token}`,
-                }}
-              >
-                <Button>Click to Upload</Button>
-              </Upload>
+              />
             </>
           </>
         )}
 
         {props.postUrl == "/word" && (
           <>
-            <Form.Item label={t("title_uz")} name={"title_uz"}>
-              <Input
-                defaultValue={useWordGetData?.title_uz}
-                style={{
-                  width: "100%",
-                }}
-              />
-            </Form.Item>
-            <Form.Item label={t("title_en")} name={"title_en"}>
-              <Input
-                defaultValue={useWordGetData?.title_en}
-                style={{
-                  width: "100%",
-                }}
-                required
-              />
-            </Form.Item>
-
-            <Form.Item label={t("comment_en")} name={"comment_en"}>
-              <Input
-                defaultValue={useWordGetData?.comment_en}
-                style={{
-                  width: "100%",
-                }}
-                required
-              />
-            </Form.Item>
-
-            <Form.Item label={t("comment_uz")} name={"comment_uz"}>
-              <Input
-                defaultValue={useWordGetData?.comment_uz}
-                style={{
-                  width: "100%",
-                }}
-                required
-              />
-            </Form.Item>
-
-            <Form.Item
-              rules={[{ required: true, message: "Missing" }]}
-              label={t("description_en")}
-              name={"description_en"}
-            >
-              <Input
-                defaultValue={useWordGetData?.description_en}
-                style={{
-                  width: "100%",
-                }}
-                required
-              />
-            </Form.Item>
-
-            <Form.Item label={t("description_uz")} name={"description_uz"}>
-              <Input
-                defaultValue={useWordGetData?.description_uz}
-                style={{
-                  width: "100%",
-                }}
-              />
-            </Form.Item>
-
-            <Form.Item
-              required
-              rules={[{ required: true, message: "Missing" }]}
-            >
-              <Upload
-                action={api + "/file"}
-                listType="picture-card"
-                fileList={fileList}
-                onChange={onChange}
-                name="photo"
-                onPreview={onPreview}
-              >
-                {fileList.length < 2 && "+ Upload"}
-              </Upload>
-            </Form.Item>
+            <Collapse
+              items={[
+                {
+                  key: "1",
+                  label: "Titles",
+                  children: (
+                    <div className={styles.inputWrapper}>
+                      <Form.Item name={"title_uz"} className={styles.Input}>
+                        <Input
+                          placeholder={t("title_uz")}
+                          defaultValue={useWordGetData?.title_uz}
+                          style={{
+                            width: "100%",
+                          }}
+                        />
+                      </Form.Item>
+                      <Form.Item className={styles.Input} name={"title_en"}>
+                        <Input
+                          placeholder={t("title_en")}
+                          defaultValue={useWordGetData?.title_en}
+                          style={{
+                            width: "100%",
+                          }}
+                          required
+                        />
+                      </Form.Item>
+                    </div>
+                  ),
+                },
+                {
+                  key: "2",
+                  label: "Comments",
+                  children: (
+                    <div className={styles.inputWrapper}>
+                      <div
+                        style={{
+                          margin: "20px 0px",
+                        }}
+                      >
+                        Comment uz
+                        <RichText
+                          value={
+                            descriptionUz == null
+                              ? useGetPhrase.data?.data.find(
+                                  (item: any) => item._id == id
+                                )?.description_uz
+                              : descriptionUz
+                          }
+                          setValue={setDescriptionUz}
+                        ></RichText>
+                        <div
+                          style={{
+                            margin: "20px 0px",
+                          }}
+                        >
+                          Comment en
+                          <RichText
+                            value={
+                              descriptionEn == null
+                                ? useGetPhrase.data?.data.find(
+                                    (item: any) => item._id == id
+                                  )?.description_uz
+                                : descriptionUz
+                            }
+                            setValue={setDescriptionEn}
+                          ></RichText>
+                        </div>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  key: "3",
+                  label: "Descripions",
+                  children: (
+                    <div className={styles.inputWrapper}>
+                      <Form.Item
+                        rules={[{ required: true, message: "Missing" }]}
+                        label={t("description_uz")}
+                        name={"description_en"}
+                      >
+                        <Input
+                          defaultValue={useWordGetData?.description_uz}
+                          style={{
+                            width: "100%",
+                          }}
+                          required
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        rules={[{ required: true, message: "Missing" }]}
+                        label={t("description_en")}
+                        name={"description_en"}
+                      >
+                        <Input
+                          defaultValue={useWordGetData?.description_en}
+                          style={{
+                            width: "100%",
+                          }}
+                          required
+                        />
+                      </Form.Item>
+                    </div>
+                  ),
+                },
+                {
+                  key: "4",
+                  label: "Image",
+                  children: (
+                    <div className={styles.inputWrapper}>
+                      <Form.Item
+                        required
+                        rules={[{ required: true, message: "Missing" }]}
+                      >
+                        <Upload
+                          action={api + "/file"}
+                          headers={{
+                            Authorization: `Bearer ${token}`,
+                          }}
+                          listType="picture-card"
+                          fileList={fileListWords}
+                          onChange={onChange}
+                          name="photo"
+                          onPreview={onPreview}
+                        >
+                          {fileListWords.length < 1 && "+ Upload"}
+                        </Upload>
+                      </Form.Item>
+                    </div>
+                  ),
+                },
+              ]}
+            />
           </>
         )}
 

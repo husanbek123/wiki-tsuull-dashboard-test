@@ -1,4 +1,5 @@
-import { Button, Checkbox, Modal } from "antd";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Button, Collapse, Modal } from "antd";
 import { useGetData } from "../../../utils/hooks/useGet";
 import parse from "html-react-parser";
 import style from "./index.module.scss";
@@ -24,114 +25,208 @@ export function Single(props: {
   return (
     data && (
       <Modal
-        width={1000}
+        width={800}
         open={isModalOpen}
         cancelButtonProps={{ style: { display: "none" } }}
         onOk={handleOk}
         onCancel={handleOk}
       >
         <div className={style.wrapper}>
-          <div>
-            Title uz :<b> {data?.title_uz}</b>
-          </div>
-          <div>
-            Title en :<b> {data?.title_en}</b>
-          </div>
-          {url == "/media" && (
-            <div
-              style={{
-                width: "100%",
-                height: "50%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                overflow: "hidden",
-              }}
-            >
-              {parse(data?.frame)}
-            </div>
-          )}
-          {url == "/phrase" && data ? (
-            <div
-              style={{
-                width: "100%",
-                height: "50%",
-                display: "flex",
-                justifyContent: "center",
-                overflow: "hidden",
-                flexDirection: "column",
-                gap: "20px",
-              }}
-            >
-              <div className={style.description}>
-                <b>Description uz :</b>
-                {parse(data?.description_uz)}
-              </div>
-              <div>
-                Description en
-                {parse(data?.description_en)}
-              </div>
-              <div className={style.comment}>
-                <b>Comment uz :</b>
-                {parse(data?.comment_uz)}
-              </div>
-              <div>
-                Comment en
-                {parse(data?.comment_en)}
-              </div>
-              <div className={style.writers}>
-                <b>Writers:</b>
-                {data.writers.map(
-                  (item: { name: string; link: string }, index: any) => (
-                    <Link key={index} className={style.writer} to={item.link}>
-                      <Button>{item.name}</Button>
-                    </Link>
-                  )
-                )}
-              </div>
-              <div className={style.informations}>
-                <b>informations:</b>
-                {data.informations.map(
-                  (
-                    item: {
-                      name_uz: string;
-                      name_en: string;
-                      info_uz: string;
-                      info_en: string;
-                    },
-                    index: any
-                  ) => (
-                    <div key={index} className={style.information}>
-                      <p>
-                        <b>name uz </b> : {item.name_uz}
-                      </p>
-                      <p>
-                        <b>name en </b> : {item.name_en}
-                      </p>
-                      <p>
-                        <b>info uz </b> : {item.name_uz}
-                      </p>
-                      <p>
-                        <b>info en </b> : {item.name_en}
-                      </p>
+          <Collapse
+            items={[
+              {
+                key: "1",
+                label: "Titles",
+                children: (
+                  <>
+                    <div>
+                      Title uz :<b> {data?.title_uz}</b>
                     </div>
-                  )
-                )}
-              </div>
-              <div className={style.checkbox}>
-                <b>isMain : </b>
-                <Checkbox defaultChecked={data.isMain} disabled />
-              </div>
-              <div>
+                    <div>
+                      Title en :<b> {data?.title_en}</b>
+                    </div>
+                  </>
+                ),
+              },
+            ]}
+          />
+          {url == "/media" && (
+            <Collapse
+              items={[
+                {
+                  key: "1",
+                  label: "Frame",
+                  children: (
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "50%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {parse(data?.frame)}
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          )}
+          {url == "/phrase" && data && (
+            <>
+              <Collapse
+                items={[
+                  {
+                    key: "1",
+                    label: "Descriptions",
+                    children: (
+                      <>
+                        <div className={style.description}>
+                          <b>Description uz :</b>
+                          {parse(data?.description_uz)}
+                        </div>
+                        <div>
+                          <b>Description en : </b>
+                          {parse(data?.description_en)}
+                        </div>
+                      </>
+                    ),
+                  },
+                  {
+                    key: "2",
+                    label: "Comments",
+                    children: (
+                      <>
+                        <div className={style.comment}>
+                          <b>Comment uz :</b>
+                          {parse(data?.comment_uz)}
+                        </div>
+                        <div>
+                          <b>Comment en : </b>
+                          {parse(data?.comment_en)}
+                        </div>
+                      </>
+                    ),
+                  },
+                  {
+                    key: "3",
+                    label: "Writers",
+                    children: (
+                      <div className={style.writers}>
+                        <b>Writers:</b>
+                        {data.writers.map(
+                          (
+                            item: { name: string; link: string },
+                            index: any
+                          ) => (
+                            <Link
+                              key={index}
+                              className={style.writer}
+                              to={item.link}
+                            >
+                              <Button>{item.name}</Button>
+                            </Link>
+                          )
+                        )}
+                      </div>
+                    ),
+                  },
+                  {
+                    key: "4",
+                    label: "Informations",
+                    children: (
+                      <div className={style.writers}>
+                        <b>Informations:</b>
+                        <div className={style.informations}>
+                          <b>informations:</b>
+                          {data.informations.map(
+                            (
+                              item: {
+                                name_uz: string;
+                                name_en: string;
+                                info_uz: string;
+                                info_en: string;
+                              },
+                              index: any
+                            ) => (
+                              <div key={index} className={style.information}>
+                                <p>
+                                  <b>name uz </b> : {item.name_uz}
+                                </p>
+                                <p>
+                                  <b>name en </b> : {item.name_en}
+                                </p>
+                                <p>
+                                  <b>info uz </b> : {item.name_uz}
+                                </p>
+                                <p>
+                                  <b>info en </b> : {item.name_en}
+                                </p>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    ),
+                  },
+                  {
+                    key: "5",
+                    label: "checkbox",
+                  },
+                ]}
+              />
+
+              <div className={style.img}>
                 <img src={api + "/file/" + data.image.path} alt="" />
               </div>
-            </div>
-          ) : (
-            <></>
-          )}
-          {url == "/word" && data ? <div>
-            {data?.description_uz}
-          </div> : <></>}
+            </>
+          ) }
+          {url == "/word" && data &&(
+            <>
+              <Collapse
+                items={[
+                  {
+                    key: "1",
+                    label: "Descriptions",
+                    children: (
+                      <>
+                        <div className={style.description}>
+                          <b>Description uz :</b>
+                          {parse(data?.description_uz)}
+                        </div>
+                        <div className={style.description}>
+                          <b>Description en : </b>
+                          {parse(data?.description_en)}
+                        </div>
+                      </>
+                    ),
+                  },
+                  {
+                    key: "2",
+                    label: "Comments",
+                    children: (
+                      <>
+                        <div className={style.comment}>
+                          <b>Comment uz :</b>
+                          {parse(data?.comment_uz)}
+                        </div>
+                        <div className={style.comment}>
+                          <b>Comment en : </b>
+                          {parse(data?.comment_en)}
+                        </div>
+                      </>
+                    ),
+                  },
+                ]}
+              />
+
+              <div className={style.img}>
+                <img src={api + "/file/" + data.image.path} alt="" />
+              </div>
+            </>
+          ) }
         </div>
       </Modal>
     )

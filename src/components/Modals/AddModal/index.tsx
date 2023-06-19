@@ -6,9 +6,9 @@ import {
   Input,
   Upload,
   Modal,
-  UploadProps,
   Space,
   UploadFile,
+  Collapse,
 } from "antd";
 import SELECT from "../../Select";
 import { useGetData } from "../../../utils/hooks/useGet";
@@ -19,7 +19,6 @@ import SuccessToastify from "../../toastify/Success";
 import ErrorToastify from "../../toastify/Error";
 import { api } from "../../../utils/axios";
 import type { RcFile } from "antd/es/upload/interface";
-import { useToken } from "../../../utils/zustand/useStore";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { RichText } from "../../RichText";
@@ -51,25 +50,11 @@ export function Add(props: {
   const [descriptionEn, setDescriptionEn] = useState("");
   const [comentUz, setComentUz] = useState("");
   const [comentEn, setComentEn] = useState("");
-  const token = useToken((state) => state.token);
   const handleCancel = () => {
     setIsModalOpen(false);
     setDatas(null);
   };
   const queryClient = useQueryClient();
-  const uploadProp: UploadProps = {
-    onChange(info) {
-      if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
-        setPhotoId(info?.file?.response?._id);
-      }
-      if (info.file.status === "done") {
-        SuccessToastify(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === "error") {
-        ErrorToastify(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
 
   /* For Upload Change  */
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -99,6 +84,11 @@ export function Add(props: {
   const onFinish = (values: any) => {
     // media
     if (props.postUrl == "/media") {
+      console.log({
+        ...values,
+        category: categoryData,
+      });
+
       usePost.mutate(
         {
           ...values,
@@ -146,8 +136,7 @@ export function Add(props: {
         }
       );
     } else if (props.postUrl == "/word") {
-      console.log(values);
-      let result = {
+      const result = {
         ...values,
         image: photoId,
       };
@@ -164,10 +153,8 @@ export function Add(props: {
           ErrorToastify();
         },
       });
-    } else if ( props.postUrl =="/media-category") {
-      let result = {
-        
-      }
+    } else if (props.postUrl == "/media-category") {
+      const result = {};
     }
 
     setDatas(null);
@@ -208,247 +195,339 @@ export function Add(props: {
         name="add_media"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600 }}
+        style={{
+          maxWidth: 700,
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+          justifyContent: "center",
+          alignContent: "center",
+          margin: "0 auto",
+        }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Form.Item
-          label={t("title_uz")}
-          name="title_uz"
-          rules={[{ required: true, message: "Please enter" }]}
-        >
-          <Input />
-        </Form.Item>
+        <Collapse
+          items={[
+            {
+              key: "1",
+              label: "Titles",
+              children: (
+                <>
+                  <Form.Item
+                    label={t("title_uz")}
+                    name="title_uz"
+                    rules={[{ required: true, message: "Please enter" }]}
+                  >
+                    <Input />
+                  </Form.Item>
 
-        <Form.Item
-          label={t("title_en")}
-          name="title_en"
-          rules={[{ required: true, message: "Please enter" }]}
-        >
-          <Input
-            style={{
-              width: "100%",
-            }}
-          />
-        </Form.Item>
+                  <Form.Item
+                    label={t("title_en")}
+                    name="title_en"
+                    rules={[{ required: true, message: "Please enter" }]}
+                  >
+                    <Input
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                  </Form.Item>
+                </>
+              ),
+            },
+          ]}
+        />
 
         {props.postUrl == "/media" && (
           <>
-            <Form.Item
-              label="Frame"
-              name="frame"
-              rules={[{ required: true, message: "Please enter" }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item label="Category" name="category">
-              <SELECT data={data} />
-            </Form.Item>
+            <Collapse
+              items={[
+                {
+                  key: "1",
+                  label: "Others",
+                  children: (
+                    <>
+                      <Form.Item
+                        label="Frame"
+                        name="frame"
+                        rules={[{ required: true, message: "Please enter" }]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item label="Category" name="category">
+                        <SELECT data={data} setData={setCategoryData} />
+                      </Form.Item>
+                    </>
+                  ),
+                },
+              ]}
+            />
           </>
         )}
         {props.postUrl == "/phrase" && (
           <>
-            <Form.List name="writers">
-              {(fields, { add, remove }) => (
-                <>
-                  {fields.map(({ key, name, ...restField }) => (
-                    <Space
-                      key={key}
-                      style={{
-                        display: "grid",
-                        marginBottom: 8,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gridTemplateColumns: "repeat(1,1fr)",
-                        position: "relative",
-                        paddingLeft: "40px",
-                      }}
-                      align="baseline"
-                    >
-                      <Form.Item
-                        {...restField}
-                        name={[name, "name"]}
-                        rules={[{ required: true, message: "Missing" }]}
-                      >
-                        <Input
-                          style={{
-                            width: "100%",
-                          }}
-                          placeholder="Name"
-                        />
-                      </Form.Item>
-                      <Form.Item
-                        {...restField}
-                        name={[name, "link"]}
-                        rules={[{ required: true, message: "Missing " }]}
-                      >
-                        <Input placeholder="Link" />
-                      </Form.Item>
-                      <MinusCircleOutlined
-                        style={{
-                          position: "absolute",
-                          right: "20%",
-                          top: "35%",
-                          fontSize: "22px",
-                        }}
-                        onClick={() => remove(name)}
-                      />
-                    </Space>
-                  ))}
-                  <Form.Item
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Button
-                      type="dashed"
-                      onClick={() => add()}
-                      block
-                      icon={<PlusOutlined />}
-                      style={{
-                        width: "400px",
-                        margin: "0 auto",
-                      }}
-                    >
-                      Add writer
-                    </Button>
-                  </Form.Item>
-                </>
-              )}
-            </Form.List>
-            <Form.List name="informations">
-              {(fields, { add, remove }) => (
-                <>
-                  {fields.map(({ key, name, ...restField }) => (
-                    <Space
-                      key={key}
-                      style={{
-                        display: "grid",
-                        marginBottom: 8,
-                        gridTemplateColumns: "repeat(1,1fr)",
-                        margin: "0 auto",
-                        position: "relative",
-                        paddingLeft: "40px",
-                      }}
-                      align="baseline"
-                    >
-                      <Form.Item
-                        {...restField}
-                        name={[name, "name_uz"]}
-                        rules={[{ required: true, message: "Missing" }]}
-                      >
-                        <Input placeholder="Name uz" />
-                      </Form.Item>
-                      <Form.Item
-                        {...restField}
-                        name={[name, "name_en"]}
-                        rules={[{ required: true, message: "Missing " }]}
-                      >
-                        <Input placeholder="Name en" />
-                      </Form.Item>
-                      <Form.Item
-                        {...restField}
-                        name={[name, "info_uz"]}
-                        rules={[{ required: true, message: "Missing " }]}
-                      >
-                        <Input placeholder="Info uz" />
-                      </Form.Item>
-                      <Form.Item
-                        {...restField}
-                        name={[name, "info_en"]}
-                        rules={[{ required: true, message: "Missing " }]}
-                      >
-                        <Input placeholder="Info en" />
-                      </Form.Item>
+            <Collapse
+              items={[
+                {
+                  key: "1",
+                  label: "Writers",
+                  children: (
+                    <Form.List name="writers">
+                      {(fields, { add, remove }) => (
+                        <>
+                          {fields.map(({ key, name, ...restField }) => (
+                            <Space
+                              key={key}
+                              style={{
+                                display: "grid",
+                                marginBottom: 8,
+                                justifyContent: "center",
+                                alignItems: "center",
+                                gridTemplateColumns: "repeat(1,1fr)",
+                                position: "relative",
+                                paddingLeft: "40px",
+                              }}
+                              align="baseline"
+                            >
+                              <Form.Item
+                                {...restField}
+                                name={[name, "name"]}
+                                rules={[{ required: true, message: "Missing" }]}
+                              >
+                                <Input
+                                  style={{
+                                    width: "100%",
+                                  }}
+                                  placeholder="Name"
+                                />
+                              </Form.Item>
+                              <Form.Item
+                                {...restField}
+                                name={[name, "link"]}
+                                rules={[
+                                  { required: true, message: "Missing " },
+                                ]}
+                              >
+                                <Input placeholder="Link" />
+                              </Form.Item>
+                              <MinusCircleOutlined
+                                style={{
+                                  position: "absolute",
+                                  right: "20%",
+                                  top: "35%",
+                                  fontSize: "22px",
+                                }}
+                                onClick={() => remove(name)}
+                              />
+                            </Space>
+                          ))}
+                          <Form.Item
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Button
+                              type="dashed"
+                              onClick={() => add()}
+                              block
+                              icon={<PlusOutlined />}
+                              style={{
+                                width: "400px",
+                                margin: "0 auto",
+                              }}
+                            >
+                              Add writer
+                            </Button>
+                          </Form.Item>
+                        </>
+                      )}
+                    </Form.List>
+                  ),
+                },
+                {
+                  key: "2",
+                  label: "Information",
+                  children: (
+                    <Form.List name="informations">
+                      {(fields, { add, remove }) => (
+                        <>
+                          {fields.map(({ key, name, ...restField }) => (
+                            <Space
+                              key={key}
+                              style={{
+                                display: "grid",
+                                marginBottom: 8,
+                                gridTemplateColumns: "repeat(1,1fr)",
+                                margin: "0 auto",
+                                position: "relative",
+                                paddingLeft: "40px",
+                              }}
+                              align="baseline"
+                            >
+                              <Form.Item
+                                {...restField}
+                                name={[name, "name_uz"]}
+                                rules={[{ required: true, message: "Missing" }]}
+                              >
+                                <Input placeholder="Name uz" />
+                              </Form.Item>
+                              <Form.Item
+                                {...restField}
+                                name={[name, "name_en"]}
+                                rules={[
+                                  { required: true, message: "Missing " },
+                                ]}
+                              >
+                                <Input placeholder="Name en" />
+                              </Form.Item>
+                              <Form.Item
+                                {...restField}
+                                name={[name, "info_uz"]}
+                                rules={[
+                                  { required: true, message: "Missing " },
+                                ]}
+                              >
+                                <Input placeholder="Info uz" />
+                              </Form.Item>
+                              <Form.Item
+                                {...restField}
+                                name={[name, "info_en"]}
+                                rules={[
+                                  { required: true, message: "Missing " },
+                                ]}
+                              >
+                                <Input placeholder="Info en" />
+                              </Form.Item>
 
-                      <MinusCircleOutlined
+                              <MinusCircleOutlined
+                                style={{
+                                  position: "absolute",
+                                  right: "20%",
+                                  top: "45%",
+                                  fontSize: "22px",
+                                }}
+                                onClick={() => remove(name)}
+                              />
+                            </Space>
+                          ))}
+                          <Form.Item
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Button
+                              type="dashed"
+                              onClick={() => add()}
+                              block
+                              style={{
+                                width: "400px",
+                                margin: "0 auto",
+                              }}
+                              icon={<PlusOutlined />}
+                            >
+                              Add information
+                            </Button>
+                          </Form.Item>
+                        </>
+                      )}
+                    </Form.List>
+                  ),
+                },
+                {
+                  key: "3",
+                  label: "Descriptions",
+                  children: (
+                    <>
+                      <div
                         style={{
-                          position: "absolute",
-                          right: "20%",
-                          top: "45%",
-                          fontSize: "22px",
+                          margin: "20px 0px",
                         }}
-                        onClick={() => remove(name)}
-                      />
-                    </Space>
-                  ))}
-                  <Form.Item
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Button
-                      type="dashed"
-                      onClick={() => add()}
-                      block
-                      style={{
-                        width: "400px",
-                        margin: "0 auto",
-                      }}
-                      icon={<PlusOutlined />}
-                    >
-                      Add information
-                    </Button>
-                  </Form.Item>
-                </>
-              )}
-            </Form.List>
-            <div
-              style={{
-                margin: "20px 0px",
-              }}
-            >
-              Description uz
-              <RichText
-                value={descriptionUz}
-                setValue={setDescriptionUz}
-              ></RichText>
-            </div>
-            <div
-              style={{
-                margin: "20px 0px",
-              }}
-            >
-              Description en
-              <RichText
-                value={descriptionEn}
-                setValue={setDescriptionEn}
-              ></RichText>
-            </div>
-            <div
-              style={{
-                margin: "20px 0px",
-              }}
-            >
-              Comment uz
-              <RichText value={comentUz} setValue={setComentUz}></RichText>
-            </div>
-            <div
-              style={{
-                margin: "20px 0px",
-              }}
-            >
-              Comment en
-              <RichText value={comentEn} setValue={setComentEn}></RichText>
-            </div>
-            <Form.Item>
-              <Checkbox onChange={(e) => setisMain(e.target.checked)}>
-                is Main
-              </Checkbox>
-            </Form.Item>
-            <Upload
-              {...uploadProp}
-              action={api + "/file"}
-              name={"photo"}
-              headers={{
-                Authorization: `Bearer ${token}`,
-              }}
-            >
-              <Button>Click to Upload</Button>
-            </Upload>
+                      >
+                        Description uz
+                        <RichText
+                          value={descriptionUz}
+                          setValue={setDescriptionUz}
+                        ></RichText>
+                      </div>
+                      <div
+                        style={{
+                          margin: "20px 0px",
+                        }}
+                      >
+                        Description en
+                        <RichText
+                          value={descriptionEn}
+                          setValue={setDescriptionEn}
+                        ></RichText>
+                      </div>
+                    </>
+                  ),
+                },
+                {
+                  key: "4",
+                  label: "Comments",
+                  children: (
+                    <>
+                      <div
+                        style={{
+                          margin: "20px 0px",
+                        }}
+                      >
+                        Comment uz
+                        <RichText
+                          value={comentUz}
+                          setValue={setComentUz}
+                        ></RichText>
+                      </div>
+                      <div
+                        style={{
+                          margin: "20px 0px",
+                        }}
+                      >
+                        Comment en
+                        <RichText
+                          value={comentEn}
+                          setValue={setComentEn}
+                        ></RichText>
+                      </div>
+                    </>
+                  ),
+                },
+                {
+                  key: "5",
+                  label: "Is main",
+                  children: (
+                    <Form.Item>
+                      <Checkbox onChange={(e) => setisMain(e.target.checked)}>
+                        is Main
+                      </Checkbox>
+                    </Form.Item>
+                  ),
+                },
+                {
+                  key: "6",
+                  label: "Image",
+                  children: (
+                    <ImgCrop rotationSlider>
+                      <Upload
+                        action={api + "/file/"}
+                        listType="picture-card"
+                        name="photo"
+                        fileList={fileList}
+                        onChange={onChange}
+                        onPreview={onPreview}
+                      >
+                        {fileList.length < 1 && "+ Upload"}
+                      </Upload>
+                    </ImgCrop>
+                  ),
+                },
+              ]}
+            />
           </>
         )}
 
@@ -496,7 +575,7 @@ export function Add(props: {
 
             <ImgCrop rotationSlider>
               <Upload
-                action="http://13.50.238.54/file"
+                action={api + "/file/"}
                 listType="picture-card"
                 fileList={fileList}
                 onChange={onChange}
