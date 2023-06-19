@@ -8,5 +8,12 @@
   "title_uz": "Title Uz",
   "title_en": "Title En",
   "description_uz": "Description Uz",
-  "delete":  "Delete"
+  "description_en" :"Description EN",
+  "delete":  "Delete",
+  "frame" :"Frame",
+  "category_uz" : "Category UZ",
+  "category_en" : "Category En" ,
+  "comment_uz" : "Comment Uz",
+  "comment_en" :"Comment En",
+  "writers" :"Writters"
 }

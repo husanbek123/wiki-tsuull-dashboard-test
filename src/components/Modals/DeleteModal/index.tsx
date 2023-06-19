@@ -15,18 +15,13 @@ export function Delete(props: {
   const useDeleteData = useDelete(`${props.postUrl}`);
   const queryClient = useQueryClient();
 
-
   const handleOk = () => {
     useDeleteData.mutate(`${id}`, {
       onSuccess: () => {
         SuccessToastify("Deleted!");
-<<<<<<< HEAD
-        queryClient.invalidateQueries({ queryKey: validateQuery });
-=======
         queryClient.invalidateQueries({
           queryKey: [`${postUrl.slice(1)}`],
         });
->>>>>>> c8e13947e49ae4ed0cf423c9b439efdf671d5928
         setIsModalOpen(false);
       },
       onError: () => ErrorToastify("Not deleted"),
@@ -36,7 +31,8 @@ export function Delete(props: {
     setIsModalOpen(false);
   };
   return (
-    <Modal
+    <Modal  
+      width={1000}
       title="Do you want delete this ?"
       open={isModalOpen}
       onOk={handleOk}

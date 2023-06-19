@@ -7,7 +7,7 @@ import { Update } from "../Modals/UpdateModal";
 
 export function CRUDNavigator(props: {
   option: "Add" | "Delete" | "Update" | "Single" | "Frame";
-  id: string;
+  id: string | number;
   isModalOpen: boolean;
   setIsModalOpen: (bool: boolean) => void;
   postUrl: postUrl;
@@ -48,7 +48,6 @@ export function CRUDNavigator(props: {
   }
   return (
     <Add
-      id={`${id}`}
       postUrl={props.postUrl}
       isModalOpen
       setIsModalOpen={setIsModalOpen}

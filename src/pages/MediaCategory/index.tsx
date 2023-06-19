@@ -7,16 +7,10 @@ import TOOLTIP from "../../components/Tooltip";
 // React Icons
 import { AiOutlinePlus } from "react-icons/ai";
 // React Icons
-import { BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
+import { BsFillEyeFill, BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
 // Use Get Hook
 import { useGetData } from "../../utils/hooks/useGet";
 import { useTranslation } from "react-i18next";
-// Table Columns
-const columns = [
-  { title: "Title Uz", dataIndex: "title_uz", key: "title_uz" },
-  { title: "Title En", dataIndex: "title_en", key: "title_uz" },
-  { title: "", dataIndex: "buttons" },
-];
 
 interface MediaCategoryData {
   _id: string;
@@ -28,10 +22,11 @@ export default function MediaCategory() {
   const useGet = useGetData(["media-category"], "/media-category");
   const [success, setSuccess] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [dataSource, setDataSource] = useState([]);
+  const [_, setDataSource] = useState([]);
   const [modalParametrs, setModalParametrs] = useState<{
     status: any;
     id?: any;
+    url ?: string;
   }>({
     status: null,
     id: null,
@@ -43,6 +38,15 @@ export default function MediaCategory() {
 
   let { t } = useTranslation();
 
+
+  // Table Columns
+const columns = [
+  { title: t("title_uz"), dataIndex: "title_uz", key: "title_uz" },
+  { title: t("title_en"), dataIndex: "title_en", key: "title_uz" },
+  { title: "Crud Buttons", dataIndex: "buttons" },
+];
+
+
   let dataResult: MediaCategoryData[] = useGet.data?.data;
   return (
     <div className={style.Main}>
@@ -53,8 +57,7 @@ export default function MediaCategory() {
             option={modalParametrs.status}
             id={modalParametrs.id}
             setIsModalOpen={setIsModalOpen}
-            isModalOpen={isModalOpen}
-          />
+            isModalOpen={isModalOpen} url={""}          />
         )}
         <div className={style.Add}>
           <TOOLTIP title={t("add")} key={"Add"} color="blue">
@@ -143,6 +146,32 @@ export default function MediaCategory() {
                       }}
                     >
                       <BsPencilSquare />
+                    </Button>
+                  </TOOLTIP>
+
+                  <TOOLTIP title={`Single`} color={"green"} key={"3"}>
+                    <Button
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        fontSize: "15px",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderColor: "green",
+                        color: "green",
+                      }}
+                      onClick={() => {
+                        setModalParametrs({
+                          status: "Single",
+                          id: item._id,
+                          url: "/",
+                        });
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      <BsFillEyeFill />
                     </Button>
                   </TOOLTIP>
                 </div>

@@ -3,7 +3,7 @@ import { useGetData } from "../../../utils/hooks/useGet";
 import parse from "html-react-parser";
 import style from "./index.module.scss";
 import { postUrl } from "../../../types/defaultType";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { api } from "../../../utils/axios";
 export function Single(props: {
   url: postUrl;
@@ -17,7 +17,6 @@ export function Single(props: {
     setIsModalOpen(false);
   };
 
-  const nav = useNavigate();
   const data = useGet.data?.data.find(
     (item: { _id: string }) => item._id == id
   );
@@ -25,7 +24,7 @@ export function Single(props: {
   return (
     data && (
       <Modal
-        title=""
+        width={1000}
         open={isModalOpen}
         cancelButtonProps={{ style: { display: "none" } }}
         onOk={handleOk}
@@ -130,6 +129,9 @@ export function Single(props: {
           ) : (
             <></>
           )}
+          {url == "/word" && data ? <div>
+            {data?.description_uz}
+          </div> : <></>}
         </div>
       </Modal>
     )

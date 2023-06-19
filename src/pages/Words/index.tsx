@@ -10,19 +10,9 @@ import style from "./index.module.scss";
 import TOOLTIP from "../../components/Tooltip";
 // React Icons
 import { AiOutlinePlus } from "react-icons/ai";
-import { BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
+import { BsFillEyeFill, BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
 import { useGetData } from "../../utils/hooks/useGet";
-// Table Columns
-const columns = [
-  { title: "Title Uz", dataIndex: "title_uz", key: "title_uz" },
-  { title: "Title En", dataIndex: "title_en", key: "title_uz" },
-  { title: "Comment UZ", dataIndex: "comment_uz", key: "comment_uz" },
-  { title: "Comment En", dataIndex: "comment_en", key: "comment_en" },
-  { title: "Description En", dataIndex: "description_en" },
-  { title: "Description Uz", dataIndex: "description_uz" },
-  { title: "Img", dataIndex: "image" },
-  { title: "", dataIndex: "buttons" },
-];
+import { useTranslation } from "react-i18next";
 
 type image = {
   _id: string;
@@ -45,6 +35,7 @@ export default function Words() {
   const [modalParametrs, setModalParametrs] = useState<{
     status: any;
     id?: any;
+    url?: string;
   }>({
     status: null,
     id: null,
@@ -56,8 +47,19 @@ export default function Words() {
     setDataSource(() => useGet.data?.data);
     setSuccess(() => true);
   }
-
   let dataResult: WordProps[] = useGet?.data?.data;
+  let {t} = useTranslation() ;
+  // Table Columns
+  const columns = [
+    { title: t("title_uz"), dataIndex: "title_uz", key: "title_uz" },
+    { title: t("title_en"), dataIndex: "title_en", key: "title_uz" },
+    { title: t("comment_en"), dataIndex: "comment_uz", key: "comment_uz" },
+    { title: t("comment_uz"), dataIndex: "comment_en", key: "comment_en" },
+    { title: t("description_en"), dataIndex: "description_en" },
+    { title: t("description_uz"), dataIndex: "description_uz" },
+    { title: "Img", dataIndex: "image" },
+    { title: "Crud Buttons", dataIndex: "buttons" },
+  ];
 
   return (
     <div className={style.Main}>
@@ -69,6 +71,7 @@ export default function Words() {
             id={modalParametrs.id}
             setIsModalOpen={setIsModalOpen}
             isModalOpen={isModalOpen}
+            url={""}
           />
         )}
         <div className={style.Add}>
@@ -117,6 +120,7 @@ export default function Words() {
                     gap: "5px",
                   }}
                 >
+                 
                   <TOOLTIP color="red" title={"Delete"} key={"1"}>
                     <Button
                       style={{
@@ -163,6 +167,32 @@ export default function Words() {
                       }}
                     >
                       <BsPencilSquare />
+                    </Button>
+                  </TOOLTIP>
+
+                  <TOOLTIP title={`Single`} color={"green"} key={"3"}>
+                    <Button
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        fontSize: "15px",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        color: "green",
+                        borderColor: "green",
+                      }}
+                      onClick={() => {
+                        setModalParametrs({
+                          status: "Single",
+                          id: item._id,
+                          url: "/phrase",
+                        });
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      <BsFillEyeFill />
                     </Button>
                   </TOOLTIP>
                 </div>

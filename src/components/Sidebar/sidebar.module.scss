@@ -43,12 +43,17 @@ $blue-color: #124a85;
     .params {
       display: flex;
       gap: 10px;
+
+      .languages{
+        margin-top: 4px;
+      }
     }
 
     .theme{
       .ThemContainerSun{
         background-color: #022c58;
         display: flex;
+        cursor: pointer;
         align-items: center;
         justify-content: center;
         padding: 10px;
@@ -61,6 +66,7 @@ $blue-color: #124a85;
         background-color: #022c58;
         display: flex;
         align-items: center;
+        cursor: pointer;
         justify-content: center;
         padding: 10px;
         border-radius: 10px;

@@ -8,21 +8,23 @@ import {
   Modal,
   UploadProps,
   Space,
+  UploadFile,
 } from "antd";
 import SELECT from "../../Select";
 import { useGetData } from "../../../utils/hooks/useGet";
 import { useState } from "react";
+import ImgCrop from "antd-img-crop";
 import { usePostData } from "../../../utils/hooks/usePost";
 import SuccessToastify from "../../toastify/Success";
 import ErrorToastify from "../../toastify/Error";
 import { api } from "../../../utils/axios";
+import type { RcFile } from "antd/es/upload/interface";
 import { useToken } from "../../../utils/zustand/useStore";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { RichText } from "../../RichText";
 import { postUrl } from "../../../types/defaultType";
 import { useTranslation } from "react-i18next";
-
 interface IData {
   label: string | null;
   value: string | null;
@@ -68,6 +70,31 @@ export function Add(props: {
       }
     },
   };
+
+  /* For Upload Change  */
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  const onChange = ({ fileList: newFileList, file }: any) => {
+    setFileList(newFileList);
+    setPhotoId(file?.response?._id);
+  };
+
+  const onPreview = async (file: UploadFile) => {
+    let src = file.url as string;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj as RcFile);
+        reader.onload = () => resolve(reader.result as string);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
+  };
+
+  /* For Upload Change End  */
 
   const onFinish = (values: any) => {
     // media
@@ -118,11 +145,33 @@ export function Add(props: {
           },
         }
       );
+    } else if (props.postUrl == "/word") {
+      console.log(values);
+      let result = {
+        ...values,
+        image: photoId,
+      };
+
+      usePost.mutate(result, {
+        onSuccess: () => {
+          SuccessToastify();
+          setIsModalOpen(false);
+          queryClient.invalidateQueries({
+            queryKey: ["word"],
+          });
+        },
+        onError: () => {
+          ErrorToastify();
+        },
+      });
+    } else if ( props.postUrl =="/media-category") {
+      let result = {
+        
+      }
     }
 
     setDatas(null);
   };
-
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
@@ -150,6 +199,7 @@ export function Add(props: {
   return (
     <Modal
       title={t("add")}
+      width={1200}
       open={isModalOpen}
       onCancel={handleCancel}
       footer={null}
@@ -168,11 +218,7 @@ export function Add(props: {
           name="title_uz"
           rules={[{ required: true, message: "Please enter" }]}
         >
-          <Input
-            style={{
-              width: "100%",
-            }}
-          />
+          <Input />
         </Form.Item>
 
         <Form.Item
@@ -180,7 +226,11 @@ export function Add(props: {
           name="title_en"
           rules={[{ required: true, message: "Please enter" }]}
         >
-          <Input />
+          <Input
+            style={{
+              width: "100%",
+            }}
+          />
         </Form.Item>
 
         {props.postUrl == "/media" && (
@@ -221,7 +271,12 @@ export function Add(props: {
                         name={[name, "name"]}
                         rules={[{ required: true, message: "Missing" }]}
                       >
-                        <Input placeholder="Name" />
+                        <Input
+                          style={{
+                            width: "100%",
+                          }}
+                          placeholder="Name"
+                        />
                       </Form.Item>
                       <Form.Item
                         {...restField}
@@ -412,14 +467,10 @@ export function Add(props: {
             </Form.Item>
 
             <Form.Item
-              label="Description EN"
+              label={t("description_en")}
               name="description_en"
               rules={[{ required: true, message: "Please enter" }]}
             >
-              <Input />
-            </Form.Item>
-
-            <Form.Item name={"comment_uz"} label="Comment Uz">
               <Input
                 style={{
                   width: "100%",
@@ -427,13 +478,34 @@ export function Add(props: {
               />
             </Form.Item>
 
-            <Form.Item label="Comment EN" name={"comment_en"}>
+            <Form.Item name={"comment_uz"} label={t("comment_uz")}>
               <Input
                 style={{
                   width: "100%",
                 }}
               />
             </Form.Item>
+
+            <Form.Item label={t("comment_en")} name={"comment_en"}>
+              <Input
+                style={{
+                  width: "100%",
+                }}
+              />
+            </Form.Item>
+
+            <ImgCrop rotationSlider>
+              <Upload
+                action="http://13.50.238.54/file"
+                listType="picture-card"
+                fileList={fileList}
+                onChange={onChange}
+                name="photo"
+                onPreview={onPreview}
+              >
+                {fileList.length < 1 && "+ Upload"}
+              </Upload>
+            </ImgCrop>
           </>
         )}
         <div
