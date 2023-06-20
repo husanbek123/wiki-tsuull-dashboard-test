@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Button, Table } from "antd";
 import { useGetData } from "../../utils/hooks/useGet";
@@ -16,7 +15,6 @@ interface DataType {
   key: React.Key;
   title: string;
 }
-
 export default function Phrase() {
   const useGet = useGetData(["phrase"], `/phrase`, {});
   const [isModalOpen, setIsModalOpen] = useState(false);

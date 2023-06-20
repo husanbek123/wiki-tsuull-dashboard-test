@@ -25,6 +25,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { RichText } from "../../RichText";
 import { postUrl } from "../../../types/defaultType";
 import { useTranslation } from "react-i18next";
+import style from "./index.module.scss";
 interface IData {
   label: string | null;
   value: string | null;
@@ -56,6 +57,7 @@ export function Add(props: {
     setIsModalOpen(false);
     setDatas(null);
   };
+
   const queryClient = useQueryClient();
   const uploadProp: UploadProps = {
     onChange(info) {
@@ -70,7 +72,6 @@ export function Add(props: {
       }
     },
   };
-
   /* For Upload Change  */
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
@@ -172,9 +173,13 @@ export function Add(props: {
 
     setDatas(null);
   };
+
+
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
+
+
   if (useGetCategory.isSuccess && data == null) {
     for (let i = 0; i < useGetCategory.data.data.length; i++) {
       const category = useGetCategory.data.data[i];
@@ -196,6 +201,7 @@ export function Add(props: {
       );
     }
   }
+
   return (
     <Modal
       title={t("add")}
@@ -453,7 +459,8 @@ export function Add(props: {
         )}
 
         {props?.postUrl == "/word" && (
-          <>
+          <div className={style.Wrapper}>
+
             <Form.Item
               label={t("description_uz")}
               name="description_uz"
@@ -506,7 +513,7 @@ export function Add(props: {
                 {fileList.length < 1 && "+ Upload"}
               </Upload>
             </ImgCrop>
-          </>
+          </div>
         )}
         <div
           style={{

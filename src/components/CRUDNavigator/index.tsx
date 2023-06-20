@@ -4,7 +4,6 @@ import { Delete } from "../Modals/DeleteModal";
 import { Frame } from "../Modals/Frame";
 import { Single } from "../Modals/SingleModal";
 import { Update } from "../Modals/UpdateModal";
-
 export function CRUDNavigator(props: {
   option: "Add" | "Delete" | "Update" | "Single" | "Frame";
   id: string | number;

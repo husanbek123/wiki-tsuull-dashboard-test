@@ -5,6 +5,7 @@ import style from "./index.module.scss";
 import { postUrl } from "../../../types/defaultType";
 import { Link } from "react-router-dom";
 import { api } from "../../../utils/axios";
+import { useTranslation } from "react-i18next";
 export function Single(props: {
   url: postUrl;
   id: string;
@@ -20,6 +21,8 @@ export function Single(props: {
   const data = useGet.data?.data.find(
     (item: { _id: string }) => item._id == id
   );
+
+  const { t } = useTranslation();
 
   return (
     data && (
@@ -129,9 +132,16 @@ export function Single(props: {
           ) : (
             <></>
           )}
-          {url == "/word" && data ? <div>
-            {data?.description_uz}
-          </div> : <></>}
+          {url == "/word" && data ? (
+            <div className={style.wordData}>
+              <div>
+                <p>{t("description_en")}:</p>
+                <b>{data?.description_en}</b>
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </Modal>
     )

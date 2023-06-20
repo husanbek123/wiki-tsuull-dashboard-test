@@ -577,7 +577,6 @@ export function Update(props: {
             </Form.Item>
 
             <Form.Item
-              rules={[{ required: true, message: "Missing" }]}
               label={t("description_en")}
               name={"description_en"}
             >

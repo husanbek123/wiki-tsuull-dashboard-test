@@ -1,7 +1,6 @@
 import * as React from "react";
 import Sidebar from "../components/Sidebar/Sidebar";
 import { useTheme } from "../utils/zustand/useTheme";
-import "./index.css";
 export default function Layout(props: {
   children: React.ReactNode;
 }): React.ReactElement {
