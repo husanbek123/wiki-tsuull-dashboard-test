@@ -20,8 +20,14 @@ img {
 }
 
 [data-theme="light"] {
-  background-color:#8888;
+  background-color: #8888;
   color: #fff;
   background-repeat: no-repeat;
   background-size: cover;
+}
+.active {
+  color: #ec781c;
+}
+a {
+  color: white;
 }

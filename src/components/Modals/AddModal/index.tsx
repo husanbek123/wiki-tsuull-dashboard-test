@@ -19,12 +19,15 @@ import SuccessToastify from "../../toastify/Success";
 import ErrorToastify from "../../toastify/Error";
 import { api } from "../../../utils/axios";
 import type { RcFile } from "antd/es/upload/interface";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  MinusCircleOutlined,
+  PlusOutlined,
+  RestFilled,
+} from "@ant-design/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { RichText } from "../../RichText";
 import { postUrl } from "../../../types/defaultType";
 import { useTranslation } from "react-i18next";
-import style from "./index.module.scss";
 interface IData {
   label: string | null;
   value: string | null;
@@ -45,8 +48,10 @@ export function Add(props: {
     value: null,
     label: null,
   });
+  const [infoUz, setInfoUz] = useState("");
+  const [infoEn, setInfoEn] = useState("");
   const [isMain, setisMain] = useState(false);
-  const [photoId, setPhotoId] = useState("");
+  const [photoId, setPhotoId] = useState<string>("");
   const [descriptionUz, setDescriptionUz] = useState("");
   const [descriptionEn, setDescriptionEn] = useState("");
   const [comentUz, setComentUz] = useState("");
@@ -139,8 +144,13 @@ export function Add(props: {
     } else if (props.postUrl == "/word") {
       const result = {
         ...values,
+        comment_uz: comentUz,
+        comment_en: comentEn,
+        description_uz: descriptionUz,
+        description_en: descriptionEn,
         image: photoId,
       };
+      console.log(result);
 
       usePost.mutate(result, {
         onSuccess: () => {
@@ -155,9 +165,11 @@ export function Add(props: {
         },
       });
     } else if (props.postUrl == "/media-category") {
-        usePost.mutate({
+      usePost.mutate(
+        {
           ...values,
-        }, {
+        },
+        {
           onSuccess: () => {
             SuccessToastify();
             setIsModalOpen(false);
@@ -168,17 +180,16 @@ export function Add(props: {
           onError: () => {
             ErrorToastify();
           },
-        })
-    } 
+        }
+      );
+    }
 
     setDatas(null);
   };
 
-
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
-
 
   if (useGetCategory.isSuccess && data == null) {
     for (let i = 0; i < useGetCategory.data.data.length; i++) {
@@ -186,18 +197,18 @@ export function Add(props: {
       setDatas((prev: any) =>
         prev
           ? [
-            ...prev,
-            {
-              value: category._id,
-              label: category.title_uz,
-            },
-          ]
+              ...prev,
+              {
+                value: category._id,
+                label: category.title_uz,
+              },
+            ]
           : [
-            {
-              value: category._id,
-              label: category.title_uz,
-            },
-          ]
+              {
+                value: category._id,
+                label: category.title_uz,
+              },
+            ]
       );
     }
   }
@@ -205,7 +216,7 @@ export function Add(props: {
   return (
     <Modal
       title={t("add")}
-      width={1200}
+      width={1000}
       open={isModalOpen}
       onCancel={handleCancel}
       footer={null}
@@ -288,6 +299,7 @@ export function Add(props: {
         {props.postUrl == "/phrase" && (
           <>
             <Collapse
+              defaultActiveKey={photoId.trim() === "" ? ["6"] : []}
               items={[
                 {
                   key: "1",
@@ -402,24 +414,20 @@ export function Add(props: {
                               >
                                 <Input placeholder="Name en" />
                               </Form.Item>
-                              <Form.Item
-                                {...restField}
-                                name={[name, "info_uz"]}
-                                rules={[
-                                  { required: true, message: "Missing " },
-                                ]}
-                              >
-                                <Input placeholder="Info uz" />
-                              </Form.Item>
-                              <Form.Item
-                                {...restField}
-                                name={[name, "info_en"]}
-                                rules={[
-                                  { required: true, message: "Missing " },
-                                ]}
-                              >
-                                <Input placeholder="Info en" />
-                              </Form.Item>
+                              <div>
+                                Info uz
+                                <RichText
+                                  value={infoUz}
+                                  setValue={setInfoUz}
+                                ></RichText>
+                              </div>
+                              <div>
+                                Info en
+                                <RichText
+                                  value={infoEn}
+                                  setValue={setInfoEn}
+                                ></RichText>
+                              </div>
 
                               <MinusCircleOutlined
                                 style={{
@@ -531,18 +539,30 @@ export function Add(props: {
                   key: "6",
                   label: "Image",
                   children: (
-                    <ImgCrop rotationSlider>
-                      <Upload
-                        action={api + "/file/"}
-                        listType="picture-card"
-                        name="photo"
-                        fileList={fileList}
-                        onChange={onChange}
-                        onPreview={onPreview}
-                      >
-                        {fileList.length < 1 && "+ Upload"}
-                      </Upload>
-                    </ImgCrop>
+                    <>
+                      <ImgCrop rotationSlider>
+                        <Upload
+                          action={api + "/file/"}
+                          listType="picture-card"
+                          name="photo"
+                          fileList={fileList}
+                          onChange={onChange}
+                          onPreview={onPreview}
+                          onRemove={() => setPhotoId("")}
+                        >
+                          {fileList.length < 1 && "+ Upload"}
+                        </Upload>
+                      </ImgCrop>
+                      {photoId.trim() == "" && (
+                        <p
+                          style={{
+                            color: "red",
+                          }}
+                        >
+                          Missig photo
+                        </p>
+                      )}
+                    </>
                   ),
                 },
               ]}
@@ -551,61 +571,86 @@ export function Add(props: {
         )}
 
         {props?.postUrl == "/word" && (
-          <div className={style.Wrapper}>
-
-            <Form.Item
-              label={t("description_uz")}
-              name="description_uz"
-              rules={[{ required: true, message: "Please enter" }]}
-            >
-              <Input
-                style={{
-                  width: "100%",
-                }}
-              />
-            </Form.Item>
-
-            <Form.Item
-              label={t("description_en")}
-              name="description_en"
-              rules={[{ required: true, message: "Please enter" }]}
-            >
-              <Input
-                style={{
-                  width: "100%",
-                }}
-              />
-            </Form.Item>
-
-            <Form.Item name={"comment_uz"} label={t("comment_uz")}>
-              <Input
-                style={{
-                  width: "100%",
-                }}
-              />
-            </Form.Item>
-
-            <Form.Item label={t("comment_en")} name={"comment_en"}>
-              <Input
-                style={{
-                  width: "100%",
-                }}
-              />
-            </Form.Item>
-
-            <ImgCrop rotationSlider>
-              <Upload
-                action={api + "/file/"}
-                listType="picture-card"
-                fileList={fileList}
-                onChange={onChange}
-                name="photo"
-                onPreview={onPreview}
-              >
-                {fileList.length < 1 && "+ Upload"}
-              </Upload>
-            </ImgCrop>
-          </div>
+          <Collapse
+            items={[
+              {
+                key: "1",
+                label: "Descriptions",
+                children: (
+                  <>
+                    <div>
+                      Description uz
+                      <RichText
+                        value={descriptionUz}
+                        setValue={setDescriptionUz}
+                      ></RichText>
+                    </div>
+                    <div>
+                      Description uz
+                      <RichText
+                        value={descriptionEn}
+                        setValue={setDescriptionEn}
+                      ></RichText>
+                    </div>
+                  </>
+                ),
+              },
+              {
+                key: "2",
+                label: "Comments",
+                children: (
+                  <>
+                    <div>
+                      Comment uz :
+                      <RichText
+                        value={comentUz}
+                        setValue={setComentUz}
+                      ></RichText>
+                    </div>
+                    <div>
+                      Comment en :
+                      <RichText
+                        value={comentEn}
+                        setValue={setComentEn}
+                      ></RichText>
+                    </div>
+                  </>
+                ),
+              },
+              {
+                key: "3",
+                label: "Image",
+                children: (
+                  <>
+                    <ImgCrop rotationSlider>
+                      <Upload
+                        action={api + "/file/"}
+                        listType="picture-card"
+                        name="photo"
+                        fileList={fileList}
+                        onChange={onChange}
+                        onPreview={onPreview}
+                        onRemove={() => setPhotoId("")}
+                      >
+                        {fileList.length < 1 && "+ Upload"}
+                      </Upload>
+                    </ImgCrop>
+                    {photoId == "" && (
+                      <p
+                        style={{
+                          color: "red",
+                        }}
+                      >
+                        Missing photo
+                      </p>
+                    )}
+                  </>
+                ),
+              },
+            ]}
+            bordered={true}
+            defaultActiveKey={!photoId ? ["3"] : []}
+          />
         )}
         <div
           style={{
@@ -618,11 +663,13 @@ export function Add(props: {
             marginTop: "50px",
           }}
         >
-          <Button type="default" onClick={handleCancel}>
-            Cancel
-          </Button>
-
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{
+              width: "100%",
+            }}
+          >
             Submit
           </Button>
         </div>

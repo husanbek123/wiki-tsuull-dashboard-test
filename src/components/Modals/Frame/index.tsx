@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Modal } from "antd";
 import { useGetData } from "../../../utils/hooks/useGet";
 import parse from "html-react-parser";
@@ -11,15 +12,11 @@ export function Frame(props: {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
 
   const data = useGet?.data?.data?.find((i: any) => i._id == id).frame;
-  console.log(data);
 
   return (
-    <Modal title="" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+    <Modal title="" open={isModalOpen} onCancel={handleCancel} footer={null}>
       <div
         style={{
           width: "100%",

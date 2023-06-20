@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Button, Table } from "antd";
 import { useGetData } from "../../utils/hooks/useGet";
@@ -33,7 +34,7 @@ export default function Phrase() {
   const columns: ColumnsType<DataType> = [
     { title: t("title_uz"), dataIndex: "title_uz", key: "title_uz" },
     { title: t("title_en"), dataIndex: "title_en", key: "title_uz" },
-    { title: t("writers"), dataIndex: "writers", key: "writers", width: 400 },
+    { title: t("writers"), dataIndex: "writers", key: "writers" },
     {
       title: t("informations"),
       dataIndex: "informations",
@@ -118,7 +119,7 @@ export default function Phrase() {
                   >
                     {item?.writers?.map((item: any, index: number) => (
                       <Button key={index} target="blank" href={item.link}>
-                        {item.name}
+                        {item.name.slice(0, 20)}...
                       </Button>
                     ))}
                   </div>
@@ -149,6 +150,7 @@ export default function Phrase() {
                     style={{
                       display: "flex",
                       gap: "5px",
+                      justifyContent: "end",
                     }}
                   >
                     <TOOLTIP color="red" title={"Delete"} key={"1"}>
