@@ -22,17 +22,9 @@ export function Single(props: {
     (item: { _id: string }) => item._id == id
   );
 
-
-
   return (
     data && (
-      <Modal
-        width={800}
-        open={isModalOpen}
-        cancelButtonProps={{ style: { display: "none" } }}
-        onOk={handleOk}
-        onCancel={handleOk}
-      >
+      <Modal width={800} open={isModalOpen} footer={null} onCancel={handleOk}>
         <div className={style.wrapper}>
           <Collapse
             items={[
@@ -57,6 +49,20 @@ export function Single(props: {
               items={[
                 {
                   key: "1",
+                  label: "Category",
+                  children: (
+                    <>
+                      <div>
+                        <b>Category uz</b> : {data.category[0].title_uz}
+                      </div>
+                      <div>
+                        <b>Category en</b> : {data.category[0].title_en}
+                      </div>
+                    </>
+                  ),
+                },
+                {
+                  key: "2",
                   label: "Frame",
                   children: (
                     <div
@@ -184,8 +190,8 @@ export function Single(props: {
                 <img src={api + "/file/" + data.image.path} alt="" />
               </div>
             </>
-          ) }
-          {url == "/word" && data &&(
+          )}
+          {url == "/word" && data && (
             <>
               <Collapse
                 items={[
@@ -228,7 +234,7 @@ export function Single(props: {
                 <img src={api + "/file/" + data.image.path} alt="" />
               </div>
             </>
-          ) }
+          )}
         </div>
       </Modal>
     )

@@ -2,8 +2,8 @@ import { changeLanguage } from "i18next";
 import { listItems } from "../../utils/routes/listItems";
 import style from "./sidebar.module.scss";
 import { useTheme } from "../../utils/zustand/useTheme";
-import { NavLink } from "react-router-dom";
-import { Dropdown } from "antd";
+import { NavLink, useNavigate } from "react-router-dom";
+import { Button, Dropdown } from "antd";
 import { useLanguage } from "../../utils/zustand/useLanguage";
 import { BsFillSunFill, BsFillMoonFill } from "react-icons/bs";
 import { t } from "i18next";
@@ -14,7 +14,9 @@ import { MdLanguage } from "react-icons/md";
 const items = [
   {
     key: "uz",
-    label: <img style={{margin: "10px 0"}} src={uzImg} width={70} alt="uz-img" />,
+    label: (
+      <img style={{ margin: "10px 0" }} src={uzImg} width={70} alt="uz-img" />
+    ),
   },
   {
     key: "en",
@@ -22,16 +24,15 @@ const items = [
   },
 ];
 export default function Sidebar() {
-  let theme = useTheme((state) => state.theme);
   const setTheme = useTheme((state) => state.setTheme);
-  const language = useLanguage((state) => state.langauge);
   const setLanguage = useLanguage((state) => state.setLangauge);
+  const setToken = useToken((state) => state.setToken);
+  const theme = useTheme((state) => state.theme);
+  const language = useLanguage((state) => state.langauge);
   const name = useToken((state) => state.name);
-  if (language === "uz") {
-    changeLanguage("uz");
-  } else {
-    changeLanguage("en");
-  }
+
+  const router = useNavigate();
+  changeLanguage(language);
   return (
     <header className={style.header}>
       <nav className={style.navbar}>
@@ -65,17 +66,28 @@ export default function Sidebar() {
               <MdLanguage size={40} />
             </Dropdown>
           </div>
-          <div className={style.theme}>
+          <div
+            className={style.theme}
+            onClick={()=>setTheme(theme == "dark" ? "light" : "dark")}
+          >
             {theme === "light" ? (
               <div className={style.ThemContainerSun}>
-                <BsFillSunFill className={style.SunIcon} onClick={setTheme} />
+                <BsFillSunFill className={style.SunIcon} />
               </div>
             ) : (
               <div className={style.ThemeContainerMoon}>
-                <BsFillMoonFill className={style.MoonIcon} onClick={setTheme} />
+                <BsFillMoonFill className={style.MoonIcon} />
               </div>
             )}
           </div>
+          <Button
+            onClick={() => {
+              setToken("");
+              router("/login");
+            }}
+          >
+            {t("Log out")}
+          </Button>
         </div>
       </nav>
     </header>

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Button, Table } from "antd";
 import style from "./index.module.scss";
@@ -26,7 +28,7 @@ export default function MediaCategory() {
   const [modalParametrs, setModalParametrs] = useState<{
     status: any;
     id?: any;
-    url ?: string;
+    url?: string;
   }>({
     status: null,
     id: null,
@@ -36,18 +38,16 @@ export default function MediaCategory() {
     setSuccess(() => true);
   }
 
-  let { t } = useTranslation();
-
+  const { t } = useTranslation();
 
   // Table Columns
-const columns = [
-  { title: t("title_uz"), dataIndex: "title_uz", key: "title_uz" },
-  { title: t("title_en"), dataIndex: "title_en", key: "title_uz" },
-  { title: "Crud Buttons", dataIndex: "buttons" },
-];
+  const columns = [
+    { title: t("title_uz"), dataIndex: "title_uz", key: "title_uz" },
+    { title: t("title_en"), dataIndex: "title_en", key: "title_uz" },
+    { title: "", dataIndex: "buttons" },
+  ];
 
-
-  let dataResult: MediaCategoryData[] = useGet.data?.data;
+  const dataResult: MediaCategoryData[] = useGet.data?.data;
   return (
     <div className={style.Main}>
       <div className={style.container}>
@@ -57,7 +57,9 @@ const columns = [
             option={modalParametrs.status}
             id={modalParametrs.id}
             setIsModalOpen={setIsModalOpen}
-            isModalOpen={isModalOpen} url={""}          />
+            isModalOpen={isModalOpen}
+            url={""}
+          />
         )}
         <div className={style.Add}>
           <TOOLTIP title={t("add")} key={"Add"} color="blue">
@@ -98,6 +100,7 @@ const columns = [
                   style={{
                     display: "flex",
                     gap: "5px",
+                    justifyContent: "end",
                   }}
                 >
                   <TOOLTIP color="red" title={"Delete"} key={"1"}>

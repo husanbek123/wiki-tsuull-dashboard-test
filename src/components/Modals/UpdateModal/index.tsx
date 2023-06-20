@@ -62,6 +62,13 @@ export function Update(props: {
   const [comentUz, setComentUz] = useState(null);
   const [comentEn, setComentEn] = useState(null);
 
+  const [categoryData, setCategoryData] = useState<
+    {
+      value: string;
+      label: string;
+    }[]
+  >([]);
+
   // QueryClient For Real Time
   const queryClient = useQueryClient();
 
@@ -174,6 +181,7 @@ export function Update(props: {
     (item: { _id: string }) => item._id === id
   );
 
+
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
@@ -235,7 +243,7 @@ export function Update(props: {
   const onChange = ({ fileList: newFileList, file }: any) => {
     if (props.postUrl === "/phrase") {
       setFileListPhrase(newFileList);
-    } else if (props.postUrl == "/media-category") {
+    } else if (props.postUrl == "/word") {
       setFileListWords(newFileList);
     }
     setPhotoId(file?.response?._id);
@@ -297,19 +305,22 @@ export function Update(props: {
                       </Form.Item>
                       <Form.Item name="category">
                         <SELECT
-                          data={useGetMedia?.data?.data
-                            .map((i: { category: any; }) => i.category)
-                            .flat(2)
-                            .map((i: { _id: string; title_uz: string; }) => ({
-                              value: i._id,
-                              label: i.title_uz,
-                            }))}
-                          defaultValue={dataMedia.category.map(
-                            (i: { _id: string; title_uz: string; }) => ({
-                              value: i._id,
-                              label: i.title_uz,
+                          data={useGetMedia?.data?.data.map(
+                            (item: any, index: number) => ({
+                              key: index,
+                              label: item.title_uz,
+                              value: item._id,
                             })
-                          )} setData={undefined} />
+                          )}
+                          defaultValue={dataMedia.category.map(
+                            (item: any, index: number) => ({
+                              key: index,
+                              label: item.title_uz,
+                              value: item._id,
+                            })
+                          )}
+                          setData={setCategoryData}
+                        />
                       </Form.Item>
                     </>
                   ),
@@ -540,8 +551,8 @@ export function Update(props: {
                             value={
                               descriptionUz == null
                                 ? useGetPhrase.data?.data.find(
-                                  (item: any) => item._id == id
-                                )?.description_uz
+                                    (item: any) => item._id == id
+                                  )?.description_uz
                                 : descriptionUz
                             }
                             setValue={setDescriptionUz}
@@ -557,8 +568,8 @@ export function Update(props: {
                             value={
                               descriptionEn == null
                                 ? useGetPhrase.data?.data.find(
-                                  (item: any) => item._id == id
-                                )?.description_en
+                                    (item: any) => item._id == id
+                                  )?.description_en
                                 : descriptionEn
                             }
                             setValue={setDescriptionEn}
@@ -582,8 +593,8 @@ export function Update(props: {
                             value={
                               comentUz == null
                                 ? useGetPhrase.data?.data.find(
-                                  (item: any) => item._id == id
-                                )?.comment_uz
+                                    (item: any) => item._id == id
+                                  )?.comment_uz
                                 : comentUz
                             }
                             setValue={setComentUz}
@@ -599,8 +610,8 @@ export function Update(props: {
                             value={
                               comentEn == null
                                 ? useGetPhrase.data?.data.find(
-                                  (item: any) => item._id == id
-                                )?.comment_en
+                                    (item: any) => item._id == id
+                                  )?.comment_en
                                 : comentEn
                             }
                             setValue={setComentEn}
@@ -696,8 +707,8 @@ export function Update(props: {
                           value={
                             descriptionUz == null
                               ? useGetPhrase.data?.data.find(
-                                (item: any) => item._id == id
-                              )?.description_uz
+                                  (item: any) => item._id == id
+                                )?.description_uz
                               : descriptionUz
                           }
                           setValue={setDescriptionUz}
@@ -712,9 +723,9 @@ export function Update(props: {
                             value={
                               descriptionEn == null
                                 ? useGetPhrase.data?.data.find(
-                                  (item: any) => item._id == id
-                                )?.description_uz
-                                : descriptionUz
+                                    (item: any) => item._id == id
+                                  )?.description_uz
+                                : descriptionEn
                             }
                             setValue={setDescriptionEn}
                           ></RichText>
@@ -766,19 +777,23 @@ export function Update(props: {
                         required
                         rules={[{ required: true, message: "Missing" }]}
                       >
-                        <Upload
-                          action={api + "/file"}
-                          headers={{
-                            Authorization: `Bearer ${token}`,
-                          }}
-                          listType="picture-card"
-                          fileList={fileListWords}
-                          onChange={onChange}
-                          name="photo"
-                          onPreview={onPreview}
-                        >
-                          {fileListWords.length < 1 && "+ Upload"}
-                        </Upload>
+                        <ImgCrop rotationSlider>
+                          <Upload
+                            action={api + "/file"}
+                            headers={{
+                              Authorization: `Bearer ${token}`,
+                            }}
+                            listType="picture-card"
+                            fileList={fileListWords}
+                            onChange={onChange}
+                            name="photo"
+                            onPreview={onPreview}
+                            // maxZoom={3}
+                            // minZoom={1}
+                          >
+                            {fileListWords.length < 1 && "+ Upload"}
+                          </Upload>
+                        </ImgCrop>
                       </Form.Item>
                     </div>
                   ),
@@ -817,17 +832,17 @@ export function Update(props: {
             display: "flex",
             gap: "10px",
             width: "100%",
-            height: "50px",
             justifyContent: "end",
-            alignItems: "center",
-            marginTop: "50px",
+            marginTop: "30px",
           }}
         >
-          <Button type="default" onClick={handleCancel}>
-            Cancel
-          </Button>
-
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{
+              width: "100%",
+            }}
+          >
             Submit
           </Button>
         </div>
