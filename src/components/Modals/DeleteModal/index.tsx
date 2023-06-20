@@ -32,7 +32,7 @@ export function Delete(props: {
   };
   return (
     <Modal  
-      width={1000}
+      width={700}
       title="Do you want delete this ?"
       open={isModalOpen}
       onOk={handleOk}

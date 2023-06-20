@@ -2,20 +2,16 @@ export interface listItemType {
   url: string;
   title: string;
 }
-
 export type postUrl = "/media" | "/phrase" | "/word" | "/media-category";
-
 export interface LanguageItemsProps {
   key: string;
   label: string;
   img: string;
 }
-
 export interface zustandProps {
   theme: string;
   setTheme: (mode: string) => void;
 }
-
 export interface image {
   _id: string;
   path: string;

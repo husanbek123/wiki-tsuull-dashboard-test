@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // useState Hook
 import { useState } from "react";
 //  Button Table  Image Antd
@@ -13,6 +14,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { BsFillEyeFill, BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
 import { useGetData } from "../../utils/hooks/useGet";
 import { useTranslation } from "react-i18next";
+import { ColumnsType } from "antd/es/table";
 
 type image = {
   _id: string;
@@ -41,16 +43,20 @@ export default function Words() {
     id: null,
   });
   const [_, setDataSource] = useState([]);
-  let useGet = useGetData(["word"], "/word", {});
+  const useGet = useGetData(["word"], "/word", {});
   const [success, setSuccess] = useState<boolean>(false);
   if (useGet.isSuccess && !success) {
     setDataSource(() => useGet.data?.data);
     setSuccess(() => true);
   }
-  let dataResult: WordProps[] = useGet?.data?.data;
-  let {t} = useTranslation() ;
+  interface DataType {
+    key: any;
+  }
+
+  const dataResult: WordProps[] = useGet?.data?.data;
+  const { t } = useTranslation();
   // Table Columns
-  const columns = [
+  const columns: ColumnsType<DataType> = [
     { title: t("title_uz"), dataIndex: "title_uz", key: "title_uz" },
     { title: t("title_en"), dataIndex: "title_en", key: "title_uz" },
     { title: t("comment_en"), dataIndex: "comment_uz", key: "comment_uz" },
@@ -58,7 +64,7 @@ export default function Words() {
     { title: t("description_en"), dataIndex: "description_en" },
     { title: t("description_uz"), dataIndex: "description_uz" },
     { title: "Img", dataIndex: "image" },
-    { title: "Crud Buttons", dataIndex: "buttons" },
+    { title: "", dataIndex: "buttons", fixed: "right" },
   ];
 
   return (
@@ -105,6 +111,7 @@ export default function Words() {
           <Table
             loading={useGet?.isLoading}
             columns={columns}
+            scroll={{ x: 1500 }}
             dataSource={dataResult?.map((item: WordProps, index: any) => ({
               key: index + 1,
               title_uz: <p>{item?.title_uz}</p>,
@@ -120,7 +127,6 @@ export default function Words() {
                     gap: "5px",
                   }}
                 >
-                 
                   <TOOLTIP color="red" title={"Delete"} key={"1"}>
                     <Button
                       style={{
