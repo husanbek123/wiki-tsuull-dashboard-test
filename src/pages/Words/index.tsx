@@ -66,7 +66,6 @@ export default function Words() {
     { title: "Img", dataIndex: "image" },
     { title: "", dataIndex: "buttons", fixed: "right" },
   ];
-
   return (
     <div className={style.Main}>
       <div className={style.container}>
