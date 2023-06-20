@@ -155,8 +155,21 @@ export function Add(props: {
         },
       });
     } else if (props.postUrl == "/media-category") {
-      const result = {};
-    }
+        usePost.mutate({
+          ...values,
+        }, {
+          onSuccess: () => {
+            SuccessToastify();
+            setIsModalOpen(false);
+            queryClient.invalidateQueries({
+              queryKey: ["media-category"],
+            });
+          },
+          onError: () => {
+            ErrorToastify();
+          },
+        })
+    } 
 
     setDatas(null);
   };

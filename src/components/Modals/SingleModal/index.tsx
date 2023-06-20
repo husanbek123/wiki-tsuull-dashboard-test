@@ -6,7 +6,6 @@ import style from "./index.module.scss";
 import { postUrl } from "../../../types/defaultType";
 import { Link } from "react-router-dom";
 import { api } from "../../../utils/axios";
-import { useTranslation } from "react-i18next";
 export function Single(props: {
   url: postUrl;
   id: string;
@@ -23,7 +22,7 @@ export function Single(props: {
     (item: { _id: string }) => item._id == id
   );
 
-  const { t } = useTranslation();
+
 
   return (
     data && (

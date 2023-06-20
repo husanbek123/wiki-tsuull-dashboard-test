@@ -2,7 +2,7 @@
 // useState Hook
 import { useState } from "react";
 //  Button Table  Image Antd
-import { Button, Table, Image } from "antd";
+import { Button, Table } from "antd";
 // Crud Navigator
 import { CRUDNavigator } from "../../components/CRUDNavigator";
 // style
