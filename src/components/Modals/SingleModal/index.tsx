@@ -53,10 +53,10 @@ export function Single(props: {
                   children: (
                     <>
                       <div>
-                        <b>Category uz</b> : {data.category[0].title_uz}
+                        <b>Category uz</b> : {data.category[0]?.title_uz}
                       </div>
                       <div>
-                        <b>Category en</b> : {data.category[0].title_en}
+                        <b>Category en</b> : {data.category[0]?.title_en}
                       </div>
                     </>
                   ),

@@ -150,8 +150,6 @@ export function Add(props: {
         description_en: descriptionEn,
         image: photoId,
       };
-      console.log(result);
-
       usePost.mutate(result, {
         onSuccess: () => {
           SuccessToastify();
@@ -182,6 +180,12 @@ export function Add(props: {
           },
         }
       );
+
+      let result = {
+        ...values,
+      }
+
+      console.log(result);
     }
 
     setDatas(null);

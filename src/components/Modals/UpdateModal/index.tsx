@@ -26,6 +26,12 @@ import { useTranslation } from "react-i18next";
 import { RcFile } from "antd/es/upload";
 import styles from "./index.module.scss";
 import ImgCrop from "antd-img-crop";
+
+interface categorySelect {
+  value: string;
+  label: string;
+}
+
 export function Update(props: {
   id: string | number;
   isModalOpen: boolean;
@@ -49,7 +55,6 @@ export function Update(props: {
   // Upload Props
 
   // all Word Data
-
   const useWordData = useGetData(["word"], "/word", {});
   const useWordPatch = usePatchData(`/word/${id}`, {});
   const useMediaCategoryPatch = usePatchData(`/media-category/${id}`, {});
@@ -62,16 +67,9 @@ export function Update(props: {
   const [comentUz, setComentUz] = useState(null);
   const [comentEn, setComentEn] = useState(null);
 
-  const [categoryData, setCategoryData] = useState<
-    {
-      value: string;
-      label: string;
-    }[]
-  >([]);
-
+  const [_, setCategoryData] = useState<categorySelect[]>([]);
   // QueryClient For Real Time
   const queryClient = useQueryClient();
-
   // Modal Functions
   const handleOk = () => setIsModalOpen(false);
   const handleCancel = () => setIsModalOpen(false);
@@ -180,7 +178,6 @@ export function Update(props: {
   const useWordGetData = useWordData?.data?.data?.find(
     (item: { _id: string }) => item._id === id
   );
-
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
