@@ -5,7 +5,7 @@ import { usePostData } from "../../utils/hooks/usePost";
 import ErrorToastify from "../../components/toastify/Error";
 import { useToken } from "../../utils/zustand/useStore";
 import { useNavigate } from "react-router-dom";
-
+import logo from "../../../public/logo.svg";
 export default function Login() {
   const useCheckUser = usePostData("/user/login", {});
   const setToken = useToken((state) => state.setToken);
@@ -60,11 +60,21 @@ export default function Login() {
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="submit">
-                Submit
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{
+                  background: "rgba(0, 0, 0, 0.623)",
+                  width: "100%",
+                }}
+              >
+                Enter
               </Button>
             </Form.Item>
           </Form>
+        </div>
+        <div className={styles.lastChild}>
+          <img src={logo} alt="" />
         </div>
       </div>
     </div>
