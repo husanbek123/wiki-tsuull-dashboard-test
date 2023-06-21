@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Form, Input } from "antd";
 import styles from "./index.module.scss";
 import SuccessToastify from "../../components/toastify/Success";
@@ -17,9 +18,11 @@ export default function Login() {
         SuccessToastify();
         setToken(data.data.token);
         setName(values.userName);
-        navigator("/");
+        navigator("/")
       },
-      onError: () => ErrorToastify(),
+      onError: () => { 
+        ErrorToastify() 
+      }
     });
   };
 

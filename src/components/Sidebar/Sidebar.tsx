@@ -30,7 +30,6 @@ export default function Sidebar() {
   const theme = useTheme((state) => state.theme);
   const language = useLanguage((state) => state.langauge);
   const name = useToken((state) => state.name);
-
   const router = useNavigate();
   changeLanguage(language);
   return (
