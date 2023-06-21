@@ -167,7 +167,7 @@ export function Add(props: {
     } else if (props.postUrl == "/media-category") {
       usePost.mutate(
         {
-          ...values,
+          ...values
         },
         {
           onSuccess: () => {

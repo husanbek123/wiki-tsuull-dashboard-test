@@ -4,6 +4,7 @@ import SuccessToastify from "../../toastify/Success";
 import { useQueryClient } from "@tanstack/react-query";
 import ErrorToastify from "../../toastify/Error";
 import { postUrl } from "../../../types/defaultType";
+import { useTranslation } from "react-i18next";
 
 export function Delete(props: {
   id: number | string;
@@ -11,10 +12,10 @@ export function Delete(props: {
   isModalOpen: boolean;
   postUrl: postUrl;
 }) {
+  const { t } = useTranslation();
   const { id, setIsModalOpen, isModalOpen, postUrl } = props;
   const useDeleteData = useDelete(`${props.postUrl}`);
   const queryClient = useQueryClient();
-
   const handleOk = () => {
     useDeleteData.mutate(`${id}`, {
       onSuccess: () => {
@@ -31,9 +32,9 @@ export function Delete(props: {
     setIsModalOpen(false);
   };
   return (
-    <Modal  
+    <Modal
       width={400}
-      title="Do you want delete this ?"
+      title={t("deleteThis")}
       open={isModalOpen}
       onOk={handleOk}
       onCancel={handleCancel}
