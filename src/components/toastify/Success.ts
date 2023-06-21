@@ -1,9 +1,7 @@
-import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 export default function SuccessToastify(msg?: string) {
-  const {t}  = useTranslation();
-  return toast.success(`${msg || t("")}`, {
+  return toast.success(`${msg }`, {
     position: "top-right",
     autoClose: 5000,
     hideProgressBar: false,

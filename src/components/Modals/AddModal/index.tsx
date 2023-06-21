@@ -19,11 +19,7 @@ import SuccessToastify from "../../toastify/Success";
 import ErrorToastify from "../../toastify/Error";
 import { api } from "../../../utils/axios";
 import type { RcFile } from "antd/es/upload/interface";
-import {
-  MinusCircleOutlined,
-  PlusOutlined,
-  RestFilled,
-} from "@ant-design/icons";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { RichText } from "../../RichText";
 import { postUrl } from "../../../types/defaultType";
@@ -165,7 +161,7 @@ export function Add(props: {
     } else if (props.postUrl == "/media-category") {
       usePost.mutate(
         {
-          ...values
+          ...values,
         },
         {
           onSuccess: () => {
@@ -181,9 +177,9 @@ export function Add(props: {
         }
       );
 
-      let result = {
+      const result = {
         ...values,
-      }
+      };
 
       console.log(result);
     }
@@ -219,6 +215,7 @@ export function Add(props: {
 
   return (
     <Modal
+     
       title={t("add")}
       width={1000}
       open={isModalOpen}

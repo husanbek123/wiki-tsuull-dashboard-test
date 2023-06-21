@@ -15,17 +15,31 @@
     flex-direction: column;
     gap: 10px;
   }
+  .writers {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    button{
+      width: 100%;
+    }
+  }
+  .informations{
+    p{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
   .checkbox {
     display: flex;
     gap: 12px;
   }
-  .img{
+  .img {
     text-align: center;
   }
 }
 
-.wordData > div{
+.wordData > div {
   display: flex;
   align-items: center;
-  gap:10px;
+  gap: 10px;
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // useState Hook
 import { useState } from "react";
@@ -15,6 +16,8 @@ import { BsFillEyeFill, BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
 import { useGetData } from "../../utils/hooks/useGet";
 import { useTranslation } from "react-i18next";
 import { ColumnsType } from "antd/es/table";
+import ComponentLoader from "../../components/ComponentLoader";
+import { api } from "../../utils/axios";
 
 type image = {
   _id: string;
@@ -59,10 +62,6 @@ export default function Words() {
   const columns: ColumnsType<DataType> = [
     { title: t("title_uz"), dataIndex: "title_uz", key: "title_uz" },
     { title: t("title_en"), dataIndex: "title_en", key: "title_uz" },
-    { title: t("comment_en"), dataIndex: "comment_uz", key: "comment_uz" },
-    { title: t("comment_uz"), dataIndex: "comment_en", key: "comment_en" },
-    { title: t("description_en"), dataIndex: "description_en" },
-    { title: t("description_uz"), dataIndex: "description_uz" },
     { title: "Img", dataIndex: "image" },
     { title: "", dataIndex: "buttons", fixed: "right" },
   ];
@@ -100,7 +99,7 @@ export default function Words() {
               }}
             >
               <p>
-                Add <AiOutlinePlus />
+                {t("add")} <AiOutlinePlus />
               </p>
             </Button>
           </TOOLTIP>
@@ -108,22 +107,26 @@ export default function Words() {
 
         <div className={style.table}>
           <Table
-            loading={useGet?.isLoading}
+            className="dark-buttons "
+            loading={{
+              indicator: (
+                <div>
+                  <ComponentLoader />
+                </div>
+              ),
+              spinning: !useGet.data?.data,
+            }}
             columns={columns}
-            scroll={{ x: 1500 }}
             dataSource={dataResult?.map((item: WordProps, index: any) => ({
               key: index + 1,
               title_uz: <p>{item?.title_uz}</p>,
               title_en: <p>{item?.title_en}</p>,
-              comment_en: <p>{item?.comment_uz}</p>,
-              comment_uz: <p>{item?.comment_uz}</p>,
-              description_en: <p>{item?.description_uz}</p>,
-              description_uz: <p>{item?.description_uz}</p>,
               buttons: (
                 <div
                   style={{
                     display: "flex",
                     gap: "5px",
+                    justifyContent: "center",
                   }}
                 >
                   <TOOLTIP color="red" title={"Delete"} key={"1"}>
@@ -206,8 +209,8 @@ export default function Words() {
                 <>
                   <div>
                     <img
-                      width={89}
-                      src={`http://13.50.238.54/file/${item?.image?.path}`}
+                      width={50}
+                      src={`${api}/file/${item?.image?.path}`}
                       alt={"word-img"}
                     />
                   </div>

@@ -25,9 +25,8 @@ export function Delete(props: {
         });
         setIsModalOpen(false);
       },
-      onError : ()=> ErrorToastify('Not deleted')
+      onError: () => ErrorToastify("Not deleted"),
     });
-
   };
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -38,6 +37,8 @@ export function Delete(props: {
       title={t("deleteThis")}
       open={isModalOpen}
       onOk={handleOk}
+      okButtonProps={{ style: { width: "100%" } }}
+      cancelButtonProps={{ style: { display: "none" } }}
       onCancel={handleCancel}
     ></Modal>
   );

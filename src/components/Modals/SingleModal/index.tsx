@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Collapse, Modal } from "antd";
+import { Button, Checkbox, Collapse, Modal } from "antd";
 import { useGetData } from "../../../utils/hooks/useGet";
 import parse from "html-react-parser";
 import style from "./index.module.scss";
 import { postUrl } from "../../../types/defaultType";
 import { Link } from "react-router-dom";
 import { api } from "../../../utils/axios";
+import { useTranslation } from "react-i18next";
 export function Single(props: {
   url: postUrl;
   id: string;
@@ -21,23 +22,28 @@ export function Single(props: {
   const data = useGet.data?.data.find(
     (item: { _id: string }) => item._id == id
   );
-
+  const { t } = useTranslation();
   return (
     data && (
-      <Modal width={800} open={isModalOpen} footer={null} onCancel={handleOk}>
+      <Modal
+        width={800}
+        open={isModalOpen}
+        footer={null}
+        onCancel={handleOk}
+      >
         <div className={style.wrapper}>
           <Collapse
             items={[
               {
                 key: "1",
-                label: "Titles",
+                label: `${t("title")}`,
                 children: (
                   <>
                     <div>
-                      Title uz :<b> {data?.title_uz}</b>
+                      {t("title_uz")} :<b> {data?.title_uz}</b>
                     </div>
                     <div>
-                      Title en :<b> {data?.title_en}</b>
+                      {t("title_en")} :<b> {data?.title_en}</b>
                     </div>
                   </>
                 ),
@@ -49,21 +55,21 @@ export function Single(props: {
               items={[
                 {
                   key: "1",
-                  label: "Category",
+                  label: `${t("Category")}`,
                   children: (
                     <>
                       <div>
-                        <b>Category uz</b> : {data.category[0]?.title_uz}
+                        <b>UZ</b> : {data.category[0]?.title_uz}
                       </div>
                       <div>
-                        <b>Category en</b> : {data.category[0]?.title_en}
+                        <b>EN</b> : {data.category[0]?.title_en}
                       </div>
                     </>
                   ),
                 },
                 {
                   key: "2",
-                  label: "Frame",
+                  label: `${t("frame")}`,
                   children: (
                     <div
                       style={{
@@ -88,15 +94,15 @@ export function Single(props: {
                 items={[
                   {
                     key: "1",
-                    label: "Descriptions",
+                    label: `${t("Description")}`,
                     children: (
                       <>
                         <div className={style.description}>
-                          <b>Description uz :</b>
+                          <b>UZ :</b>
                           {parse(data?.description_uz)}
                         </div>
                         <div>
-                          <b>Description en : </b>
+                          <b>EN : </b>
                           {parse(data?.description_en)}
                         </div>
                       </>
@@ -104,15 +110,15 @@ export function Single(props: {
                   },
                   {
                     key: "2",
-                    label: "Comments",
+                    label: `${t("Comment")}`,
                     children: (
                       <>
                         <div className={style.comment}>
-                          <b>Comment uz :</b>
+                          <b> UZ :</b>
                           {parse(data?.comment_uz)}
                         </div>
                         <div>
-                          <b>Comment en : </b>
+                          <b>EN: </b>
                           {parse(data?.comment_en)}
                         </div>
                       </>
@@ -120,10 +126,9 @@ export function Single(props: {
                   },
                   {
                     key: "3",
-                    label: "Writers",
+                    label: `${t("writers")}`,
                     children: (
                       <div className={style.writers}>
-                        <b>Writers:</b>
                         {data.writers.map(
                           (
                             item: { name: string; link: string },
@@ -134,7 +139,11 @@ export function Single(props: {
                               className={style.writer}
                               to={item.link}
                             >
-                              <Button>{item.name}</Button>
+                              {item.name.length > 50 ? (
+                                <Button>{item.name.slice(0, 50)}...</Button>
+                              ) : (
+                                <Button>{item.name}</Button>
+                              )}
                             </Link>
                           )
                         )}
@@ -143,12 +152,10 @@ export function Single(props: {
                   },
                   {
                     key: "4",
-                    label: "Informations",
+                    label: `${t("informations")}`,
                     children: (
                       <div className={style.writers}>
-                        <b>Informations:</b>
                         <div className={style.informations}>
-                          <b>informations:</b>
                           {data.informations.map(
                             (
                               item: {
@@ -161,16 +168,18 @@ export function Single(props: {
                             ) => (
                               <div key={index} className={style.information}>
                                 <p>
-                                  <b>name uz </b> : {item.name_uz}
+                                  <b>{t("name")} uz : </b> {item.name_uz}
                                 </p>
                                 <p>
-                                  <b>name en </b> : {item.name_en}
+                                  <b>{t("name")} en : </b> {item.name_en}
                                 </p>
                                 <p>
-                                  <b>info uz </b> : {item.name_uz}
+                                  <b>{t("info")} uz : </b>
+                                  {item.name_uz}
                                 </p>
                                 <p>
-                                  <b>info en </b> : {item.name_en}
+                                  <b>{t("info")} en : </b>
+                                  {item.name_en}
                                 </p>
                               </div>
                             )
@@ -182,6 +191,7 @@ export function Single(props: {
                   {
                     key: "5",
                     label: "checkbox",
+                    children: <Checkbox checked={data.isMain}></Checkbox>,
                   },
                 ]}
               />

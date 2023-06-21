@@ -13,6 +13,7 @@ import { BsFillEyeFill, BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
 // Use Get Hook
 import { useGetData } from "../../utils/hooks/useGet";
 import { useTranslation } from "react-i18next";
+import ComponentLoader from "../../components/ComponentLoader";
 
 interface MediaCategoryData {
   _id: string;
@@ -90,6 +91,15 @@ export default function MediaCategory() {
 
         <div className={style.table}>
           <Table
+            className="dark-buttons "
+            loading={{
+              indicator: (
+                <div>
+                  <ComponentLoader />
+                </div>
+              ),
+              spinning: !useGet.data?.data,
+            }}
             columns={columns}
             dataSource={dataResult?.map((item: any, index: any) => ({
               key: index + 1,

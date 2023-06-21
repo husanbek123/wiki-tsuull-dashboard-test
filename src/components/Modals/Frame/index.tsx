@@ -16,7 +16,12 @@ export function Frame(props: {
   const data = useGet?.data?.data?.find((i: any) => i._id == id).frame;
 
   return (
-    <Modal title="" open={isModalOpen} onCancel={handleCancel} footer={null}>
+    <Modal
+      title=""
+      open={isModalOpen}
+      onCancel={handleCancel}
+      footer={null}
+    >
       <div
         style={{
           width: "100%",

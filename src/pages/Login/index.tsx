@@ -7,22 +7,25 @@ import ErrorToastify from "../../components/toastify/Error";
 import { useToken } from "../../utils/zustand/useStore";
 import { useNavigate } from "react-router-dom";
 import logo from "../../../public/logo.svg";
+import { useTranslation } from "react-i18next";
 export default function Login() {
   const useCheckUser = usePostData("/user/login", {});
   const setToken = useToken((state) => state.setToken);
   const setName = useToken((state) => state.setName);
   const navigator = useNavigate();
+  const { t } = useTranslation();
   const onFinish = (values: any) => {
+    console.log(values);
     useCheckUser.mutate(values, {
       onSuccess: (data) => {
-        SuccessToastify();
+        SuccessToastify(t('SuccessLogedIn'));
         setToken(data.data.token);
         setName(values.userName);
-        navigator("/")
+        navigator("/");
       },
-      onError: () => { 
-        ErrorToastify() 
-      }
+      onError: () => {
+        ErrorToastify();
+      },
     });
   };
 

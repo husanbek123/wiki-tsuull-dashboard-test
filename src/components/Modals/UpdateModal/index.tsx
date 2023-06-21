@@ -248,7 +248,7 @@ export function Update(props: {
 
   return (
     <Modal
-      title="Update"
+      title={t("update")}
       open={isModalOpen}
       width={700}
       onOk={handleOk}

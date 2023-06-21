@@ -92,6 +92,7 @@ export default function Phrase() {
           <div className={styles.table}>
             <Table
               scroll={{ x: 1500 }}
+              className="dark-buttons "
               loading={{
                 indicator: (
                   <div>
@@ -119,7 +120,9 @@ export default function Phrase() {
                   >
                     {item?.writers?.map((item: any, index: number) => (
                       <Button key={index} target="blank" href={item.link}>
-                        {item.name.slice(0, 20)}...
+                        {item.name.length > 20
+                          ? item.name.slice(0, 20) + "..."
+                          : item.name}
                       </Button>
                     ))}
                   </div>
@@ -136,10 +139,16 @@ export default function Phrase() {
                         key={index}
                       >
                         <Button>
-                          name : {item[`name_${language}`].slice(0, 10) + "..."}
+                          {t("name")} :{" "}
+                          {item[`name_${language}`].length > 20
+                            ? item[`name_${language}`].slice(0, 20) + "..."
+                            : item[`name_${language}`]}
                         </Button>
                         <Button>
-                          info : {item[`info_${language}`].slice(0, 10) + "..."}
+                          {t("info")} :{" "}
+                          {item[`info_${language}`].length > 15
+                            ? item[`info_${language}`].slice(0, 15) + "..."
+                            : item[`info_${language}`]}
                         </Button>
                       </div>
                     ))}
@@ -150,7 +159,7 @@ export default function Phrase() {
                     style={{
                       display: "flex",
                       gap: "5px",
-                      justifyContent: "end",
+                      justifyContent: "center",
                     }}
                   >
                     <TOOLTIP color="red" title={"Delete"} key={"1"}>

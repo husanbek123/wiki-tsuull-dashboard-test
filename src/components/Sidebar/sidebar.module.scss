@@ -43,13 +43,14 @@ $blue-color: #124a85;
       display: flex;
       gap: 10px;
       align-items: center;
-      .languages{
+      .languages {
         margin-top: 4px;
+        cursor: pointer;
       }
     }
 
-    .theme{
-      .ThemContainerSun{
+    .theme {
+      .ThemContainerSun {
         background-color: #022c58;
         display: flex;
         cursor: pointer;
@@ -61,7 +62,7 @@ $blue-color: #124a85;
           font-size: 1.7rem;
         }
       }
-      .ThemeContainerMoon{
+      .ThemeContainerMoon {
         background-color: #022c58;
         display: flex;
         align-items: center;
@@ -69,7 +70,7 @@ $blue-color: #124a85;
         justify-content: center;
         padding: 10px;
         border-radius: 10px;
-        .MoonIcon{
+        .MoonIcon {
           font-size: 1.6rem;
         }
       }
@@ -77,3 +78,13 @@ $blue-color: #124a85;
   }
 }
 
+[data-theme="dark"] {
+  .header {
+    background: #00013d;
+    button{
+      &:hover{
+        border-color: #ec781c;
+      }
+    }
+  }
+}

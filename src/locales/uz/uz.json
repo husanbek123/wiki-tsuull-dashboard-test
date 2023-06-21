@@ -7,6 +7,7 @@
   "Words-Modal": "So'lar Qo'shish",
   "title_uz": "Sarlavha Uz",
   "title_en": "Sarlavha EN",
+  "update": "O'zgartirish",
   "description_uz": "Tavsifi Uz",
   "description_en": "Tavsifi En",
   "delete": "O'chirish",
@@ -18,5 +19,15 @@
   "writers": "Yozuvchilar",
   "informations": "Ma'lumotlar",
   "Log out": "Chiqish",
-  "deleteThis": "Buni o'chirib tashlamoqchimisiz? 🗑"
+  "deleteThis": "Buni o'chirib tashlamoqchimisiz? 🗑",
+  "SuccessLogedIn": "Kirish muvaffaqiyat!",
+  "Category" : "Toifa",
+  "Deleted" : "O'chirildi!",
+  "Added" : "Qo'shildi!",
+  "Updated" : "O'zgardi!",
+  "Description" : "Tafsiv",
+  "Comment" : "izoh",
+  "name" : "Ism",
+  "info" : "Ma'lumot",
+  "title" : "Sarlavha"
 }

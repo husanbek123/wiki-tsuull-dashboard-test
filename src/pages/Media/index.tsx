@@ -8,14 +8,15 @@ import { AiOutlinePlus } from "react-icons/ai";
 import TOOLTIP from "../../components/Tooltip";
 import { useState } from "react";
 import { CRUDNavigator } from "../../components/CRUDNavigator";
-import videoIcon from "../../../public/videoIco.png";
+import videoIcon from "../../../public/videoIcon.png";
 import Table, { ColumnsType } from "antd/es/table";
 import { useTranslation } from "react-i18next";
+import ComponentLoader from "../../components/ComponentLoader";
+import { useTheme } from "../../utils/zustand/useTheme";
+import whiteVideoIcon from "../../../public/whiteVideoIcon.png";
 interface DataType {
   key: React.Key;
 }
-
-
 
 export default function Media() {
   const useGet = useGetData(["media"], `/media`, {});
@@ -30,23 +31,19 @@ export default function Media() {
   });
 
   const { t } = useTranslation();
-
+  const theme = useTheme((state) => state.theme);
   const columns: ColumnsType<DataType> = [
     { title: t("title_uz"), dataIndex: "title_uz", key: "title_uz" },
     { title: t("title_en"), dataIndex: "title_en", key: "title_uz" },
     { title: t("frame"), dataIndex: "frame", key: "frame" },
-    { title: t("category_uz"), dataIndex: "category_uz", key: "category_uz" },
-    { title: t("category_en"), dataIndex: "category_en", key: "category_uz" },
     {
-      title: "Crud Buttons",
+      title: "",
       dataIndex: "buttons",
       key: "buttons",
       fixed: "right",
       width: 100,
     },
   ];
-
-
 
   return (
     <div className={styles.Main}>
@@ -92,11 +89,20 @@ export default function Media() {
         <div className={styles.table}>
           <Table
             columns={columns}
+            className={styles.table}
+            loading={{
+              indicator: (
+                <div>
+                  <ComponentLoader />
+                </div>
+              ),
+              spinning: !useGet.data?.data,
+            }}
             dataSource={useGet.data?.data.map((item: any, index: any) => ({
               key: index + 1,
               title_uz: <p>{item.title_uz}</p>,
               title_en: <p>{item.title_en}</p>,
-              
+
               frame: (
                 <div
                   style={{
@@ -109,10 +115,11 @@ export default function Media() {
                   }}
                 >
                   <img
-                    src={videoIcon}
+                    src={theme === "dark" ? whiteVideoIcon : videoIcon}
                     alt=""
                     style={{
                       cursor: "pointer",
+                      background: "transparent",
                     }}
                   />
                 </div>
@@ -144,7 +151,9 @@ export default function Media() {
                   style={{
                     display: "flex",
                     gap: "5px",
+                    justifyContent: "center",
                   }}
+                  className="dark-buttons"
                 >
                   <TOOLTIP color="red" title={"Delete"} key={"1"}>
                     <Button
