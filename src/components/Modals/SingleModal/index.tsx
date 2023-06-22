@@ -25,12 +25,7 @@ export function Single(props: {
   const { t } = useTranslation();
   return (
     data && (
-      <Modal
-        width={800}
-        open={isModalOpen}
-        footer={null}
-        onCancel={handleOk}
-      >
+      <Modal width={800} open={isModalOpen} footer={null} onCancel={handleOk}>
         <div className={style.wrapper}>
           <Collapse
             items={[
@@ -38,14 +33,14 @@ export function Single(props: {
                 key: "1",
                 label: `${t("title")}`,
                 children: (
-                  <>
+                  <div className="addText">
                     <div>
                       {t("title_uz")} :<b> {data?.title_uz}</b>
                     </div>
                     <div>
                       {t("title_en")} :<b> {data?.title_en}</b>
                     </div>
-                  </>
+                  </div>
                 ),
               },
             ]}
@@ -57,14 +52,14 @@ export function Single(props: {
                   key: "1",
                   label: `${t("Category")}`,
                   children: (
-                    <>
+                    <div className="addText">
                       <div>
                         <b>UZ</b> : {data.category[0]?.title_uz}
                       </div>
                       <div>
                         <b>EN</b> : {data.category[0]?.title_en}
                       </div>
-                    </>
+                    </div>
                   ),
                 },
                 {
@@ -80,6 +75,7 @@ export function Single(props: {
                         alignItems: "center",
                         overflow: "hidden",
                       }}
+                      className="addText"
                     >
                       {parse(data?.frame)}
                     </div>
@@ -96,7 +92,7 @@ export function Single(props: {
                     key: "1",
                     label: `${t("Description")}`,
                     children: (
-                      <>
+                      <div className="addText">
                         <div className={style.description}>
                           <b>UZ :</b>
                           {parse(data?.description_uz)}
@@ -105,14 +101,14 @@ export function Single(props: {
                           <b>EN : </b>
                           {parse(data?.description_en)}
                         </div>
-                      </>
+                      </div>
                     ),
                   },
                   {
                     key: "2",
                     label: `${t("Comment")}`,
                     children: (
-                      <>
+                      <div className="addText">
                         <div className={style.comment}>
                           <b> UZ :</b>
                           {parse(data?.comment_uz)}
@@ -121,14 +117,14 @@ export function Single(props: {
                           <b>EN: </b>
                           {parse(data?.comment_en)}
                         </div>
-                      </>
+                      </div>
                     ),
                   },
                   {
                     key: "3",
                     label: `${t("writers")}`,
                     children: (
-                      <div className={style.writers}>
+                      <div className={[style.writers , 'addText'].join(' ')} >
                         {data.writers.map(
                           (
                             item: { name: string; link: string },
@@ -154,7 +150,7 @@ export function Single(props: {
                     key: "4",
                     label: `${t("informations")}`,
                     children: (
-                      <div className={style.writers}>
+                      <div className={[style.writers , 'addText'].join(' ')}>
                         <div className={style.informations}>
                           {data.informations.map(
                             (
@@ -190,7 +186,7 @@ export function Single(props: {
                   },
                   {
                     key: "5",
-                    label: "checkbox",
+                    label: `${t('isMain')}`,
                     children: <Checkbox checked={data.isMain}></Checkbox>,
                   },
                 ]}
@@ -209,7 +205,7 @@ export function Single(props: {
                     key: "1",
                     label: "Descriptions",
                     children: (
-                      <>
+                      <div className="addText">
                         <div className={style.description}>
                           <b>Description uz :</b>
                           {parse(data?.description_uz)}
@@ -218,14 +214,14 @@ export function Single(props: {
                           <b>Description en : </b>
                           {parse(data?.description_en)}
                         </div>
-                      </>
+                      </div>
                     ),
                   },
                   {
                     key: "2",
                     label: "Comments",
                     children: (
-                      <>
+                      <div className="addText">
                         <div className={style.comment}>
                           <b>Comment uz :</b>
                           {parse(data?.comment_uz)}
@@ -234,7 +230,7 @@ export function Single(props: {
                           <b>Comment en : </b>
                           {parse(data?.comment_en)}
                         </div>
-                      </>
+                      </div>
                     ),
                   },
                 ]}

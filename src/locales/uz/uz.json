@@ -29,5 +29,9 @@
   "Comment" : "izoh",
   "name" : "Ism",
   "info" : "Ma'lumot",
-  "title" : "Sarlavha"
+  "title" : "Sarlavha",
+  "isMain" : "Asosiyda",
+  "Image" : "Rasm",
+  "Upload" : "Yuklash",
+  "Others" : "Boshqalar"
 }

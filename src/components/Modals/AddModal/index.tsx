@@ -110,6 +110,7 @@ export function Add(props: {
         }
       );
     }
+
     // phrase
     else if (props.postUrl == "/phrase") {
       usePost.mutate(
@@ -137,6 +138,17 @@ export function Add(props: {
           },
         }
       );
+      console.log({
+        ...values,
+        comment_uz: comentUz,
+        comment_en: comentEn,
+        description_uz: descriptionUz,
+        description_en: descriptionEn,
+        informations: values.informations || [],
+        writers: values.writers || [],
+        isMain,
+        image: photoId,
+      });
     } else if (props.postUrl == "/word") {
       const result = {
         ...values,
@@ -215,7 +227,6 @@ export function Add(props: {
 
   return (
     <Modal
-     
       title={t("add")}
       width={1000}
       open={isModalOpen}
@@ -243,7 +254,7 @@ export function Add(props: {
           items={[
             {
               key: "1",
-              label: "Titles",
+              label: `${t("title")}`,
               children: (
                 <>
                   <Form.Item
@@ -300,11 +311,11 @@ export function Add(props: {
         {props.postUrl == "/phrase" && (
           <>
             <Collapse
-              defaultActiveKey={photoId.trim() === "" ? ["6"] : []}
+              defaultActiveKey={photoId === "" ? ["6"] : []}
               items={[
                 {
                   key: "1",
-                  label: "Writers",
+                  label: `${t("writers")}`,
                   children: (
                     <Form.List name="writers">
                       {(fields, { add, remove }) => (
@@ -404,7 +415,7 @@ export function Add(props: {
                                 name={[name, "name_uz"]}
                                 rules={[{ required: true, message: "Missing" }]}
                               >
-                                <Input placeholder="Name uz" />
+                                <Input placeholder={`${t("name")} uz`} />
                               </Form.Item>
                               <Form.Item
                                 {...restField}
@@ -413,17 +424,17 @@ export function Add(props: {
                                   { required: true, message: "Missing " },
                                 ]}
                               >
-                                <Input placeholder="Name en" />
+                                <Input placeholder={`${t("name")} en`} />
                               </Form.Item>
-                              <div>
-                                Info uz
+                              <div className="addText">
+                                {t("info")} uz
                                 <RichText
                                   value={infoUz}
                                   setValue={setInfoUz}
                                 ></RichText>
                               </div>
-                              <div>
-                                Info en
+                              <div className="addText">
+                                {t("info")} en
                                 <RichText
                                   value={infoEn}
                                   setValue={setInfoEn}
@@ -467,15 +478,16 @@ export function Add(props: {
                 },
                 {
                   key: "3",
-                  label: "Descriptions",
+                  label: `${t("Descriptions")}`,
                   children: (
                     <>
                       <div
                         style={{
                           margin: "20px 0px",
                         }}
+                        className="addText"
                       >
-                        Description uz
+                        {t("Description")} uz
                         <RichText
                           value={descriptionUz}
                           setValue={setDescriptionUz}
@@ -485,8 +497,9 @@ export function Add(props: {
                         style={{
                           margin: "20px 0px",
                         }}
+                        className="addText"
                       >
-                        Description en
+                        {t("Description")} en
                         <RichText
                           value={descriptionEn}
                           setValue={setDescriptionEn}
@@ -497,13 +510,14 @@ export function Add(props: {
                 },
                 {
                   key: "4",
-                  label: "Comments",
+                  label: `${t("Comment")}`,
                   children: (
                     <>
                       <div
                         style={{
                           margin: "20px 0px",
                         }}
+                        className="addText"
                       >
                         Comment uz
                         <RichText
@@ -515,6 +529,7 @@ export function Add(props: {
                         style={{
                           margin: "20px 0px",
                         }}
+                        className="addText"
                       >
                         Comment en
                         <RichText
@@ -527,18 +542,18 @@ export function Add(props: {
                 },
                 {
                   key: "5",
-                  label: "Is main",
+                  label: `${t("isMain")}`,
                   children: (
-                    <Form.Item>
+                    <div>
                       <Checkbox onChange={(e) => setisMain(e.target.checked)}>
-                        is Main
+                        <p className="addText">{t("isMain")}</p>
                       </Checkbox>
-                    </Form.Item>
+                    </div>
                   ),
                 },
                 {
                   key: "6",
-                  label: "Image",
+                  label: `${t("Image")}`,
                   children: (
                     <>
                       <ImgCrop rotationSlider>
@@ -551,10 +566,10 @@ export function Add(props: {
                           onPreview={onPreview}
                           onRemove={() => setPhotoId("")}
                         >
-                          {fileList.length < 1 && "+ Upload"}
+                          {fileList.length < 1 && `+ ${t("Upload")}`}
                         </Upload>
                       </ImgCrop>
-                      {photoId.trim() == "" && (
+                      {photoId == "" && (
                         <p
                           style={{
                             color: "red",
@@ -576,18 +591,18 @@ export function Add(props: {
             items={[
               {
                 key: "1",
-                label: "Descriptions",
+                label: `${t("Description")}`,
                 children: (
                   <>
-                    <div>
-                      Description uz
+                    <div className="addText">
+                      UZ
                       <RichText
                         value={descriptionUz}
                         setValue={setDescriptionUz}
                       ></RichText>
                     </div>
-                    <div>
-                      Description uz
+                    <div className="addText">
+                      EN
                       <RichText
                         value={descriptionEn}
                         setValue={setDescriptionEn}
@@ -598,18 +613,18 @@ export function Add(props: {
               },
               {
                 key: "2",
-                label: "Comments",
+                label: `${t("Comment")}`,
                 children: (
                   <>
-                    <div>
-                      Comment uz :
+                    <div className="addText">
+                      {t("Comment")} uz :
                       <RichText
                         value={comentUz}
                         setValue={setComentUz}
                       ></RichText>
                     </div>
-                    <div>
-                      Comment en :
+                    <div className="addText">
+                      {t("Comment")} en :
                       <RichText
                         value={comentEn}
                         setValue={setComentEn}
@@ -620,7 +635,7 @@ export function Add(props: {
               },
               {
                 key: "3",
-                label: "Image",
+                label: `${t("Image")}`,
                 children: (
                   <>
                     <ImgCrop rotationSlider>
@@ -633,7 +648,7 @@ export function Add(props: {
                         onPreview={onPreview}
                         onRemove={() => setPhotoId("")}
                       >
-                        {fileList.length < 1 && "+ Upload"}
+                        {fileList.length < 1 && `+ ${t("Upload")}`}
                       </Upload>
                     </ImgCrop>
                     {photoId == "" && (

@@ -96,6 +96,46 @@ img {
       background: white;
     }
   }
+  .ant-collapse-content {
+    background: black;
+    .ant-form-item-label {
+      label {
+        color: white;
+      }
+    }
+    .ant-upload {
+      overflow: hidden;
+      background: white;
+    }
+  }
+  .addText {
+    color: white;
+  }
+  .quill {
+    color: white;
+    .ql-toolbar {
+      span {
+        color: white;
+      }
+      .ql-formats{
+        .ql-header{
+          
+          span{
+            color: black;
+          }
+          .ql-picker-label{
+            color: white;
+          }
+        }
+        button{
+          color: white;
+          svg{
+            color: white;
+          }
+        }
+      }
+    }
+  }
 }
 .active {
   color: #ec781c;

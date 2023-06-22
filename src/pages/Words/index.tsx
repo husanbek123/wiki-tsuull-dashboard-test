@@ -211,7 +211,7 @@ export default function Words() {
                     <img
                       width={50}
                       src={`${api}/file/${item?.image?.path}`}
-                      alt={"word-img"}
+                      alt={"img"}
                     />
                   </div>
                 </>

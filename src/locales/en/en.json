@@ -28,5 +28,9 @@
   "informations": "informations",
   "name" : "name",
   "info" : "Info",
-  "title" : "Title"
+  "title" : "Title",
+  "isMain" : "In main",
+  "Image" : "Image",
+  "Upload" : "Upload",
+  "Others" : "Boshqalar"
 }

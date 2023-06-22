@@ -91,7 +91,7 @@ export default function Phrase() {
           </div>
           <div className={styles.table}>
             <Table
-              scroll={{ x: 1500 }}
+              scroll={{ x: 1000 }}
               className="dark-buttons "
               loading={{
                 indicator: (
@@ -140,14 +140,14 @@ export default function Phrase() {
                       >
                         <Button>
                           {t("name")} :{" "}
-                          {item[`name_${language}`].length > 20
-                            ? item[`name_${language}`].slice(0, 20) + "..."
+                          {item[`name_${language}`].length > 15
+                            ? item[`name_${language}`].slice(0, 15) + "..."
                             : item[`name_${language}`]}
                         </Button>
                         <Button>
                           {t("info")} :{" "}
-                          {item[`info_${language}`].length > 15
-                            ? item[`info_${language}`].slice(0, 15) + "..."
+                          {item[`info_${language}`].length > 10
+                            ? item[`info_${language}`].slice(0, 10) + "..."
                             : item[`info_${language}`]}
                         </Button>
                       </div>

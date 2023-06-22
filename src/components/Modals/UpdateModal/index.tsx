@@ -66,7 +66,8 @@ export function Update(props: {
   const [descriptionEn, setDescriptionEn] = useState(null);
   const [comentUz, setComentUz] = useState(null);
   const [comentEn, setComentEn] = useState(null);
-
+  const [infoUz, setInfoUz] = useState<string | null>(null);
+  const [infoEn, setInfoEn] = useState<string | null>(null);
   const [_, setCategoryData] = useState<categorySelect[]>([]);
   // QueryClient For Real Time
   const queryClient = useQueryClient();
@@ -173,6 +174,12 @@ export function Update(props: {
         }
       );
     }
+    setDescriptionEn(null);
+    setDescriptionUz(null);
+    setComentEn(null);
+    setComentUz(null);
+    setInfoUz(null);
+    setInfoEn(null);
   };
 
   const useWordGetData = useWordData?.data?.data?.find(
@@ -277,13 +284,13 @@ export function Update(props: {
               items={[
                 {
                   key: "1",
-                  label: "Titles",
+                  label: `${t("title")}`,
                   children: (
-                    <div className={styles.titles}>
-                      <Form.Item label="Title uz" name="title_uz">
+                    <div className={[styles.titles, "addText"].join(" ")}>
+                      <Form.Item label={`${t("title")} uz`} name="title_uz">
                         <Input defaultValue={dataMedia.title_uz} />
                       </Form.Item>
-                      <Form.Item label="Title en" name="title_en">
+                      <Form.Item label={`${"title"} en`} name="title_en">
                         <Input defaultValue={dataMedia.title_en} />
                       </Form.Item>
                     </div>
@@ -291,7 +298,7 @@ export function Update(props: {
                 },
                 {
                   key: "2",
-                  label: "Others",
+                  label: `${t("Others")}`,
                   children: (
                     <>
                       <Form.Item name="frame">
@@ -302,20 +309,19 @@ export function Update(props: {
                       </Form.Item>
                       <Form.Item name="category">
                         <SELECT
-                          data={useGetMedia?.data?.data.map(
+                          data={useMediaCategory?.data?.data.map(
                             (item: any, index: number) => ({
-                              key: index,
+                              // key: index,
                               label: item.title_uz,
                               value: item._id,
                             })
                           )}
-                          defaultValue={dataMedia.category.map(
-                            (item: any, index: number) => ({
-                              key: index,
+                          defaultValue={useGetMedia.data?.data
+                            .find((item: any) => item._id == id)
+                            .category.map((item: any) => ({
                               label: item.title_uz,
                               value: item._id,
-                            })
-                          )}
+                            }))}
                           setData={setCategoryData}
                         />
                       </Form.Item>
@@ -334,11 +340,13 @@ export function Update(props: {
                 items={[
                   {
                     key: "1",
-                    label: "Titles",
+                    label: `${t("title")}`,
                     children: (
-                      <div className={styles.inputWrapper}>
+                      <div
+                        className={[styles.inputWrapper, "addText"].join(" ")}
+                      >
                         <Form.Item
-                          label="Title uz"
+                          label={`${t("title")} uz`}
                           name="title_uz"
                           className={styles.Input}
                         >
@@ -351,7 +359,7 @@ export function Update(props: {
                           />
                         </Form.Item>
                         <Form.Item
-                          label="Title en"
+                          label={`${t("title")} en`}
                           name="title_en"
                           className={styles.Input}
                         >
@@ -368,12 +376,14 @@ export function Update(props: {
                   },
                   {
                     key: "2",
-                    label: "Writers",
+                    label: `${t("writers")}`,
                     children: (
                       <Form.List name="writers">
                         {(fields, { add, remove }) => (
                           <div
-                            className={styles.inputWrapper}
+                            className={[styles.inputWrapper, "addText"].join(
+                              " "
+                            )}
                             style={{
                               display: "grid",
                             }}
@@ -443,7 +453,7 @@ export function Update(props: {
                   },
                   {
                     key: "3",
-                    label: "Informations",
+                    label: `${t("informations")}`,
                     children: (
                       <Form.List name="informations">
                         {(fields, { add, remove }) => (
@@ -459,6 +469,7 @@ export function Update(props: {
                                   position: "relative",
                                   paddingLeft: "40px",
                                 }}
+                                className="addText"
                                 align="baseline"
                               >
                                 <Form.Item
@@ -468,7 +479,7 @@ export function Update(props: {
                                     { required: true, message: "Missing" },
                                   ]}
                                 >
-                                  <Input placeholder="Name uz" />
+                                  <Input placeholder={`${t("name")} uz`} />
                                 </Form.Item>
                                 <Form.Item
                                   {...restField}
@@ -477,7 +488,7 @@ export function Update(props: {
                                     { required: true, message: "Missing " },
                                   ]}
                                 >
-                                  <Input placeholder="Name en" />
+                                  <Input placeholder={`${t("name")} en`} />
                                 </Form.Item>
                                 <Form.Item
                                   {...restField}
@@ -486,7 +497,17 @@ export function Update(props: {
                                     { required: true, message: "Missing " },
                                   ]}
                                 >
-                                  <Input placeholder="Info uz" />
+                                  <p className="addText">{t("info")} uz</p>
+                                  <RichText
+                                    value={
+                                      infoUz == null
+                                        ? useGetPhrase.data?.data.find(
+                                            (item: any) => item._id == id
+                                          )?.info_uz
+                                        : descriptionUz
+                                    }
+                                    setValue={setInfoUz}
+                                  ></RichText>
                                 </Form.Item>
                                 <Form.Item
                                   {...restField}
@@ -495,7 +516,17 @@ export function Update(props: {
                                     { required: true, message: "Missing " },
                                   ]}
                                 >
-                                  <Input placeholder="Info en" />
+                                  <p className="addText">{t("info")} en</p>
+                                  <RichText
+                                    value={
+                                      infoEn == null
+                                        ? useGetPhrase.data?.data.find(
+                                            (item: any) => item._id == id
+                                          )?.info_en
+                                        : descriptionEn
+                                    }
+                                    setValue={setInfoEn}
+                                  ></RichText>
                                 </Form.Item>
 
                                 <MinusCircleOutlined
@@ -525,7 +556,7 @@ export function Update(props: {
                                 }}
                                 icon={<PlusOutlined />}
                               >
-                                Add information
+                                {t("add")}
                               </Button>
                             </Form.Item>
                           </div>
@@ -535,15 +566,16 @@ export function Update(props: {
                   },
                   {
                     key: "4",
-                    label: "Descriptions",
+                    label: `${t("Description")}`,
                     children: (
                       <>
                         <div
                           style={{
                             margin: "20px 0px",
                           }}
+                          className="addText"
                         >
-                          Description uz
+                          UZ
                           <RichText
                             value={
                               descriptionUz == null
@@ -559,8 +591,9 @@ export function Update(props: {
                           style={{
                             margin: "20px 0px",
                           }}
+                          className="addText"
                         >
-                          Description en
+                          EN
                           <RichText
                             value={
                               descriptionEn == null
@@ -577,15 +610,16 @@ export function Update(props: {
                   },
                   {
                     key: "5",
-                    label: "Comments",
+                    label: `${t("Comment")}`,
                     children: (
                       <>
                         <div
                           style={{
                             margin: "20px 0px",
                           }}
+                          className="addText"
                         >
-                          Comment uz
+                          {t("Comment")} uz
                           <RichText
                             value={
                               comentUz == null
@@ -601,8 +635,9 @@ export function Update(props: {
                           style={{
                             margin: "20px 0px",
                           }}
+                          className="addText"
                         >
-                          Comment en
+                          {t("Comment")} en
                           <RichText
                             value={
                               comentEn == null
@@ -619,7 +654,7 @@ export function Update(props: {
                   },
                   {
                     key: "6",
-                    label: "Is main",
+                    label: `${t("isMain")}`,
                     children: (
                       <Form.Item>
                         <Checkbox
@@ -633,7 +668,7 @@ export function Update(props: {
                   },
                   {
                     key: "7",
-                    label: "Image",
+                    label: `${t("Image")}`,
                     children: (
                       <ImgCrop rotationSlider>
                         <Upload
@@ -664,7 +699,7 @@ export function Update(props: {
               items={[
                 {
                   key: "1",
-                  label: "Titles",
+                  label: `${t("title")}`,
                   children: (
                     <div className={styles.inputWrapper}>
                       <Form.Item name={"title_uz"} className={styles.Input}>
@@ -691,15 +726,55 @@ export function Update(props: {
                 },
                 {
                   key: "2",
-                  label: "Comments",
+                  label: `${t("Comment")}`,
                   children: (
                     <div className={styles.inputWrapper}>
                       <div
                         style={{
                           margin: "20px 0px",
                         }}
+                        className="addText"
                       >
                         Comment uz
+                        <RichText
+                          value={
+                            comentUz == null
+                              ? useGetPhrase.data?.data.find(
+                                  (item: any) => item._id == id
+                                )?.comment_uz
+                              : comentUz
+                          }
+                          setValue={setComentUz}
+                        ></RichText>
+                        <div
+                          style={{
+                            margin: "20px 0px",
+                          }}
+                          className="addText"
+                        >
+                          Comment en
+                          <RichText
+                            value={
+                              comentEn == null
+                                ? useGetPhrase.data?.data.find(
+                                    (item: any) => item._id == id
+                                  )?.comment_en
+                                : comentEn
+                            }
+                            setValue={setComentEn}
+                          ></RichText>
+                        </div>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  key: "3",
+                  label: `${t("Description")}`,
+                  children: (
+                    <div className={styles.inputWrapper}>
+                      <div className="addText">
+                        UZ
                         <RichText
                           value={
                             descriptionUz == null
@@ -710,64 +785,26 @@ export function Update(props: {
                           }
                           setValue={setDescriptionUz}
                         ></RichText>
-                        <div
-                          style={{
-                            margin: "20px 0px",
-                          }}
-                        >
-                          Comment en
-                          <RichText
-                            value={
-                              descriptionEn == null
-                                ? useGetPhrase.data?.data.find(
-                                    (item: any) => item._id == id
-                                  )?.description_uz
-                                : descriptionEn
-                            }
-                            setValue={setDescriptionEn}
-                          ></RichText>
-                        </div>
+                      </div>
+                      <div className="addText">
+                        EN
+                        <RichText
+                          value={
+                            descriptionEn == null
+                              ? useGetPhrase.data?.data.find(
+                                  (item: any) => item._id == id
+                                )?.description_en
+                              : descriptionEn
+                          }
+                          setValue={setDescriptionEn}
+                        ></RichText>
                       </div>
                     </div>
                   ),
                 },
                 {
-                  key: "3",
-                  label: "Descripions",
-                  children: (
-                    <div className={styles.inputWrapper}>
-                      <Form.Item
-                        rules={[{ required: true, message: "Missing" }]}
-                        label={t("description_uz")}
-                        name={"description_en"}
-                      >
-                        <Input
-                          defaultValue={useWordGetData?.description_uz}
-                          style={{
-                            width: "100%",
-                          }}
-                          required
-                        />
-                      </Form.Item>
-                      <Form.Item
-                        rules={[{ required: true, message: "Missing" }]}
-                        label={t("description_en")}
-                        name={"description_en"}
-                      >
-                        <Input
-                          defaultValue={useWordGetData?.description_en}
-                          style={{
-                            width: "100%",
-                          }}
-                          required
-                        />
-                      </Form.Item>
-                    </div>
-                  ),
-                },
-                {
                   key: "4",
-                  label: "Image",
+                  label: `${t("Image")}`,
                   children: (
                     <div className={styles.inputWrapper}>
                       <Form.Item
@@ -785,8 +822,6 @@ export function Update(props: {
                             onChange={onChange}
                             name="photo"
                             onPreview={onPreview}
-                            // maxZoom={3}
-                            // minZoom={1}
                           >
                             {fileListWords.length < 1 && "+ Upload"}
                           </Upload>
