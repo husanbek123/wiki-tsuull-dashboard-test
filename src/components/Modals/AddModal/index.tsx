@@ -46,6 +46,14 @@ export function Add(props: {
   });
   const [infoUz, setInfoUz] = useState("");
   const [infoEn, setInfoEn] = useState("");
+  const [fields, setFields] = useState<
+    {
+      info_uz?: string;
+      info_en?: string;
+      name_uz?: string;
+      name_en?: string;
+    }[]
+  >([]);
   const [isMain, setisMain] = useState(false);
   const [photoId, setPhotoId] = useState<string>("");
   const [descriptionUz, setDescriptionUz] = useState("");
@@ -84,119 +92,122 @@ export function Add(props: {
   /* For Upload Change End  */
 
   const onFinish = (values: any) => {
-    // media
-    if (props.postUrl == "/media") {
-      console.log({
-        ...values,
-        category: categoryData,
-      });
-
-      usePost.mutate(
-        {
+    if (photoId.trim() === "") {
+      ErrorToastify("Missing photo");
+    } else {
+      // media
+      if (props.postUrl == "/media") {
+        console.log({
           ...values,
-          category: categoryData.value,
-        },
-        {
-          onSuccess: () => {
-            SuccessToastify();
-            setIsModalOpen(false);
-            queryClient.invalidateQueries({
-              queryKey: ["media"],
-            });
-          },
-          onError: () => {
-            ErrorToastify();
-          },
-        }
-      );
-    }
+          category: categoryData,
+        });
 
-    // phrase
-    else if (props.postUrl == "/phrase") {
-      usePost.mutate(
-        {
+        usePost.mutate(
+          {
+            ...values,
+            category: categoryData.value,
+          },
+          {
+            onSuccess: () => {
+              SuccessToastify("");
+              setIsModalOpen(false);
+              setDatas(null);
+              queryClient.invalidateQueries({
+                queryKey: ["media"],
+              });
+            },
+            onError: () => {
+              ErrorToastify();
+            },
+          }
+        );
+      }
+
+      // phrase
+      else if (props.postUrl == "/phrase") {
+        // usePost.mutate(
+        //   {
+        //     ...values,
+        //     comment_uz: comentUz,
+        //     comment_en: comentEn,
+        //     description_uz: descriptionUz,
+        //     description_en: descriptionEn,
+        //     informations: values.informations || [],
+        //     writers: values.writers || [],
+        //     isMain,
+        //     image: photoId,
+        //   },
+        //   {
+        //     onSuccess: () => {
+        //       SuccessToastify();
+        //       setIsModalOpen(false);
+        //       queryClient.invalidateQueries({
+        //         queryKey: ["phrase"],
+        //       });
+        //     },
+        //     onError: () => {
+        //       ErrorToastify();
+        //     },
+        //   }
+        // );
+        console.log({
+          comment_uz: comentUz,
+          comment_en: comentEn,
+          description_uz: descriptionUz,
+          description_en: descriptionEn,
+          informations:
+            values.informations.map((item: any) => ({
+              info_uz: item.info_uz,
+              info_en: item.info_en,
+              name_uz: item.name_uz,
+              name_en: item.name_en,
+            })) || [],
+          writers: values.writers || [],
+          isMain,
+          image: photoId,
+        });
+      } else if (props.postUrl == "/word") {
+        const result = {
           ...values,
           comment_uz: comentUz,
           comment_en: comentEn,
           description_uz: descriptionUz,
           description_en: descriptionEn,
-          informations: values.informations || [],
-          writers: values.writers || [],
-          isMain,
           image: photoId,
-        },
-        {
+        };
+        usePost.mutate(result, {
           onSuccess: () => {
             SuccessToastify();
             setIsModalOpen(false);
             queryClient.invalidateQueries({
-              queryKey: ["phrase"],
+              queryKey: ["word"],
             });
           },
           onError: () => {
             ErrorToastify();
           },
-        }
-      );
-      console.log({
-        ...values,
-        comment_uz: comentUz,
-        comment_en: comentEn,
-        description_uz: descriptionUz,
-        description_en: descriptionEn,
-        informations: values.informations || [],
-        writers: values.writers || [],
-        isMain,
-        image: photoId,
-      });
-    } else if (props.postUrl == "/word") {
-      const result = {
-        ...values,
-        comment_uz: comentUz,
-        comment_en: comentEn,
-        description_uz: descriptionUz,
-        description_en: descriptionEn,
-        image: photoId,
-      };
-      usePost.mutate(result, {
-        onSuccess: () => {
-          SuccessToastify();
-          setIsModalOpen(false);
-          queryClient.invalidateQueries({
-            queryKey: ["word"],
-          });
-        },
-        onError: () => {
-          ErrorToastify();
-        },
-      });
-    } else if (props.postUrl == "/media-category") {
-      usePost.mutate(
-        {
-          ...values,
-        },
-        {
-          onSuccess: () => {
-            SuccessToastify();
-            setIsModalOpen(false);
-            queryClient.invalidateQueries({
-              queryKey: ["media-category"],
-            });
+        });
+      } else if (props.postUrl == "/media-category") {
+        usePost.mutate(
+          {
+            ...values,
           },
-          onError: () => {
-            ErrorToastify();
-          },
-        }
-      );
-
-      const result = {
-        ...values,
-      };
-
-      console.log(result);
+          {
+            onSuccess: () => {
+              SuccessToastify();
+              setIsModalOpen(false);
+              queryClient.invalidateQueries({
+                queryKey: ["media-category"],
+              });
+            },
+            onError: () => {
+              ErrorToastify();
+            },
+          }
+        );
+      }
     }
-
-    setDatas(null);
+    return;
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -426,20 +437,23 @@ export function Add(props: {
                               >
                                 <Input placeholder={`${t("name")} en`} />
                               </Form.Item>
-                              <div className="addText">
-                                {t("info")} uz
+                              <Form.Item name={[name, "info_uz"]}>
+                                <p className="addText"> {t("info")} uz </p>
                                 <RichText
                                   value={infoUz}
                                   setValue={setInfoUz}
                                 ></RichText>
-                              </div>
-                              <div className="addText">
-                                {t("info")} en
+                              </Form.Item>
+                              <Form.Item name={[name, "info_en"]}>
+                                <p className="addText">
+                                  {" "}
+                                  {t("information")} en
+                                </p>
                                 <RichText
                                   value={infoEn}
                                   setValue={setInfoEn}
                                 ></RichText>
-                              </div>
+                              </Form.Item>
 
                               <MinusCircleOutlined
                                 style={{

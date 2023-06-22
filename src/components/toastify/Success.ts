@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 
 export default function SuccessToastify(msg?: string) {
-  return toast.success(`${msg }`, {
+  return toast.success(`${msg || "Success"}`, {
     position: "top-right",
     autoClose: 5000,
     hideProgressBar: false,

@@ -7,6 +7,7 @@ import { postUrl } from "../../../types/defaultType";
 import { Link } from "react-router-dom";
 import { api } from "../../../utils/axios";
 import { useTranslation } from "react-i18next";
+import ComponentLoader from "../../ComponentLoader";
 export function Single(props: {
   url: postUrl;
   id: string;
@@ -24,8 +25,8 @@ export function Single(props: {
   );
   const { t } = useTranslation();
   return (
-    data && (
-      <Modal width={800} open={isModalOpen} footer={null} onCancel={handleOk}>
+    <Modal width={800} open={isModalOpen} footer={null} onCancel={handleOk}>
+      {data ? (
         <div className={style.wrapper}>
           <Collapse
             items={[
@@ -124,7 +125,7 @@ export function Single(props: {
                     key: "3",
                     label: `${t("writers")}`,
                     children: (
-                      <div className={[style.writers , 'addText'].join(' ')} >
+                      <div className={[style.writers, "addText"].join(" ")}>
                         {data.writers.map(
                           (
                             item: { name: string; link: string },
@@ -150,7 +151,7 @@ export function Single(props: {
                     key: "4",
                     label: `${t("informations")}`,
                     children: (
-                      <div className={[style.writers , 'addText'].join(' ')}>
+                      <div className={[style.writers, "addText"].join(" ")}>
                         <div className={style.informations}>
                           {data.informations.map(
                             (
@@ -186,7 +187,7 @@ export function Single(props: {
                   },
                   {
                     key: "5",
-                    label: `${t('isMain')}`,
+                    label: `${t("isMain")}`,
                     children: <Checkbox checked={data.isMain}></Checkbox>,
                   },
                 ]}
@@ -242,7 +243,16 @@ export function Single(props: {
             </>
           )}
         </div>
-      </Modal>
-    )
+      ) : (
+        <div style={{
+          height:'400px',
+          display : 'flex',
+          justifyContent : 'center',
+          alignItems:'center'
+        }}>
+          <ComponentLoader></ComponentLoader>
+        </div>
+      )}
+    </Modal>
   );
 }

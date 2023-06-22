@@ -10,5 +10,6 @@ export default function ErrorToastify(msg?: string) {
     draggable: true,
     progress: undefined,
     theme: "colored",
+    
   });
 }

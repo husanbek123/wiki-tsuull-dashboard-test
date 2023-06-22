@@ -68,7 +68,7 @@ export function Update(props: {
   const [comentEn, setComentEn] = useState(null);
   const [infoUz, setInfoUz] = useState<string | null>(null);
   const [infoEn, setInfoEn] = useState<string | null>(null);
-  const [_, setCategoryData] = useState<categorySelect[]>([]);
+  const [categoryData, setCategoryData] = useState<categorySelect>();
   // QueryClient For Real Time
   const queryClient = useQueryClient();
   // Modal Functions
@@ -81,7 +81,9 @@ export function Update(props: {
           title_uz: values.title_uz || dataMedia.title_uz,
           title_en: values.title_en || dataMedia.title_en,
           frame: values.frame || dataMedia.frame,
-          category: dataMedia.category,
+          category: categoryData
+            ? categoryData.value
+            : dataMedia.category[0]._id,
         },
         {
           onSuccess: () => {
@@ -96,42 +98,76 @@ export function Update(props: {
       );
     }
     if (props.postUrl === "/phrase") {
-      usePhrasePatch.mutate(
-        {
-          title_uz: values.title_uz,
-          title_en: values.title_en,
-          description_uz:
-            descriptionUz ||
-            useGetPhrase.data?.data.find((item: any) => item._id == id)
-              ?.description_uz,
-          description_en:
-            descriptionEn ||
-            useGetPhrase.data?.data.find((item: any) => item._id == id)
-              ?.description_en,
-          comment_uz:
-            comentUz ||
-            useGetPhrase.data?.data.find((item: any) => item._id == id)
-              ?.comments_uz,
-          comment_en:
-            comentEn ||
-            useGetPhrase.data?.data.find((item: any) => item._id == id)
-              ?.comments_en,
-          writers: values.writers,
-          informations: values.informations,
-          image: photoId,
-          isMain: isMain,
-        },
-        {
-          onSuccess: () => {
-            SuccessToastify();
-            queryClient.invalidateQueries({ queryKey: ["phrase"] });
-            setIsModalOpen(false);
-          },
-          onError: () => {
-            ErrorToastify();
-          },
-        }
-      );
+      console.log({
+        title_uz:
+          values.title_uz ||
+          useGetPhrase.data?.data.find((item: any) => item._id == id)?.title_uz,
+        title_en:
+          values.title_en ||
+          useGetPhrase?.data?.data.find((item: any) => item._id == id)
+            ?.title_en,
+        description_uz:
+          descriptionUz ||
+          useGetPhrase.data?.data.find((item: any) => item._id == id)
+            ?.description_uz,
+        description_en:
+          descriptionEn ||
+          useGetPhrase.data?.data.find((item: any) => item._id == id)
+            ?.description_en,
+        comment_uz:
+          comentUz ||
+          useGetPhrase.data?.data.find((item: any) => item._id == id)
+            ?.comment_uz,
+        comment_en:
+          comentEn ||
+          useGetPhrase.data?.data.find((item: any) => item._id == id)
+            ?.comment_en,
+        writers: values.writers ||   useGetPhrase?.data?.data.find((item: any) => item._id == id)
+        ?.writers,
+        informations:
+          values.informations ||
+          useGetPhrase?.data?.data.find((item: any) => item._id == id)
+            ?.informations,
+        image: photoId,
+        isMain: isMain,
+      });
+
+      // usePhrasePatch.mutate(
+      // {
+      //   title_uz: values.title_uz,
+      //   title_en: values.title_en,
+      //   description_uz:
+      //     descriptionUz ||
+      //     useGetPhrase.data?.data.find((item: any) => item._id == id)
+      //       ?.description_uz,
+      //   description_en:
+      //     descriptionEn ||
+      //     useGetPhrase.data?.data.find((item: any) => item._id == id)
+      //       ?.description_en,
+      //   comment_uz:
+      //     comentUz ||
+      //     useGetPhrase.data?.data.find((item: any) => item._id == id)
+      //       ?.comments_uz,
+      //   comment_en:
+      //     comentEn ||
+      //     useGetPhrase.data?.data.find((item: any) => item._id == id)
+      //       ?.comments_en,
+      //   writers: values.writers,
+      //   informations: values.informations,
+      //   image: photoId,
+      //   isMain: isMain,
+      // },
+      //   {
+      //     onSuccess: () => {
+      //       SuccessToastify();
+      //       queryClient.invalidateQueries({ queryKey: ["phrase"] });
+      //       setIsModalOpen(false);
+      //     },
+      //     onError: () => {
+      //       ErrorToastify();
+      //     },
+      //   }
+      // );
     }
     if (props.postUrl === "/word") {
       useWordPatch.mutate(
@@ -310,18 +346,15 @@ export function Update(props: {
                       <Form.Item name="category">
                         <SELECT
                           data={useMediaCategory?.data?.data.map(
-                            (item: any, index: number) => ({
-                              // key: index,
+                            (item: any) => ({
                               label: item.title_uz,
                               value: item._id,
                             })
                           )}
-                          defaultValue={useGetMedia.data?.data
-                            .find((item: any) => item._id == id)
-                            .category.map((item: any) => ({
-                              label: item.title_uz,
-                              value: item._id,
-                            }))}
+                          defaultValue={dataMedia.category.map((item: any) => ({
+                            label: item.title_uz,
+                            value: item._id,
+                          }))}
                           setData={setCategoryData}
                         />
                       </Form.Item>
@@ -493,9 +526,6 @@ export function Update(props: {
                                 <Form.Item
                                   {...restField}
                                   name={[name, "info_uz"]}
-                                  rules={[
-                                    { required: true, message: "Missing " },
-                                  ]}
                                 >
                                   <p className="addText">{t("info")} uz</p>
                                   <RichText
@@ -504,7 +534,7 @@ export function Update(props: {
                                         ? useGetPhrase.data?.data.find(
                                             (item: any) => item._id == id
                                           )?.info_uz
-                                        : descriptionUz
+                                        : infoUz
                                     }
                                     setValue={setInfoUz}
                                   ></RichText>
@@ -512,9 +542,6 @@ export function Update(props: {
                                 <Form.Item
                                   {...restField}
                                   name={[name, "info_en"]}
-                                  rules={[
-                                    { required: true, message: "Missing " },
-                                  ]}
                                 >
                                   <p className="addText">{t("info")} en</p>
                                   <RichText
@@ -523,7 +550,7 @@ export function Update(props: {
                                         ? useGetPhrase.data?.data.find(
                                             (item: any) => item._id == id
                                           )?.info_en
-                                        : descriptionEn
+                                        : infoEn
                                     }
                                     setValue={setInfoEn}
                                   ></RichText>
@@ -656,14 +683,12 @@ export function Update(props: {
                     key: "6",
                     label: `${t("isMain")}`,
                     children: (
-                      <Form.Item>
-                        <Checkbox
-                          checked={isMain}
-                          onChange={(e) => setisMain(e.target.checked)}
-                        >
-                          is Main
-                        </Checkbox>
-                      </Form.Item>
+                      <Checkbox
+                        checked={isMain}
+                        onChange={(e) => setisMain(e.target.checked)}
+                      >
+                        <p className="addText">is Main</p>
+                      </Checkbox>
                     ),
                   },
                   {
@@ -696,6 +721,7 @@ export function Update(props: {
         {props.postUrl == "/word" && (
           <>
             <Collapse
+              defaultActiveKey={["1"]}
               items={[
                 {
                   key: "1",
