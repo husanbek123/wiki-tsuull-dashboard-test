@@ -24,6 +24,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { RichText } from "../../RichText";
 import { postUrl } from "../../../types/defaultType";
 import { useTranslation } from "react-i18next";
+import TextEditor from "../../InformationRichText";
 interface IData {
   label: string | null;
   value: string | null;
@@ -44,16 +45,6 @@ export function Add(props: {
     value: null,
     label: null,
   });
-  const [infoUz, setInfoUz] = useState("");
-  const [infoEn, setInfoEn] = useState("");
-  const [fields, setFields] = useState<
-    {
-      info_uz?: string;
-      info_en?: string;
-      name_uz?: string;
-      name_en?: string;
-    }[]
-  >([]);
   const [isMain, setisMain] = useState(false);
   const [photoId, setPhotoId] = useState<string>("");
   const [descriptionUz, setDescriptionUz] = useState("");
@@ -97,11 +88,6 @@ export function Add(props: {
     } else {
       // media
       if (props.postUrl == "/media") {
-        console.log({
-          ...values,
-          category: categoryData,
-        });
-
         usePost.mutate(
           {
             ...values,
@@ -125,42 +111,49 @@ export function Add(props: {
 
       // phrase
       else if (props.postUrl == "/phrase") {
-        // usePost.mutate(
-        //   {
-        //     ...values,
-        //     comment_uz: comentUz,
-        //     comment_en: comentEn,
-        //     description_uz: descriptionUz,
-        //     description_en: descriptionEn,
-        //     informations: values.informations || [],
-        //     writers: values.writers || [],
-        //     isMain,
-        //     image: photoId,
-        //   },
-        //   {
-        //     onSuccess: () => {
-        //       SuccessToastify();
-        //       setIsModalOpen(false);
-        //       queryClient.invalidateQueries({
-        //         queryKey: ["phrase"],
-        //       });
-        //     },
-        //     onError: () => {
-        //       ErrorToastify();
-        //     },
-        //   }
-        // );
+        usePost.mutate(
+          {
+            ...values,
+            comment_uz: comentUz,
+            comment_en: comentEn,
+            description_uz: descriptionUz,
+            description_en: descriptionEn,
+            informations:
+              values.informations.map((item: any) => ({
+                info_uz: item.info_uz || "",
+                info_en: item.info_en || "",
+                name_uz: item.name_uz || "",
+                name_en: item.name_en || "",
+              })) || [],
+            writers: values.writers || [],
+            isMain,
+            image: photoId,
+          },
+          {
+            onSuccess: () => {
+              SuccessToastify();
+              setIsModalOpen(false);
+              queryClient.invalidateQueries({
+                queryKey: ["phrase"],
+              });
+            },
+            onError: () => {
+              ErrorToastify();
+            },
+          }
+        );
         console.log({
+          ...values,
           comment_uz: comentUz,
           comment_en: comentEn,
           description_uz: descriptionUz,
           description_en: descriptionEn,
           informations:
             values.informations.map((item: any) => ({
-              info_uz: item.info_uz,
-              info_en: item.info_en,
-              name_uz: item.name_uz,
-              name_en: item.name_en,
+              info_uz: item.info_uz || "",
+              info_en: item.info_en || "",
+              name_uz: item.name_uz || "",
+              name_en: item.name_en || "",
             })) || [],
           writers: values.writers || [],
           isMain,
@@ -438,21 +431,10 @@ export function Add(props: {
                                 <Input placeholder={`${t("name")} en`} />
                               </Form.Item>
                               <Form.Item name={[name, "info_uz"]}>
-                                <p className="addText"> {t("info")} uz </p>
-                                <RichText
-                                  value={infoUz}
-                                  setValue={setInfoUz}
-                                ></RichText>
+                                <TextEditor></TextEditor>
                               </Form.Item>
                               <Form.Item name={[name, "info_en"]}>
-                                <p className="addText">
-                                  {" "}
-                                  {t("information")} en
-                                </p>
-                                <RichText
-                                  value={infoEn}
-                                  setValue={setInfoEn}
-                                ></RichText>
+                                <TextEditor></TextEditor>
                               </Form.Item>
 
                               <MinusCircleOutlined

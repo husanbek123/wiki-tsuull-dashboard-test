@@ -26,7 +26,7 @@ import { useTranslation } from "react-i18next";
 import { RcFile } from "antd/es/upload";
 import styles from "./index.module.scss";
 import ImgCrop from "antd-img-crop";
-
+import TextEditor from "../../InformationRichText";
 interface categorySelect {
   value: string;
   label: string;
@@ -68,6 +68,15 @@ export function Update(props: {
   const [comentEn, setComentEn] = useState(null);
   const [infoUz, setInfoUz] = useState<string | null>(null);
   const [infoEn, setInfoEn] = useState<string | null>(null);
+  const [infos, setInfos] = useState<
+    {
+      key: any;
+      info_uz: string;
+      info_en: string;
+      name_uz: string;
+      name_en: string;
+    }[]
+  >([]);
   const [categoryData, setCategoryData] = useState<categorySelect>();
   // QueryClient For Real Time
   const queryClient = useQueryClient();
@@ -122,8 +131,9 @@ export function Update(props: {
           comentEn ||
           useGetPhrase.data?.data.find((item: any) => item._id == id)
             ?.comment_en,
-        writers: values.writers ||   useGetPhrase?.data?.data.find((item: any) => item._id == id)
-        ?.writers,
+        writers:
+          values.writers ||
+          useGetPhrase?.data?.data.find((item: any) => item._id == id)?.writers,
         informations:
           values.informations ||
           useGetPhrase?.data?.data.find((item: any) => item._id == id)
@@ -131,6 +141,7 @@ export function Update(props: {
         image: photoId,
         isMain: isMain,
       });
+      console.log(infos);
 
       // usePhrasePatch.mutate(
       // {
@@ -210,12 +221,12 @@ export function Update(props: {
         }
       );
     }
-    setDescriptionEn(null);
-    setDescriptionUz(null);
-    setComentEn(null);
-    setComentUz(null);
-    setInfoUz(null);
-    setInfoEn(null);
+    // setDescriptionEn(null);
+    // setDescriptionUz(null);
+    // setComentEn(null);
+    // setComentUz(null);
+    // setInfoUz(null);
+    // setInfoEn(null);
   };
 
   const useWordGetData = useWordData?.data?.data?.find(
@@ -527,35 +538,12 @@ export function Update(props: {
                                   {...restField}
                                   name={[name, "info_uz"]}
                                 >
-                                  <p className="addText">{t("info")} uz</p>
-                                  <RichText
-                                    value={
-                                      infoUz == null
-                                        ? useGetPhrase.data?.data.find(
-                                            (item: any) => item._id == id
-                                          )?.info_uz
-                                        : infoUz
-                                    }
-                                    setValue={setInfoUz}
-                                  ></RichText>
+                                  <p className="addText">{t("informations")} uz</p>
+                                  <TextEditor></TextEditor>
                                 </Form.Item>
-                                <Form.Item
-                                  {...restField}
-                                  name={[name, "info_en"]}
-                                >
-                                  <p className="addText">{t("info")} en</p>
-                                  <RichText
-                                    value={
-                                      infoEn == null
-                                        ? useGetPhrase.data?.data.find(
-                                            (item: any) => item._id == id
-                                          )?.info_en
-                                        : infoEn
-                                    }
-                                    setValue={setInfoEn}
-                                  ></RichText>
+                                <Form.Item name={[name, "info_en"]}>
+                                  <TextEditor></TextEditor>
                                 </Form.Item>
-
                                 <MinusCircleOutlined
                                   style={{
                                     position: "absolute",
@@ -687,7 +675,7 @@ export function Update(props: {
                         checked={isMain}
                         onChange={(e) => setisMain(e.target.checked)}
                       >
-                        <p className="addText">is Main</p>
+                        <p className="addText">{t("isMain")}</p>
                       </Checkbox>
                     ),
                   },

@@ -15,6 +15,7 @@
     "@tanstack/react-query-devtools": "^4.29.14",
     "antd": "^5.6.1",
     "antd-img-crop": "^4.12.2",
+    "antd-tinymce": "^1.0.2",
     "axios": "^1.4.0",
     "html-react-parser": "^4.0.0",
     "i18next": "^23.0.2",
