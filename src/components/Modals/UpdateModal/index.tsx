@@ -143,42 +143,54 @@ export function Update(props: {
       });
       console.log(infos);
 
-      // usePhrasePatch.mutate(
-      // {
-      //   title_uz: values.title_uz,
-      //   title_en: values.title_en,
-      //   description_uz:
-      //     descriptionUz ||
-      //     useGetPhrase.data?.data.find((item: any) => item._id == id)
-      //       ?.description_uz,
-      //   description_en:
-      //     descriptionEn ||
-      //     useGetPhrase.data?.data.find((item: any) => item._id == id)
-      //       ?.description_en,
-      //   comment_uz:
-      //     comentUz ||
-      //     useGetPhrase.data?.data.find((item: any) => item._id == id)
-      //       ?.comments_uz,
-      //   comment_en:
-      //     comentEn ||
-      //     useGetPhrase.data?.data.find((item: any) => item._id == id)
-      //       ?.comments_en,
-      //   writers: values.writers,
-      //   informations: values.informations,
-      //   image: photoId,
-      //   isMain: isMain,
-      // },
-      //   {
-      //     onSuccess: () => {
-      //       SuccessToastify();
-      //       queryClient.invalidateQueries({ queryKey: ["phrase"] });
-      //       setIsModalOpen(false);
-      //     },
-      //     onError: () => {
-      //       ErrorToastify();
-      //     },
-      //   }
-      // );
+      usePhrasePatch.mutate(
+        {
+          title_uz:
+            values.title_uz ||
+            useGetPhrase.data?.data.find((item: any) => item._id == id)
+              ?.title_uz,
+          title_en:
+            values.title_en ||
+            useGetPhrase?.data?.data.find((item: any) => item._id == id)
+              ?.title_en,
+          description_uz:
+            descriptionUz ||
+            useGetPhrase.data?.data.find((item: any) => item._id == id)
+              ?.description_uz,
+          description_en:
+            descriptionEn ||
+            useGetPhrase.data?.data.find((item: any) => item._id == id)
+              ?.description_en,
+          comment_uz:
+            comentUz ||
+            useGetPhrase.data?.data.find((item: any) => item._id == id)
+              ?.comment_uz,
+          comment_en:
+            comentEn ||
+            useGetPhrase.data?.data.find((item: any) => item._id == id)
+              ?.comment_en,
+          writers:
+            values.writers ||
+            useGetPhrase?.data?.data.find((item: any) => item._id == id)
+              ?.writers,
+          informations:
+            values.informations ||
+            useGetPhrase?.data?.data.find((item: any) => item._id == id)
+              ?.informations,
+          image: photoId,
+          isMain: isMain,
+        },
+        {
+          onSuccess: () => {
+            SuccessToastify();
+            queryClient.invalidateQueries({ queryKey: ["phrase"] });
+            setIsModalOpen(false);
+          },
+          onError: () => {
+            ErrorToastify();
+          },
+        }
+      );
     }
     if (props.postUrl === "/word") {
       useWordPatch.mutate(
@@ -538,7 +550,9 @@ export function Update(props: {
                                   {...restField}
                                   name={[name, "info_uz"]}
                                 >
-                                  <p className="addText">{t("informations")} uz</p>
+                                  <p className="addText">
+                                    {t("informations")} uz
+                                  </p>
                                   <TextEditor></TextEditor>
                                 </Form.Item>
                                 <Form.Item name={[name, "info_en"]}>
