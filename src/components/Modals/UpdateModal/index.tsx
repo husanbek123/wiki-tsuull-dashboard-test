@@ -198,6 +198,7 @@ export function Update(props: {
     setDescriptionUz(null);
     setComentEn(null);
     setComentUz(null);
+    return;
   };
 
   const useWordGetData = useWordData?.data?.data?.find(
@@ -352,6 +353,7 @@ export function Update(props: {
           <>
             <>
               <Collapse
+                defaultActiveKey={["3"]}
                 items={[
                   {
                     key: "1",
@@ -392,6 +394,7 @@ export function Update(props: {
                   {
                     key: "2",
                     label: `${t("writers")}`,
+
                     children: (
                       <Form.List name="writers">
                         {(fields, { add, remove }) => (
@@ -418,9 +421,6 @@ export function Update(props: {
                                   {...restField}
                                   name={[name, "name"]}
                                   label={`name`}
-                                  rules={[
-                                    { required: true, message: "Missing" },
-                                  ]}
                                 >
                                   <Input placeholder="Name" />
                                 </Form.Item>
@@ -428,9 +428,6 @@ export function Update(props: {
                                   {...restField}
                                   label={`link`}
                                   name={[name, "link"]}
-                                  rules={[
-                                    { required: true, message: "Missing " },
-                                  ]}
                                 >
                                   <Input placeholder="Link" />
                                 </Form.Item>

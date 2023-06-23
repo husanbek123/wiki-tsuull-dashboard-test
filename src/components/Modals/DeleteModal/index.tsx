@@ -27,6 +27,7 @@ export function Delete(props: {
       },
       onError: () => ErrorToastify("Not deleted"),
     });
+    return;
   };
   const handleCancel = () => {
     setIsModalOpen(false);
