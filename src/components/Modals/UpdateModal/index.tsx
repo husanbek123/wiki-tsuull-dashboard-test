@@ -509,9 +509,6 @@ export function Update(props: {
                                   {...restField}
                                   name={[name, "info_uz"]}
                                 >
-                                  <p className="addText">
-                                    {t("informations")} uz
-                                  </p>
                                   <TextEditor></TextEditor>
                                 </Form.Item>
                                 <Form.Item name={[name, "info_en"]}>
