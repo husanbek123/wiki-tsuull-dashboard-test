@@ -66,17 +66,6 @@ export function Update(props: {
   const [descriptionEn, setDescriptionEn] = useState(null);
   const [comentUz, setComentUz] = useState(null);
   const [comentEn, setComentEn] = useState(null);
-  const [infoUz, setInfoUz] = useState<string | null>(null);
-  const [infoEn, setInfoEn] = useState<string | null>(null);
-  const [infos, setInfos] = useState<
-    {
-      key: any;
-      info_uz: string;
-      info_en: string;
-      name_uz: string;
-      name_en: string;
-    }[]
-  >([]);
   const [categoryData, setCategoryData] = useState<categorySelect>();
   // QueryClient For Real Time
   const queryClient = useQueryClient();
@@ -87,9 +76,15 @@ export function Update(props: {
     if (props.postUrl === "/media") {
       useMediaPatch.mutate(
         {
-          title_uz: values.title_uz || dataMedia.title_uz,
-          title_en: values.title_en || dataMedia.title_en,
-          frame: values.frame || dataMedia.frame,
+          title_uz:
+            values.title_uz !== undefined
+              ? values.title_uz
+              : dataMedia.title_uz,
+          title_en:
+            values.title_en !== undefined
+              ? values.title_en
+              : dataMedia.title_en,
+          frame: values.frame !== undefined ? values.frame : dataMedia.frame,
           category: categoryData
             ? categoryData.value
             : dataMedia.category[0]._id,
@@ -107,52 +102,18 @@ export function Update(props: {
       );
     }
     if (props.postUrl === "/phrase") {
-      console.log({
-        title_uz:
-          values.title_uz ||
-          useGetPhrase.data?.data.find((item: any) => item._id == id)?.title_uz,
-        title_en:
-          values.title_en ||
-          useGetPhrase?.data?.data.find((item: any) => item._id == id)
-            ?.title_en,
-        description_uz:
-          descriptionUz ||
-          useGetPhrase.data?.data.find((item: any) => item._id == id)
-            ?.description_uz,
-        description_en:
-          descriptionEn ||
-          useGetPhrase.data?.data.find((item: any) => item._id == id)
-            ?.description_en,
-        comment_uz:
-          comentUz ||
-          useGetPhrase.data?.data.find((item: any) => item._id == id)
-            ?.comment_uz,
-        comment_en:
-          comentEn ||
-          useGetPhrase.data?.data.find((item: any) => item._id == id)
-            ?.comment_en,
-        writers:
-          values.writers ||
-          useGetPhrase?.data?.data.find((item: any) => item._id == id)?.writers,
-        informations:
-          values.informations ||
-          useGetPhrase?.data?.data.find((item: any) => item._id == id)
-            ?.informations,
-        image: photoId,
-        isMain: isMain,
-      });
-      console.log(infos);
-
       usePhrasePatch.mutate(
         {
           title_uz:
-            values.title_uz ||
-            useGetPhrase.data?.data.find((item: any) => item._id == id)
-              ?.title_uz,
+            values.title_uz !== undefined
+              ? values.title_uz
+              : useGetPhrase.data?.data.find((item: any) => item._id == id)
+                  ?.title_uz,
           title_en:
-            values.title_en ||
-            useGetPhrase?.data?.data.find((item: any) => item._id == id)
-              ?.title_en,
+            values.title_en !== undefined
+              ? values.title_en
+              : useGetPhrase?.data?.data.find((item: any) => item._id == id)
+                  ?.title_en,
           description_uz:
             descriptionUz ||
             useGetPhrase.data?.data.find((item: any) => item._id == id)
@@ -233,20 +194,18 @@ export function Update(props: {
         }
       );
     }
-    // setDescriptionEn(null);
-    // setDescriptionUz(null);
-    // setComentEn(null);
-    // setComentUz(null);
-    // setInfoUz(null);
-    // setInfoEn(null);
+    setDescriptionEn(null);
+    setDescriptionUz(null);
+    setComentEn(null);
+    setComentUz(null);
   };
 
   const useWordGetData = useWordData?.data?.data?.find(
     (item: { _id: string }) => item._id === id
   );
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+  const onFinishFailed = () => {
+    ErrorToastify("Error missing value!");
   };
   const dataMedia = useGetMedia?.data?.data?.find(
     (item: { _id: string }) => item._id === id

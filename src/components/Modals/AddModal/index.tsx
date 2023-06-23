@@ -142,23 +142,6 @@ export function Add(props: {
             },
           }
         );
-        console.log({
-          ...values,
-          comment_uz: comentUz,
-          comment_en: comentEn,
-          description_uz: descriptionUz,
-          description_en: descriptionEn,
-          informations:
-            values.informations.map((item: any) => ({
-              info_uz: item.info_uz || "",
-              info_en: item.info_en || "",
-              name_uz: item.name_uz || "",
-              name_en: item.name_en || "",
-            })) || [],
-          writers: values.writers || [],
-          isMain,
-          image: photoId,
-        });
       } else if (props.postUrl == "/word") {
         const result = {
           ...values,

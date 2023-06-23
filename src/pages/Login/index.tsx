@@ -15,10 +15,9 @@ export default function Login() {
   const navigator = useNavigate();
   const { t } = useTranslation();
   const onFinish = (values: any) => {
-    console.log(values);
     useCheckUser.mutate(values, {
       onSuccess: (data) => {
-        SuccessToastify(t('SuccessLogedIn'));
+        SuccessToastify(t("SuccessLogedIn"));
         setToken(data.data.token);
         setName(values.userName);
         navigator("/");
