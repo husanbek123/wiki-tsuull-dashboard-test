@@ -324,7 +324,6 @@ export function Add(props: {
                               <Form.Item
                                 {...restField}
                                 name={[name, "name"]}
-                                rules={[{ required: true, message: "Missing" }]}
                               >
                                 <Input
                                   style={{
@@ -336,9 +335,6 @@ export function Add(props: {
                               <Form.Item
                                 {...restField}
                                 name={[name, "link"]}
-                                rules={[
-                                  { required: true, message: "Missing " },
-                                ]}
                               >
                                 <Input placeholder="Link" />
                               </Form.Item>
