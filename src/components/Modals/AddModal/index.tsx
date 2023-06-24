@@ -91,7 +91,9 @@ export function Add(props: {
   const onFinish = async (values: any) => {
     if (photoId === "" && ["/word", "/phrase"].includes(props.postUrl)) {
       return ErrorToastify(t("FillInTheBlanks"));
-    } else {
+    }
+
+    else {
       // media
       if (props.postUrl == "/media") {
         if (categoryData.value) {
@@ -266,22 +268,30 @@ export function Add(props: {
       setDatas((prev: any) =>
         prev
           ? [
-              ...prev,
-              {
-                value: category._id,
-                label:
-                  language === "uz" ? category.title_uz : category.title_en,
-              },
-            ]
+            ...prev,
+            {
+              value: category._id,
+              label:
+                language === "uz" ? category.title_uz : category.title_en,
+            },
+          ]
           : [
-              {
-                value: category._id,
-                label:
-                  language === "uz" ? category.title_uz : category.title_en,
-              },
-            ]
+            {
+              value: category._id,
+              label:
+                language === "uz" ? category.title_uz : category.title_en,
+            },
+          ]
       );
     }
+  }
+
+
+  // colaspaceOnChange
+
+
+  const colaspaceOnChange = (e: any) => {
+    console.log(e)
   }
 
   return (
@@ -333,6 +343,7 @@ export function Add(props: {
           </>
         ) : (
           <Collapse
+            accordion
             items={[
               {
                 key: "1",
@@ -374,25 +385,38 @@ export function Add(props: {
             >
               <Input />
             </Form.Item>
-            <Form.Item label="Category" name="category">
+            <Form.Item required={true} label="Category" name="category">
               <SELECT data={data} setData={setCategoryData} />
             </Form.Item>
           </>
         )}
+
+
+
+
         {props.postUrl == "/phrase" && (
           <>
             <Collapse
               defaultActiveKey={photoId === "" ? ["6"] : []}
+              accordion
+              onChange={colaspaceOnChange}
               items={[
                 {
                   key: "1",
                   label: `${t("writers")}`,
                   children: (
-                    <Form.List name="writers">
-                      {(fields, { add, remove }) => (
-                        <>
-                          {fields.map(({ key, name, ...restField }) => (
-                            <Space
+                    <Form.List rules={[{
+                      validator(rule, _value, _callback) {
+                        rule.required = true,
+                          this.message = t("Missing")
+                      },
+                    }]} name="writers">
+                      {(fields, { add, remove }) => {
+                        console.log("add Function", add)
+                        return <>
+                          {fields.map(({ key, name, ...restField }) => {
+                            console.log(key, name);
+                            return <Space
                               key={key}
                               style={{
                                 display: "grid",
@@ -438,7 +462,7 @@ export function Add(props: {
                                 onClick={() => remove(name)}
                               />
                             </Space>
-                          ))}
+                          })}
                           <Form.Item
                             style={{
                               display: "flex",
@@ -459,7 +483,7 @@ export function Add(props: {
                             </Button>
                           </Form.Item>
                         </>
-                      )}
+                      }}
                     </Form.List>
                   ),
                 },
@@ -467,85 +491,92 @@ export function Add(props: {
                   key: "2",
                   label: "Information",
                   children: (
-                    <Form.List name="informations">
-                      {(fields, { add, remove }) => (
-                        <>
-                          {fields.map(({ key, name, ...restField }) => (
-                            <Space
-                              key={key}
-                              style={{
-                                display: "grid",
-                                marginBottom: 8,
-                                gridTemplateColumns: "repeat(1,1fr)",
-                                margin: "0 auto",
-                                position: "relative",
-                                paddingLeft: "40px",
-                              }}
-                              align="baseline"
-                            >
-                              <Form.Item
-                                {...restField}
-                                name={[name, "name_uz"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: t("Missing"),
-                                  },
-                                ]}
-                              >
-                                <Input placeholder={`${t("name")} uz`} />
-                              </Form.Item>
-                              <Form.Item
-                                {...restField}
-                                name={[name, "name_en"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: t("Missing"),
-                                  },
-                                ]}
-                              >
-                                <Input placeholder={`${t("name")} en`} />
-                              </Form.Item>
-                              <Form.Item name={[name, "info_uz"]}>
-                                <TextEditor></TextEditor>
-                              </Form.Item>
-                              <Form.Item name={[name, "info_en"]}>
-                                <TextEditor></TextEditor>
-                              </Form.Item>
-
-                              <MinusCircleOutlined
-                                style={{
-                                  position: "absolute",
-                                  right: "20%",
-                                  top: "45%",
-                                  fontSize: "22px",
-                                }}
-                                onClick={() => remove(name)}
-                              />
-                            </Space>
-                          ))}
-                          <Form.Item
+                    <Form.List
+                      rules={[{
+                        validator(rule, _value, _callback) {
+                          rule.required = true,
+                            this.message = t("Missing")
+                        },
+                      }]}
+                      name="informations">
+                      {(fields, { add, remove }) => {
+                        return  <>
+                        {fields.map(({ key, name, ...restField }) => (
+                          <Space
+                            key={key}
                             style={{
-                              display: "flex",
-                              justifyContent: "center",
+                              display: "grid",
+                              marginBottom: 8,
+                              gridTemplateColumns: "repeat(1,1fr)",
+                              margin: "0 auto",
+                              position: "relative",
+                              paddingLeft: "40px",
                             }}
+                            align="baseline"
                           >
-                            <Button
-                              type="dashed"
-                              onClick={() => add()}
-                              block
-                              style={{
-                                width: "400px",
-                                margin: "0 auto",
-                              }}
-                              icon={<PlusOutlined />}
+                            <Form.Item
+                              {...restField}
+                              name={[name, "name_uz"]}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: t("Missing"),
+                                },
+                              ]}
                             >
-                              Add information
-                            </Button>
-                          </Form.Item>
-                        </>
-                      )}
+                              <Input placeholder={`${t("name")} uz`} />
+                            </Form.Item>
+                            <Form.Item
+                              {...restField}
+                              name={[name, "name_en"]}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: t("Missing"),
+                                },
+                              ]}
+                            >
+                              <Input placeholder={`${t("name")} en`} />
+                            </Form.Item>
+                            <Form.Item rules={[{ required: true, message: t("Missing") }]} name={[name, "info_uz"]}>
+                              <TextEditor></TextEditor>
+                            </Form.Item>
+                            <Form.Item rules={[{ required: true, message: t("Missing") }]} name={[name, "info_en"]}>
+                              <TextEditor></TextEditor>
+                            </Form.Item>
+
+                            <MinusCircleOutlined
+                              style={{
+                                position: "absolute",
+                                right: "20%",
+                                top: "45%",
+                                fontSize: "22px",
+                              }}
+                              onClick={() => remove(name)}
+                            />
+                          </Space>
+                        ))}
+                        <Form.Item
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Button
+                            type="dashed"
+                            onClick={() => add()}
+                            block
+                            style={{
+                              width: "400px",
+                              margin: "0 auto",
+                            }}
+                            icon={<PlusOutlined />}
+                          >
+                            Add information
+                          </Button>
+                        </Form.Item>
+                      </>
+                      }}
                     </Form.List>
                   ),
                 },
@@ -554,17 +585,22 @@ export function Add(props: {
                   label: `${t("Description")}`,
                   children: (
                     <>
+                        
                       <div
                         style={{
                           margin: "20px 0px",
                         }}
                         className="addText"
                       >
-                        {t("Description")} uz
-                        <RichText
-                          value={descriptionUz}
-                          setValue={setDescriptionUz}
-                        ></RichText>
+                        <Form.Item
+                          rules={[{ required: true, message: t("Missing") }]}
+                        >
+                          {t("Description")} uz
+                          <RichText
+                            value={descriptionUz}
+                            setValue={setDescriptionUz}
+                          ></RichText>
+                        </Form.Item>
                       </div>
                       <div
                         style={{
@@ -572,11 +608,15 @@ export function Add(props: {
                         }}
                         className="addText"
                       >
-                        {t("Description")} en
-                        <RichText
-                          value={descriptionEn}
-                          setValue={setDescriptionEn}
-                        ></RichText>
+                        <Form.Item
+                          rules={[{ required: true, message: t("Missing") }]}
+                        >
+                          {t("Description")} en
+                          <RichText
+                            value={descriptionEn}
+                            setValue={setDescriptionEn}
+                          ></RichText>
+                        </Form.Item>
                       </div>
                     </>
                   ),
@@ -592,11 +632,15 @@ export function Add(props: {
                         }}
                         className="addText"
                       >
-                        Comment uz
-                        <RichText
-                          value={comentUz}
-                          setValue={setComentUz}
-                        ></RichText>
+                        <Form.Item
+                          rules={[{ required: true, message: t("Missing") }]}
+                        >
+                          Comment uz
+                          <RichText
+                            value={comentUz}
+                            setValue={setComentUz}
+                          ></RichText>
+                        </Form.Item>
                       </div>
                       <div
                         style={{
@@ -661,6 +705,7 @@ export function Add(props: {
 
         {props?.postUrl == "/word" && (
           <Collapse
+            accordion
             items={[
               {
                 key: "1",

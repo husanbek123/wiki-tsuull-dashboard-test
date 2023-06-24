@@ -28,7 +28,7 @@ export default function App() {
         pauseOnHover
         theme="colored"
       />
-      <React.Suspense fallback={<Loading />}>
+      <React.Suspense fallback={""}>
         <Routes>
           <Route
             path="/"
