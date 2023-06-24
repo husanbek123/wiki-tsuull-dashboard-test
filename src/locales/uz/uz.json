@@ -38,5 +38,6 @@
   "Error" : "Hatolik",
   "NotDeleted" : "O'chirilmadi",
   "FillInTheBlanks"  : "Bo'sh joylarni to'ldiring",
-  "MissingPhoto" : "Rasm kiriting!"
+  "MissingPhoto" : "Rasm kiriting!",
+  "YouAreNotAdmin" : "Kirish uchun admin bo'lishingiz kerak"
 }

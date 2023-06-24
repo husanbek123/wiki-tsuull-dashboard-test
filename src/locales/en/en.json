@@ -38,5 +38,6 @@
   "Error": "Error",
   "NotDeleted": "Not deleted",
   "FillInTheBlanks": "Fill in the blanks",
-  "MissingPhoto" : "Missing photo"
+  "MissingPhoto" : "Missing photo",
+  "YouAreNotAdmin" : "You should be an admin"
 }
