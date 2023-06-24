@@ -444,7 +444,7 @@ export function Update(props: {
                   },
                   {
                     key: "3",
-                    label: `${t("informations")}`,
+                    label: `${t("informations")}`, 
                     children: (
                       <Form.List name="informations">
                         {(fields, { add, remove }) => (
