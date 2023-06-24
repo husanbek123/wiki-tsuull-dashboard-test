@@ -24,14 +24,6 @@ export function Single(props: {
     (item: { _id: string }) => item._id == id
   );
   const { t } = useTranslation();
-  console.log(
-    data?.frame
-      ?.split(" ")
-      ?.find((item: any) => item.includes("src"))
-      ?.split("src=")[1]
-      .slice(1, -1)
-  );
-
   return (
     <Modal width={800} open={isModalOpen} footer={null} onCancel={handleOk}>
       {data ? (
