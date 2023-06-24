@@ -16,12 +16,7 @@ export function Frame(props: {
   const data = useGet?.data?.data?.find((i: any) => i._id == id).frame;
 
   return (
-    <Modal
-      title=""
-      open={isModalOpen}
-      onCancel={handleCancel}
-      footer={null}
-    >
+    <Modal title="" open={isModalOpen} onCancel={handleCancel} footer={null}>
       <div
         style={{
           width: "100%",
@@ -32,7 +27,7 @@ export function Frame(props: {
           alignItems: "center",
         }}
       >
-        {data ? parse(data) : parse("<h1>No data</h1>")}
+        {data ? parse(data) : <h1>No data</h1>}
       </div>
     </Modal>
   );

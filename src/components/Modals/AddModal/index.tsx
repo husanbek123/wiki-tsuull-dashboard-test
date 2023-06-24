@@ -83,8 +83,8 @@ export function Add(props: {
   /* For Upload Change End  */
 
   const onFinish = (values: any) => {
-    if (photoId.trim() === "") {
-      ErrorToastify("Missing photo");
+    if (photoId === "" && ["/words", "/phrase"].includes(props.postUrl)) {
+      return ErrorToastify(t("FillInTheBlanks"));
     } else {
       // media
       if (props.postUrl == "/media") {
@@ -95,7 +95,7 @@ export function Add(props: {
           },
           {
             onSuccess: () => {
-              SuccessToastify("");
+              SuccessToastify(t("Success"));
               setIsModalOpen(false);
               setDatas(null);
               queryClient.invalidateQueries({
@@ -114,12 +114,12 @@ export function Add(props: {
         usePost.mutate(
           {
             ...values,
-            comment_uz: comentUz,
-            comment_en: comentEn,
-            description_uz: descriptionUz,
-            description_en: descriptionEn,
+            comment_uz: comentUz || "",
+            comment_en: comentEn || "",
+            description_uz: descriptionUz || "",
+            description_en: descriptionEn || "",
             informations:
-              values.informations.map((item: any) => ({
+              values?.informations?.map((item: any) => ({
                 info_uz: item.info_uz || "",
                 info_en: item.info_en || "",
                 name_uz: item.name_uz || "",
@@ -131,14 +131,14 @@ export function Add(props: {
           },
           {
             onSuccess: () => {
-              SuccessToastify();
+              SuccessToastify(t("Success"));
               setIsModalOpen(false);
               queryClient.invalidateQueries({
                 queryKey: ["phrase"],
               });
             },
             onError: () => {
-              ErrorToastify();
+              ErrorToastify(t("Error"));
             },
           }
         );
@@ -153,14 +153,14 @@ export function Add(props: {
         };
         usePost.mutate(result, {
           onSuccess: () => {
-            SuccessToastify();
+            SuccessToastify(t("Success"));
             setIsModalOpen(false);
             queryClient.invalidateQueries({
               queryKey: ["word"],
             });
           },
           onError: () => {
-            ErrorToastify();
+            ErrorToastify(t("Error"));
           },
         });
       } else if (props.postUrl == "/media-category") {
@@ -170,14 +170,14 @@ export function Add(props: {
           },
           {
             onSuccess: () => {
-              SuccessToastify();
+              SuccessToastify(t("Success"));
               setIsModalOpen(false);
               queryClient.invalidateQueries({
                 queryKey: ["media-category"],
               });
             },
             onError: () => {
-              ErrorToastify();
+              ErrorToastify(t("Error"));
             },
           }
         );
@@ -186,8 +186,8 @@ export function Add(props: {
     return;
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+  const onFinishFailed = () => {
+    ErrorToastify(t("FillInTheBlanks"));
   };
 
   if (useGetCategory.isSuccess && data == null) {
@@ -321,10 +321,7 @@ export function Add(props: {
                               }}
                               align="baseline"
                             >
-                              <Form.Item
-                                {...restField}
-                                name={[name, "name"]}
-                              >
+                              <Form.Item {...restField} name={[name, "name"]}>
                                 <Input
                                   style={{
                                     width: "100%",
@@ -332,10 +329,7 @@ export function Add(props: {
                                   placeholder="Name"
                                 />
                               </Form.Item>
-                              <Form.Item
-                                {...restField}
-                                name={[name, "link"]}
-                              >
+                              <Form.Item {...restField} name={[name, "link"]}>
                                 <Input placeholder="Link" />
                               </Form.Item>
                               <MinusCircleOutlined
@@ -550,7 +544,7 @@ export function Add(props: {
                             color: "red",
                           }}
                         >
-                          Missig photo
+                          {t("MissingPhoto")}
                         </p>
                       )}
                     </>
@@ -632,7 +626,7 @@ export function Add(props: {
                           color: "red",
                         }}
                       >
-                        Missing photo
+                        {t("MissingPhoto")}
                       </p>
                     )}
                   </>

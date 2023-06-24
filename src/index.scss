@@ -18,7 +18,12 @@ img {
   max-width: 100%;
   max-height: 100%;
 }
-
+[data-theme="light"] {
+  code {
+    color: white !important;
+    background: black !important;
+  }
+}
 [data-theme="dark"] {
   background-color: #00013d;
   color: #fff;
@@ -117,24 +122,26 @@ img {
       span {
         color: white;
       }
-      .ql-formats{
-        .ql-header{
-          
-          span{
+      .ql-formats {
+        .ql-header {
+          span {
             color: black;
           }
-          .ql-picker-label{
+          .ql-picker-label {
             color: white;
           }
         }
-        button{
+        button {
           color: white;
-          svg{
+          svg {
             color: white;
           }
         }
       }
     }
+  }
+  code {
+    color: black;
   }
 }
 .active {

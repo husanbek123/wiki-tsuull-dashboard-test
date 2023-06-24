@@ -23,13 +23,13 @@ export default function Login() {
         navigator("/");
       },
       onError: () => {
-        ErrorToastify();
+        ErrorToastify(t("Error"));
       },
     });
   };
 
   const onFinishFailed = () => {
-    ErrorToastify();
+    ErrorToastify(t("FillInTheBlanks"));
   };
 
   return (

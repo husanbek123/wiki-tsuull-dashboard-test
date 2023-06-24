@@ -91,12 +91,12 @@ export function Update(props: {
         },
         {
           onSuccess: () => {
-            SuccessToastify();
+            SuccessToastify(t("Success"));
             queryClient.invalidateQueries({ queryKey: ["media"] });
             setIsModalOpen(false);
           },
           onError: () => {
-            ErrorToastify();
+            ErrorToastify(t("Error"));
           },
         }
       );
@@ -143,12 +143,12 @@ export function Update(props: {
         },
         {
           onSuccess: () => {
-            SuccessToastify();
+            SuccessToastify(t("Success"));
             queryClient.invalidateQueries({ queryKey: ["phrase"] });
             setIsModalOpen(false);
           },
           onError: () => {
-            ErrorToastify();
+            ErrorToastify(t("Error"));
           },
         }
       );
@@ -166,12 +166,12 @@ export function Update(props: {
         },
         {
           onSuccess: () => {
-            SuccessToastify();
+            SuccessToastify(t("Success"));
             queryClient.invalidateQueries({ queryKey: ["word"] });
             setIsModalOpen(false);
           },
           onError: () => {
-            ErrorToastify();
+            ErrorToastify(t("Error"));
           },
         }
       );
@@ -184,12 +184,12 @@ export function Update(props: {
         },
         {
           onSuccess: () => {
-            SuccessToastify();
+            SuccessToastify(t("Success"));
             queryClient.invalidateQueries({ queryKey: ["media-category"] });
             setIsModalOpen(false);
           },
           onError: () => {
-            ErrorToastify();
+            ErrorToastify(t("Error"));
           },
         }
       );
@@ -206,7 +206,7 @@ export function Update(props: {
   );
 
   const onFinishFailed = () => {
-    ErrorToastify("Error missing value!");
+    ErrorToastify(t("FillInTheBlanks"));
   };
   const dataMedia = useGetMedia?.data?.data?.find(
     (item: { _id: string }) => item._id === id
@@ -353,7 +353,7 @@ export function Update(props: {
           <>
             <>
               <Collapse
-                defaultActiveKey={["3"]}
+                defaultActiveKey={["1", "3", "7"]}
                 items={[
                   {
                     key: "1",

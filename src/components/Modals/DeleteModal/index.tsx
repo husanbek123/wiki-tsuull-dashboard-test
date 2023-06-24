@@ -19,13 +19,13 @@ export function Delete(props: {
   const handleOk = () => {
     useDeleteData.mutate(`${id}`, {
       onSuccess: () => {
-        SuccessToastify("Deleted!");
+        SuccessToastify(t("Deleted"));
         queryClient.invalidateQueries({
           queryKey: [`${postUrl.slice(1)}`],
         });
         setIsModalOpen(false);
       },
-      onError: () => ErrorToastify("Not deleted"),
+      onError: () => ErrorToastify(t("NotDeleted")),
     });
     return;
   };
