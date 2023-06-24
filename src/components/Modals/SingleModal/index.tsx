@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Checkbox, Collapse, Modal } from "antd";
 import { useGetData } from "../../../utils/hooks/useGet";
 import parse from "html-react-parser";
