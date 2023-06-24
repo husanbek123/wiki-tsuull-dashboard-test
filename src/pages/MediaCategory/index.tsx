@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { Breadcrumb, Button, Table } from "antd";
+import {  Button, Table } from "antd";
 import style from "./index.module.scss";
 import { CRUDNavigator } from "../../components/CRUDNavigator";
 // TOOLTIP

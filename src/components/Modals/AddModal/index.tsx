@@ -738,7 +738,7 @@ export function Add(props: {
               },
             ]}
             bordered={true}
-            defaultActiveKey={!photoId ? ["3"] : []}
+            // defaultActiveKey={!photoId ? ["3"] : []}
           />
         )}
         <div
