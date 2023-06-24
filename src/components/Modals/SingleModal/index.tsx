@@ -103,11 +103,11 @@ export function Single(props: {
                       children: (
                         <div className="addText">
                           <div className={style.description}>
-                            <b>UZ :</b>
+                            <b>{t("Description")} uz</b>
                             {parse(data?.description_uz)}
                           </div>
                           <div>
-                            <b>EN : </b>
+                            <b>{t("Description")} en</b>
                             {parse(data?.description_en)}
                           </div>
                         </div>
@@ -119,11 +119,11 @@ export function Single(props: {
                       children: (
                         <div className="addText">
                           <div className={style.comment}>
-                            <b> UZ :</b>
+                            <b> {t("Comment")} uz </b>
                             {parse(data?.comment_uz)}
                           </div>
                           <div>
-                            <b>EN: </b>
+                            <b> {t("Comment")} en </b>
                             {parse(data?.comment_en)}
                           </div>
                         </div>
@@ -212,15 +212,15 @@ export function Single(props: {
                   items={[
                     {
                       key: "1",
-                      label: "Descriptions",
+                      label: t("Description"),
                       children: (
                         <div className="addText">
                           <div className={style.description}>
-                            <b>Description uz :</b>
+                            <b>{t("Description")} uz :</b>
                             {parse(data?.description_uz)}
                           </div>
                           <div className={style.description}>
-                            <b>Description en : </b>
+                            <b>{t("Description")} en : </b>
                             {parse(data?.description_en)}
                           </div>
                         </div>
@@ -228,15 +228,15 @@ export function Single(props: {
                     },
                     {
                       key: "2",
-                      label: "Comments",
+                      label: t("Comment"),
                       children: (
                         <div className="addText">
                           <div className={style.comment}>
-                            <b>Comment uz :</b>
+                            <b>{t("Comment")} uz :</b>
                             {parse(data?.comment_uz)}
                           </div>
                           <div className={style.comment}>
-                            <b>Comment en : </b>
+                            <b>{t("Comment")} en : </b>
                             {parse(data?.comment_en)}
                           </div>
                         </div>
