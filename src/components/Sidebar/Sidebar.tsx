@@ -43,11 +43,12 @@ export default function Sidebar() {
           </div>
         </div>
         <div className={style.links}>
-          {listItems.map((item, index) => (
-            <NavLink to={`${item.url}`} key={index}>
+          {listItems.map((item, index) => {
+            console.log(item)
+            return <NavLink to={`${item.url}`} key={index}>
               {t(item.title)}
             </NavLink>
-          ))}
+          })}
         </div>
         <div className={style.params}>
           <div className={style.languages}>
@@ -67,7 +68,7 @@ export default function Sidebar() {
           </div>
           <div
             className={style.theme}
-            onClick={()=>setTheme(theme == "dark" ? "light" : "dark")}
+            onClick={() => setTheme(theme == "dark" ? "light" : "dark")}
           >
             {theme === "light" ? (
               <div className={style.ThemContainerSun}>
@@ -92,3 +93,4 @@ export default function Sidebar() {
     </header>
   );
 }
+
