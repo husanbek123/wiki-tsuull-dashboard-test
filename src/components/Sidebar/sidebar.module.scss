@@ -1,6 +1,7 @@
 $orange-color: #ec781c;
 $blue-color: #124a85;
 
+
 .header {
   background: $blue-color;
   width: 100%;
@@ -20,7 +21,7 @@ $blue-color: #124a85;
         width: 60px;
         height: 60px;
         border-radius: 50%;
-        background: #ec781c;
+        background: $orange-color;
         font-size: 30px;
         display: flex;
         justify-content: center;
@@ -32,7 +33,7 @@ $blue-color: #124a85;
       gap: 20px;
       a {
         cursor: pointer;
-        font-size: 20px;
+        font-size: 17px;
         &:hover {
           transition: 0.3s;
           color: $orange-color;
