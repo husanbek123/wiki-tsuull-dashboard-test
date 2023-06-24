@@ -18,6 +18,7 @@ import { useTranslation } from "react-i18next";
 import { ColumnsType } from "antd/es/table";
 import ComponentLoader from "../../components/ComponentLoader";
 import { api } from "../../utils/axios";
+import { ComponenBreadCrumb } from "../../components/Breadcrumb";
 
 type image = {
   _id: string;
@@ -68,6 +69,8 @@ export default function Words() {
   return (
     <div className={style.Main}>
       <div className={style.container}>
+        <ComponenBreadCrumb url={t("Words")} />
+
         {isModalOpen && (
           <CRUDNavigator
             postUrl={"/word"}
@@ -117,106 +120,108 @@ export default function Words() {
               spinning: !useGet.data?.data,
             }}
             columns={columns}
-            dataSource={dataResult?.map((item: WordProps, index: any) => ({
-              key: index + 1,
-              title_uz: <p>{item?.title_uz}</p>,
-              title_en: <p>{item?.title_en}</p>,
-              buttons: (
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "5px",
-                    justifyContent: "center",
-                  }}
-                >
-                  <TOOLTIP color="red" title={"Delete"} key={"1"}>
-                    <Button
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        color: "red",
-                        borderColor: "red",
-                        fontSize: "15px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                      onClick={() => {
-                        setModalParametrs({
-                          status: "Delete",
-                          id: item._id,
-                        });
-                        setIsModalOpen(true);
-                      }}
-                    >
-                      <BsFillTrashFill></BsFillTrashFill>
-                    </Button>
-                  </TOOLTIP>
-                  <TOOLTIP title={`Change`} color={"orange"} key={"2"}>
-                    <Button
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        color: "orange",
-                        borderColor: "orange",
-                        fontSize: "15px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                      onClick={() => {
-                        setModalParametrs({
-                          status: "Update",
-                          id: item._id,
-                        });
-                        setIsModalOpen(true);
-                      }}
-                    >
-                      <BsPencilSquare />
-                    </Button>
-                  </TOOLTIP>
+            dataSource={dataResult
+              ?.reverse()
+              .map((item: WordProps, index: any) => ({
+                key: index + 1,
+                title_uz: <p>{item?.title_uz}</p>,
+                title_en: <p>{item?.title_en}</p>,
+                buttons: (
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "5px",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <TOOLTIP color="red" title={"Delete"} key={"1"}>
+                      <Button
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          color: "red",
+                          borderColor: "red",
+                          fontSize: "15px",
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                        onClick={() => {
+                          setModalParametrs({
+                            status: "Delete",
+                            id: item._id,
+                          });
+                          setIsModalOpen(true);
+                        }}
+                      >
+                        <BsFillTrashFill></BsFillTrashFill>
+                      </Button>
+                    </TOOLTIP>
+                    <TOOLTIP title={`Change`} color={"orange"} key={"2"}>
+                      <Button
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          color: "orange",
+                          borderColor: "orange",
+                          fontSize: "15px",
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                        onClick={() => {
+                          setModalParametrs({
+                            status: "Update",
+                            id: item._id,
+                          });
+                          setIsModalOpen(true);
+                        }}
+                      >
+                        <BsPencilSquare />
+                      </Button>
+                    </TOOLTIP>
 
-                  <TOOLTIP title={`Single`} color={"green"} key={"3"}>
-                    <Button
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        fontSize: "15px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        color: "green",
-                        borderColor: "green",
-                      }}
-                      onClick={() => {
-                        setModalParametrs({
-                          status: "Single",
-                          id: item._id,
-                          url: "/phrase",
-                        });
-                        setIsModalOpen(true);
-                      }}
-                    >
-                      <BsFillEyeFill />
-                    </Button>
-                  </TOOLTIP>
-                </div>
-              ),
-              image: (
-                <>
-                  <div>
-                    <img
-                      width={50}
-                      src={`${api}/file/${item?.image?.path}`}
-                      alt={"img"}
-                    />
+                    <TOOLTIP title={`Single`} color={"green"} key={"3"}>
+                      <Button
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          fontSize: "15px",
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          color: "green",
+                          borderColor: "green",
+                        }}
+                        onClick={() => {
+                          setModalParametrs({
+                            status: "Single",
+                            id: item._id,
+                            url: "/phrase",
+                          });
+                          setIsModalOpen(true);
+                        }}
+                      >
+                        <BsFillEyeFill />
+                      </Button>
+                    </TOOLTIP>
                   </div>
-                </>
-              ),
-            }))}
+                ),
+                image: (
+                  <>
+                    <div>
+                      <img
+                        width={50}
+                        src={`${api}/file/${item?.image?.path}`}
+                        alt={"img"}
+                      />
+                    </div>
+                  </>
+                ),
+              }))}
           />
         </div>
       </div>

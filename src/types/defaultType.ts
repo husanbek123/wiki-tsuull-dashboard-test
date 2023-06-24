@@ -12,6 +12,10 @@ export interface zustandProps {
   theme: string;
   setTheme: (mode: string) => void;
 }
+export interface mediaCategoryIdProps {
+  id: string;
+  setId: (id: string) => void;
+}
 export interface image {
   _id: string;
   path: string;

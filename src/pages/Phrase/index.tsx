@@ -13,6 +13,7 @@ import parse from "html-react-parser";
 import { useLanguage } from "../../utils/zustand/useLanguage";
 import { useTranslation } from "react-i18next";
 import ComponentLoader from "../../components/ComponentLoader";
+import { ComponenBreadCrumb } from "../../components/Breadcrumb";
 interface DataType {
   key: React.Key;
   title: string;
@@ -63,6 +64,8 @@ export default function Phrase() {
           />
         )}
         <div className={styles.container}>
+        <ComponenBreadCrumb url={t("Phrase")} />
+
           <div className={styles.Add}>
             <TOOLTIP title={"Add"} key={"Add"} color="blue">
               <Button
@@ -102,7 +105,7 @@ export default function Phrase() {
                 spinning: !useGet.data?.data,
               }}
               columns={columns}
-              dataSource={useGet.data?.data.map((item: any, index: any) => ({
+              dataSource={useGet.data?.data.reverse().map((item: any, index: any) => ({
                 key: `${index + 1}`,
                 title_uz: <p>{item.title_uz}</p>,
                 title_en: <p>{item.title_en}</p>,

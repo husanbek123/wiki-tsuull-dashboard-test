@@ -3,7 +3,7 @@
   "MediaCategory": "Media Toifasi",
   "Words": "So'zlar",
   "Phrase": "Iboralar",
-  "add": "Malimot Qo'shish",
+  "add": "Malumot Qo'shish",
   "Words-Modal": "So'lar Qo'shish",
   "title_uz": "Sarlavha Uz",
   "title_en": "Sarlavha EN",
@@ -26,7 +26,7 @@
   "Added": "Qo'shildi!",
   "Updated": "O'zgardi!",
   "Description": "Tafsiv",
-  "Comment": "izoh",
+  "Comment": "Izoh",
   "name": "Ism",
   "info": "Ma'lumot",
   "title": "Sarlavha",
@@ -39,5 +39,9 @@
   "NotDeleted" : "O'chirilmadi",
   "FillInTheBlanks"  : "Bo'sh joylarni to'ldiring",
   "MissingPhoto" : "Rasm kiriting!",
-  "YouAreNotAdmin" : "Kirish uchun admin bo'lishingiz kerak"
+  "YouAreNotAdmin" : "Kirish uchun admin bo'lishingiz kerak",
+  "ErrorInPost" : "Qo'shishda hatolik",
+  "Main" : "Bosh sahifa",
+  "OpenVideo" : "Video ni o'chish",
+  "Missing" : "To'ldiring"
 }

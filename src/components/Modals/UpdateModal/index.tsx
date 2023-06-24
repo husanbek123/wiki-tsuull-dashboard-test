@@ -27,6 +27,7 @@ import { RcFile } from "antd/es/upload";
 import styles from "./index.module.scss";
 import ImgCrop from "antd-img-crop";
 import TextEditor from "../../InformationRichText";
+import { useLanguage } from "../../../utils/zustand/useLanguage";
 interface categorySelect {
   value: string;
   label: string;
@@ -211,7 +212,7 @@ export function Update(props: {
   const dataMedia = useGetMedia?.data?.data?.find(
     (item: { _id: string }) => item._id === id
   );
-
+  const language = useLanguage((state) => state.langauge);
   const useMediaCategoryDataId = useMediaCategory?.data?.data?.find(
     (item: { _id: string }) => item._id === id
   );
@@ -299,53 +300,31 @@ export function Update(props: {
       >
         {props.postUrl == "/media" && (
           <>
-            <Collapse
-              items={[
-                {
-                  key: "1",
-                  label: `${t("title")}`,
-                  children: (
-                    <div className={[styles.titles, "addText"].join(" ")}>
-                      <Form.Item label={`${t("title")} uz`} name="title_uz">
-                        <Input defaultValue={dataMedia.title_uz} />
-                      </Form.Item>
-                      <Form.Item label={`${"title"} en`} name="title_en">
-                        <Input defaultValue={dataMedia.title_en} />
-                      </Form.Item>
-                    </div>
-                  ),
-                },
-                {
-                  key: "2",
-                  label: `${t("Others")}`,
-                  children: (
-                    <>
-                      <Form.Item name="frame">
-                        <Input
-                          placeholder="Frame"
-                          defaultValue={dataMedia.frame}
-                        />
-                      </Form.Item>
-                      <Form.Item name="category">
-                        <SELECT
-                          data={useMediaCategory?.data?.data.map(
-                            (item: any) => ({
-                              label: item.title_uz,
-                              value: item._id,
-                            })
-                          )}
-                          defaultValue={dataMedia.category.map((item: any) => ({
-                            label: item.title_uz,
-                            value: item._id,
-                          }))}
-                          setData={setCategoryData}
-                        />
-                      </Form.Item>
-                    </>
-                  ),
-                },
-              ]}
-            />
+            <div className={[styles.titles, "addText"].join(" ")}>
+              <Form.Item label={`${t("title")} uz`} name="title_uz">
+                <Input defaultValue={dataMedia.title_uz} />
+              </Form.Item>
+              <Form.Item label={`${"title"} en`} name="title_en">
+                <Input defaultValue={dataMedia.title_en} />
+              </Form.Item>
+            </div>
+
+            <Form.Item name="frame" label={`${t("frame")}`}>
+              <Input placeholder="Frame" defaultValue={dataMedia.frame} />
+            </Form.Item>
+            <Form.Item name="category" label={`${t("Category")}`}>
+              <SELECT
+                data={useMediaCategory?.data?.data.map((item: any) => ({
+                  label: language == "uz" ? item.title_uz : item.title_en,
+                  value: item._id,
+                }))}
+                defaultValue={dataMedia.category.map((item: any) => ({
+                  label: language == "uz" ? item.title_uz : item.title_en,
+                  value: item._id,
+                }))}
+                setData={setCategoryData}
+              />
+            </Form.Item>
           </>
         )}
 
@@ -716,7 +695,7 @@ export function Update(props: {
                         }}
                         className="addText"
                       >
-                        Comment uz
+                        {t("Comment")} uz
                         <RichText
                           value={
                             comentUz == null
@@ -733,7 +712,7 @@ export function Update(props: {
                           }}
                           className="addText"
                         >
-                          Comment en
+                          {t("Comment")} en
                           <RichText
                             value={
                               comentEn == null

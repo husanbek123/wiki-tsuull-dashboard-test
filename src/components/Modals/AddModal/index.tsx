@@ -25,6 +25,8 @@ import { RichText } from "../../RichText";
 import { postUrl } from "../../../types/defaultType";
 import { useTranslation } from "react-i18next";
 import TextEditor from "../../InformationRichText";
+import { useLanguage } from "../../../utils/zustand/useLanguage";
+import { useCategoryId } from "../../../utils/zustand/useMediaCategoryId";
 interface IData {
   label: string | null;
   value: string | null;
@@ -39,6 +41,9 @@ export function Add(props: {
   const { t } = useTranslation();
   const { setIsModalOpen, isModalOpen } = props;
   const useGetCategory = useGetData(["media-category"], "/media-category", {});
+  const usePostMediaCategory = usePostData("media-category");
+  const categoryId = useCategoryId((state) => state.id);
+  const setCategoryId = useCategoryId((state) => state.setId);
   const usePost = usePostData(`${props.postUrl}`);
   const [data, setDatas] = useState<IData[] | null>(null);
   const [categoryData, setCategoryData] = useState<IData>({
@@ -56,6 +61,7 @@ export function Add(props: {
     setDatas(null);
   };
 
+  const language = useLanguage((state) => state.langauge);
   const queryClient = useQueryClient();
   /* For Upload Change  */
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -82,35 +88,99 @@ export function Add(props: {
 
   /* For Upload Change End  */
 
-  const onFinish = (values: any) => {
-    if (photoId === "" && ["/words", "/phrase"].includes(props.postUrl)) {
+  const onFinish = async (values: any) => {
+    if (photoId === "" && ["/word", "/phrase"].includes(props.postUrl)) {
       return ErrorToastify(t("FillInTheBlanks"));
     } else {
       // media
       if (props.postUrl == "/media") {
-        usePost.mutate(
-          {
-            ...values,
-            category: categoryData.value,
-          },
-          {
-            onSuccess: () => {
-              SuccessToastify(t("Success"));
-              setIsModalOpen(false);
-              setDatas(null);
-              queryClient.invalidateQueries({
-                queryKey: ["media"],
-              });
+        if (categoryData.value) {
+          usePost.mutate(
+            {
+              ...values,
+              category: categoryData.value,
             },
-            onError: () => {
-              ErrorToastify();
-            },
+            {
+              onSuccess: () => {
+                SuccessToastify(t("Success"));
+                setIsModalOpen(false);
+                setDatas(null);
+                queryClient.invalidateQueries({
+                  queryKey: ["media"],
+                });
+              },
+              onError: () => {
+                ErrorToastify(t("Error"));
+              },
+            }
+          );
+        } else {
+          if (categoryId == "") {
+            await usePostMediaCategory.mutate(
+              {
+                title_uz: "Boshqalar",
+                title_en: "Others",
+              },
+              {
+                onSuccess: (data) => {
+                  setCategoryId(data.data._id);
+                  SuccessToastify(t("Success"));
+                  setIsModalOpen(false);
+                  setDatas(null);
+                  queryClient.invalidateQueries({
+                    queryKey: ["media-category", "media"],
+                  });
+                },
+                onError: () => {
+                  ErrorToastify(t("Error"));
+                },
+              }
+            );
+            await usePost.mutate(
+              {
+                ...values,
+                category: categoryId,
+              },
+              {
+                onSuccess: () => {
+                  SuccessToastify(t("Success"));
+                  setIsModalOpen(false);
+                  setDatas(null);
+                  queryClient.invalidateQueries({
+                    queryKey: ["media-category"],
+                  });
+                  queryClient.invalidateQueries({
+                    queryKey: ["media"],
+                  });
+                },
+                onError: () => {
+                  ErrorToastify(t("Error"));
+                },
+              }
+            );
+          } else {
+            usePost.mutate(
+              {
+                ...values,
+                category: categoryId,
+              },
+              {
+                onSuccess: () => {
+                  SuccessToastify(t("Success"));
+                  setIsModalOpen(false);
+                  setDatas(null);
+                  queryClient.invalidateQueries({
+                    queryKey: ["media"],
+                  });
+                },
+                onError: () => {
+                  ErrorToastify(t("Error"));
+                },
+              }
+            );
           }
-        );
-      }
-
-      // phrase
-      else if (props.postUrl == "/phrase") {
+        }
+      } else if (props.postUrl == "/phrase") {
         usePost.mutate(
           {
             ...values,
@@ -199,13 +269,15 @@ export function Add(props: {
               ...prev,
               {
                 value: category._id,
-                label: category.title_uz,
+                label:
+                  language === "uz" ? category.title_uz : category.title_en,
               },
             ]
           : [
               {
                 value: category._id,
-                label: category.title_uz,
+                label:
+                  language === "uz" ? category.title_uz : category.title_en,
               },
             ]
       );
@@ -237,62 +309,74 @@ export function Add(props: {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Collapse
-          items={[
-            {
-              key: "1",
-              label: `${t("title")}`,
-              children: (
-                <>
-                  <Form.Item
-                    label={t("title_uz")}
-                    name="title_uz"
-                    rules={[{ required: true, message: "Please enter" }]}
-                  >
-                    <Input />
-                  </Form.Item>
+        {["/media", "/media-category"].includes(props.postUrl) ? (
+          <>
+            <Form.Item
+              label={t("title_uz")}
+              name="title_uz"
+              rules={[{ required: true, message: "Please enter" }]}
+            >
+              <Input />
+            </Form.Item>
 
-                  <Form.Item
-                    label={t("title_en")}
-                    name="title_en"
-                    rules={[{ required: true, message: "Please enter" }]}
-                  >
-                    <Input
-                      style={{
-                        width: "100%",
-                      }}
-                    />
-                  </Form.Item>
-                </>
-              ),
-            },
-          ]}
-        />
+            <Form.Item
+              label={t("title_en")}
+              name="title_en"
+              rules={[{ required: true, message: "Please enter" }]}
+            >
+              <Input
+                style={{
+                  width: "100%",
+                }}
+              />
+            </Form.Item>
+          </>
+        ) : (
+          <Collapse
+            items={[
+              {
+                key: "1",
+                label: `${t("title")}`,
+                children: (
+                  <>
+                    <Form.Item
+                      label={t("title_uz")}
+                      name="title_uz"
+                      rules={[{ required: true, message: "Please enter" }]}
+                    >
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      label={t("title_en")}
+                      name="title_en"
+                      rules={[{ required: true, message: "Please enter" }]}
+                    >
+                      <Input
+                        style={{
+                          width: "100%",
+                        }}
+                      />
+                    </Form.Item>
+                  </>
+                ),
+              },
+            ]}
+          />
+        )}
 
         {props.postUrl == "/media" && (
           <>
-            <Collapse
-              items={[
-                {
-                  key: "1",
-                  label: "Others",
-                  children: (
-                    <>
-                      <Form.Item
-                        label="Frame"
-                        name="frame"
-                        rules={[{ required: true, message: "Please enter" }]}
-                      >
-                        <Input />
-                      </Form.Item>
-                      <Form.Item label="Category" name="category">
-                        <SELECT data={data} setData={setCategoryData} />
-                      </Form.Item>
-                    </>
-                  ),
-                },
-              ]}
-            />
+            <Form.Item
+              label="Frame"
+              name="frame"
+              rules={[{ required: true, message: "Please enter" }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item label="Category" name="category">
+              <SELECT data={data} setData={setCategoryData} />
+            </Form.Item>
           </>
         )}
         {props.postUrl == "/phrase" && (
@@ -321,7 +405,16 @@ export function Add(props: {
                               }}
                               align="baseline"
                             >
-                              <Form.Item {...restField} name={[name, "name"]}>
+                              <Form.Item
+                                {...restField}
+                                name={[name, "name"]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: t("Missing"),
+                                  },
+                                ]}
+                              >
                                 <Input
                                   style={{
                                     width: "100%",
@@ -329,16 +422,19 @@ export function Add(props: {
                                   placeholder="Name"
                                 />
                               </Form.Item>
-                              <Form.Item {...restField} name={[name, "link"]}>
+                              <Form.Item
+                                {...restField}
+                                name={[name, "link"]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: t("Missing"),
+                                  },
+                                ]}
+                              >
                                 <Input placeholder="Link" />
                               </Form.Item>
                               <MinusCircleOutlined
-                                style={{
-                                  position: "absolute",
-                                  right: "20%",
-                                  top: "35%",
-                                  fontSize: "22px",
-                                }}
                                 onClick={() => remove(name)}
                               />
                             </Space>
@@ -390,7 +486,12 @@ export function Add(props: {
                               <Form.Item
                                 {...restField}
                                 name={[name, "name_uz"]}
-                                rules={[{ required: true, message: "Missing" }]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: t("Missing"),
+                                  },
+                                ]}
                               >
                                 <Input placeholder={`${t("name")} uz`} />
                               </Form.Item>
@@ -398,7 +499,10 @@ export function Add(props: {
                                 {...restField}
                                 name={[name, "name_en"]}
                                 rules={[
-                                  { required: true, message: "Missing " },
+                                  {
+                                    required: true,
+                                    message: t("Missing"),
+                                  },
                                 ]}
                               >
                                 <Input placeholder={`${t("name")} en`} />
@@ -447,7 +551,7 @@ export function Add(props: {
                 },
                 {
                   key: "3",
-                  label: `${t("Descriptions")}`,
+                  label: `${t("Description")}`,
                   children: (
                     <>
                       <div
@@ -564,14 +668,14 @@ export function Add(props: {
                 children: (
                   <>
                     <div className="addText">
-                      UZ
+                      {t("Description")} uz
                       <RichText
                         value={descriptionUz}
                         setValue={setDescriptionUz}
                       ></RichText>
                     </div>
                     <div className="addText">
-                      EN
+                      {t("Description")} en
                       <RichText
                         value={descriptionEn}
                         setValue={setDescriptionEn}
@@ -586,14 +690,14 @@ export function Add(props: {
                 children: (
                   <>
                     <div className="addText">
-                      {t("Comment")} uz :
+                      {t("Comment")} uz
                       <RichText
                         value={comentUz}
                         setValue={setComentUz}
                       ></RichText>
                     </div>
                     <div className="addText">
-                      {t("Comment")} en :
+                      {t("Comment")} en
                       <RichText
                         value={comentEn}
                         setValue={setComentEn}
