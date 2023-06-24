@@ -17,7 +17,6 @@ export default function Login() {
   const onFinish = (values: any) => {
     useCheckUser.mutate(values, {
       onSuccess: (data) => {
-        console.log(data.data.user.role);
         if (data.data.user.role === "admin") {
           SuccessToastify(t("SuccessLogedIn"));
           setToken(data.data.token);

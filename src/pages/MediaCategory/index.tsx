@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { Button, Table } from "antd";
+import { Breadcrumb, Button, Table } from "antd";
 import style from "./index.module.scss";
 import { CRUDNavigator } from "../../components/CRUDNavigator";
 // TOOLTIP
@@ -14,6 +14,7 @@ import { BsFillEyeFill, BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
 import { useGetData } from "../../utils/hooks/useGet";
 import { useTranslation } from "react-i18next";
 import ComponentLoader from "../../components/ComponentLoader";
+import { ComponenBreadCrumb } from "../../components/Breadcrumb";
 
 interface MediaCategoryData {
   _id: string;
@@ -52,6 +53,8 @@ export default function MediaCategory() {
   return (
     <div className={style.Main}>
       <div className={style.container}>
+      <ComponenBreadCrumb url={t("MediaCategory")}/>
+
         {isModalOpen && (
           <CRUDNavigator
             postUrl={"/media-category"}
@@ -101,7 +104,7 @@ export default function MediaCategory() {
               spinning: !useGet.data?.data,
             }}
             columns={columns}
-            dataSource={dataResult?.map((item: any, index: any) => ({
+            dataSource={dataResult?.reverse()?.map((item: any, index: any) => ({
               key: index + 1,
               title_uz: <p>{item.title_uz}</p>,
               title_en: <p>{item.title_en}</p>,

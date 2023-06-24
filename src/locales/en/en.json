@@ -38,6 +38,11 @@
   "Error": "Error",
   "NotDeleted": "Not deleted",
   "FillInTheBlanks": "Fill in the blanks",
-  "MissingPhoto" : "Missing photo",
-  "YouAreNotAdmin" : "You should be an admin"
+  "MissingPhoto": "Missing photo",
+  "YouAreNotAdmin": "You should be an admin",
+  "ErrorInPost": "Not posted",
+  "Main": "Main",
+  "Phrase" : "Phrase",
+  "OpenVideo" : "Open video",
+  "Missing" : "Fill"
 }
