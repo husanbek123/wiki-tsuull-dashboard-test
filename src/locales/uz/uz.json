@@ -43,5 +43,6 @@
   "ErrorInPost" : "Qo'shishda hatolik",
   "Main" : "Bosh sahifa",
   "OpenVideo" : "Video ni o'chish",
-  "Missing" : "To'ldiring"
+  "Missing" : "To'ldiring",
+  "page" : "sahifasi"
 }

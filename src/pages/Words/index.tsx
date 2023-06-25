@@ -69,7 +69,7 @@ export default function Words() {
   return (
     <div className={style.Main}>
       <div className={style.container}>
-        <ComponenBreadCrumb url={t("Words")} />
+        <ComponenBreadCrumb url={`${t("Word")}`} />
 
         {isModalOpen && (
           <CRUDNavigator

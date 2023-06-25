@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import {  Button, Table } from "antd";
+import { Button, Table } from "antd";
 import style from "./index.module.scss";
 import { CRUDNavigator } from "../../components/CRUDNavigator";
 // TOOLTIP
@@ -53,7 +53,7 @@ export default function MediaCategory() {
   return (
     <div className={style.Main}>
       <div className={style.container}>
-      <ComponenBreadCrumb url={t("MediaCategory")}/>
+        <ComponenBreadCrumb url={`${t("MediaCategory")}`.split('-').join(' ')} />
 
         {isModalOpen && (
           <CRUDNavigator

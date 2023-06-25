@@ -64,7 +64,7 @@ export default function Phrase() {
           />
         )}
         <div className={styles.container}>
-        <ComponenBreadCrumb url={t("Phrase")} />
+        <ComponenBreadCrumb url={`${t("Phrase")}`} />
 
           <div className={styles.Add}>
             <TOOLTIP title={"Add"} key={"Add"} color="blue">
