@@ -8,14 +8,14 @@ import { api } from "../../../utils/axios";
 import { useTranslation } from "react-i18next";
 import ComponentLoader from "../../ComponentLoader";
 export function Single(props: {
-  url: postUrl;
+  postUrl: postUrl;
   id: string;
   isModalOpen: boolean;
   setIsModalOpen: (bool: boolean) => void;
 }) {
-  const { url, id, isModalOpen, setIsModalOpen } = props;
+  const {  id, isModalOpen, setIsModalOpen } = props;
   const { t } = useTranslation();
-  const useGet = useGetData([`single-${url}`], url.toString());
+  const useGet = useGetData([`single-${props.postUrl}`], `${props.postUrl}`);
   const handleOk = () => {
     setIsModalOpen(false);
   };
@@ -28,7 +28,7 @@ export function Single(props: {
     <Modal width={800} open={isModalOpen} footer={null} onCancel={handleOk}>
       {data ? (
         <>
-          {!["/media", "/media-category"].includes(props.url) ? (
+          {!["/media", "/media-category"].includes(props.postUrl) ? (
             <div className={style.wrapper}>
               <Collapse
                 items={[
@@ -60,7 +60,7 @@ export function Single(props: {
             </div>
           )}
           <div className={style.wrapper}>
-            {url == "/media" && (
+            {props.postUrl == "/media" && (
               <div>
                 <div className="addText">
                   <div>
@@ -93,7 +93,7 @@ export function Single(props: {
                 </div>
               </div>
             )}
-            {url == "/phrase" && data && (
+            {props.postUrl == "/phrase" && (
               <>
                 <Collapse
                   items={[
@@ -206,7 +206,7 @@ export function Single(props: {
                 </div>
               </>
             )}
-            {url == "/word" && data && (
+            {props.postUrl == "/word" && (
               <>
                 <Collapse
                   items={[

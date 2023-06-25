@@ -35,7 +35,7 @@ export function CRUDNavigator(props: {
     return (
       <Single
         id={props.id.toString()}
-        url={props.postUrl}
+        postUrl={props.postUrl}
         isModalOpen
         setIsModalOpen={setIsModalOpen}
       ></Single>

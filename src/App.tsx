@@ -9,7 +9,6 @@ import {
   Pharse,
   Words,
 } from "./utils/routes/dynamicRoutes/Dynamic";
-import Loading from "./components/Loading/Loading";
 import NotFound from "./pages/NotFound/NotFound";
 import Login from "./pages/Login";
 import Protected from "./utils/ProtectedRoute";
