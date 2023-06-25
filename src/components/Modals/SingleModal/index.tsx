@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Checkbox, Collapse, Modal } from "antd";
 import { useGetData } from "../../../utils/hooks/useGet";
 import parse from "html-react-parser";
@@ -84,7 +83,7 @@ export function Single(props: {
                   <Button
                     href={data?.frame
                       ?.split(" ")
-                      ?.find((item: any) => item.includes("src"))
+                      ?.find((item: string[]) => item.includes("src"))
                       ?.split("src=")[1]
                       .slice(1, -1)}
                   >
@@ -137,7 +136,7 @@ export function Single(props: {
                           {data.writers.map(
                             (
                               item: { name: string; link: string },
-                              index: any
+                              index: number
                             ) => (
                               <Link
                                 key={index}
@@ -169,7 +168,7 @@ export function Single(props: {
                                   info_uz: string;
                                   info_en: string;
                                 },
-                                index: any
+                                index: number
                               ) => (
                                 <div key={index} className={style.information}>
                                   <p>
