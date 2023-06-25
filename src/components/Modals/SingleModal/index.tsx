@@ -13,7 +13,7 @@ export function Single(props: {
   isModalOpen: boolean;
   setIsModalOpen: (bool: boolean) => void;
 }) {
-  const {  id, isModalOpen, setIsModalOpen } = props;
+  const { id, isModalOpen, setIsModalOpen } = props;
   const { t } = useTranslation();
   const useGet = useGetData([`single-${props.postUrl}`], `${props.postUrl}`);
   const handleOk = () => {
