@@ -57,7 +57,8 @@ export default function Words() {
     key: any;
   }
 
-  const dataResult: WordProps[] = useGet?.data?.data;
+  const dataResult: WordProps[] =
+    useGet?.data?.data != undefined ? [...useGet.data.data].reverse() : [];
   const { t } = useTranslation();
   // Table Columns
   const columns: ColumnsType<DataType> = [
@@ -117,111 +118,109 @@ export default function Words() {
                   <ComponentLoader />
                 </div>
               ),
-              spinning: !useGet.data?.data,
+              spinning: !dataResult.length,
             }}
             columns={columns}
-            dataSource={dataResult
-              ?.reverse()
-              .map((item: WordProps, index: any) => ({
-                key: index + 1,
-                title_uz: <p>{item?.title_uz}</p>,
-                title_en: <p>{item?.title_en}</p>,
-                buttons: (
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "5px",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <TOOLTIP color="red" title={"Delete"} key={"1"}>
-                      <Button
-                        style={{
-                          width: "40px",
-                          height: "40px",
-                          color: "red",
-                          borderColor: "red",
-                          fontSize: "15px",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                        onClick={() => {
-                          setModalParametrs({
-                            status: "Delete",
-                            id: item._id,
-                          });
-                          setIsModalOpen(true);
-                        }}
-                      >
-                        <BsFillTrashFill></BsFillTrashFill>
-                      </Button>
-                    </TOOLTIP>
-                    <TOOLTIP title={`Change`} color={"orange"} key={"2"}>
-                      <Button
-                        style={{
-                          width: "40px",
-                          height: "40px",
-                          color: "orange",
-                          borderColor: "orange",
-                          fontSize: "15px",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                        onClick={() => {
-                          setModalParametrs({
-                            status: "Update",
-                            id: item._id,
-                          });
-                          setIsModalOpen(true);
-                        }}
-                      >
-                        <BsPencilSquare />
-                      </Button>
-                    </TOOLTIP>
+            dataSource={dataResult.map((item: WordProps, index: any) => ({
+              key: index + 1,
+              title_uz: <p>{item?.title_uz}</p>,
+              title_en: <p>{item?.title_en}</p>,
+              buttons: (
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "5px",
+                    justifyContent: "center",
+                  }}
+                >
+                  <TOOLTIP color="red" title={"Delete"} key={"1"}>
+                    <Button
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        color: "red",
+                        borderColor: "red",
+                        fontSize: "15px",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                      onClick={() => {
+                        setModalParametrs({
+                          status: "Delete",
+                          id: item._id,
+                        });
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      <BsFillTrashFill></BsFillTrashFill>
+                    </Button>
+                  </TOOLTIP>
+                  <TOOLTIP title={`Change`} color={"orange"} key={"2"}>
+                    <Button
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        color: "orange",
+                        borderColor: "orange",
+                        fontSize: "15px",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                      onClick={() => {
+                        setModalParametrs({
+                          status: "Update",
+                          id: item._id,
+                        });
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      <BsPencilSquare />
+                    </Button>
+                  </TOOLTIP>
 
-                    <TOOLTIP title={`Single`} color={"green"} key={"3"}>
-                      <Button
-                        style={{
-                          width: "40px",
-                          height: "40px",
-                          fontSize: "15px",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          color: "green",
-                          borderColor: "green",
-                        }}
-                        onClick={() => {
-                          setModalParametrs({
-                            status: "Single",
-                            id: item._id,
-                            url: "/phrase",
-                          });
-                          setIsModalOpen(true);
-                        }}
-                      >
-                        <BsFillEyeFill />
-                      </Button>
-                    </TOOLTIP>
+                  <TOOLTIP title={`Single`} color={"green"} key={"3"}>
+                    <Button
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        fontSize: "15px",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        color: "green",
+                        borderColor: "green",
+                      }}
+                      onClick={() => {
+                        setModalParametrs({
+                          status: "Single",
+                          id: item._id,
+                          url: "/phrase",
+                        });
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      <BsFillEyeFill />
+                    </Button>
+                  </TOOLTIP>
+                </div>
+              ),
+              image: (
+                <>
+                  <div>
+                    <img
+                      width={50}
+                      src={`${api}/file/${item?.image?.path}`}
+                      alt={"img"}
+                    />
                   </div>
-                ),
-                image: (
-                  <>
-                    <div>
-                      <img
-                        width={50}
-                        src={`${api}/file/${item?.image?.path}`}
-                        alt={"img"}
-                      />
-                    </div>
-                  </>
-                ),
-              }))}
+                </>
+              ),
+            }))}
           />
         </div>
       </div>
