@@ -15,15 +15,16 @@ export function Single(props: {
   setIsModalOpen: (bool: boolean) => void;
 }) {
   const { url, id, isModalOpen, setIsModalOpen } = props;
+   const { t } = useTranslation();
   const useGet = useGetData([`single-${url}`], url.toString());
   const handleOk = () => {
     setIsModalOpen(false);
   };
-
+  
   const data = useGet.data?.data.find(
     (item: { _id: string }) => item._id == id
   );
-  const { t } = useTranslation();
+ 
   return (
     <Modal width={800} open={isModalOpen} footer={null} onCancel={handleOk}>
       {data ? (
