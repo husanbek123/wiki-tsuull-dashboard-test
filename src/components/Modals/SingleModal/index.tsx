@@ -93,7 +93,7 @@ export function Single(props: {
                 </div>
               </div>
             )}
-            {url == "/phrase" && data && (
+            {url == "/phrase" (
               <>
                 <Collapse
                   items={[
@@ -206,7 +206,7 @@ export function Single(props: {
                 </div>
               </>
             )}
-            {url == "/word" && data && (
+            {url == "/word" (
               <>
                 <Collapse
                   items={[
