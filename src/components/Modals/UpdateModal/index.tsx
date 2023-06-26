@@ -19,7 +19,6 @@ import ErrorToastify from "../../toastify/Error";
 import { usePatchData } from "../../../utils/hooks/usePatch";
 import { postUrl } from "../../../types/defaultType";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { RichText } from "../../RichText";
 import { api } from "../../../utils/axios";
 import { useToken } from "../../../utils/zustand/useStore";
 import { useTranslation } from "react-i18next";
@@ -64,8 +63,6 @@ export function Update(props: {
   const [photoId, setPhotoId] = useState("");
   const [descriptionUz, setDescriptionUz] = useState(null);
   const [descriptionEn, setDescriptionEn] = useState(null);
-  const [comentUz, setComentUz] = useState(null);
-  const [comentEn, setComentEn] = useState(null);
   const [categoryData, setCategoryData] = useState<categorySelect>();
   // QueryClient For Real Time
   const queryClient = useQueryClient();
@@ -121,15 +118,15 @@ export function Update(props: {
             useGetPhrase.data?.data.find((item: any) => item._id == id)
               ?.description_uz,
           description_en:
-          values.description_en ||
+            values.description_en ||
             useGetPhrase.data?.data.find((item: any) => item._id == id)
               ?.description_en,
           comment_uz:
-          values.comment_uz ||
+            values.comment_uz ||
             useGetPhrase.data?.data.find((item: any) => item._id == id)
               ?.comment_uz,
           comment_en:
-          values.comment_en ||
+            values.comment_en ||
             useGetPhrase.data?.data.find((item: any) => item._id == id)
               ?.comment_en,
           writers:
@@ -198,8 +195,8 @@ export function Update(props: {
     }
     setDescriptionEn(null);
     setDescriptionUz(null);
-    setComentEn(null);
-    setComentUz(null);
+    // setComentEn(null);
+    // setComentUz(null);
     return;
   };
 
@@ -727,28 +724,17 @@ export function Update(props: {
                         className="addText"
                       >
                         {t("Comment")} uz
-                        <RichText
-                          value={
-                            comentUz == null
-                              ? useWordData.data?.data.find(
-                                  (item: any) => item._id == id
-                                )?.comment_uz
-                              : comentUz
-                          }
-                          // setValue={setComentUz}
-                          defaultValue={
-                            useWordData.data?.data.find(
-                              (item: any) => item._id == id
-                            )?.comment_uz
-                          }
-                        ></RichText>
-                        <b
-                          style={{
-                            color: "red",
-                          }}
+                        <Form.Item
+                          name={"comment_uz"}
+                          rules={[
+                            {
+                              required: true,
+                              message: t("Missing"),
+                            },
+                          ]}
                         >
-                          {t("Missing")}
-                        </b>
+                          <TextEditor></TextEditor>
+                        </Form.Item>
                       </div>
                       <div
                         style={{
@@ -757,23 +743,17 @@ export function Update(props: {
                         className="addText"
                       >
                         {t("Comment")} en
-                        <RichText
-                          value={
-                            comentEn == null
-                              ? useWordData.data?.data.find(
-                                  (item: any) => item._id == id
-                                )?.comment_en
-                              : comentEn
-                          }
-                          // setValue={setComentEn}
-                        ></RichText>
-                        <b
-                          style={{
-                            color: "red",
-                          }}
+                        <Form.Item
+                          name={"comment_en"}
+                          rules={[
+                            {
+                              required: true,
+                              message: t("Missing"),
+                            },
+                          ]}
                         >
-                          {t("Missing")}
-                        </b>
+                          <TextEditor></TextEditor>
+                        </Form.Item>
                       </div>
                     </div>
                   ),
@@ -785,53 +765,31 @@ export function Update(props: {
                     <div className={styles.inputWrapper}>
                       <div className="addText">
                         {t("Description")} uz
-                        <RichText
-                          value={
-                            descriptionUz === null
-                              ? useWordData.data?.data.find(
-                                  (item: any) => item._id == id
-                                )?.description_uz
-                              : descriptionUz
-                          }
-                          // setValue={setDescriptionUz}
-                          defaultValue={
-                            useWordData.data?.data.find(
-                              (item: any) => item._id == id
-                            ).description_uz
-                          }
-                        ></RichText>
-                        <b
-                          style={{
-                            color: "red",
-                          }}
+                        <Form.Item
+                          name={"description_uz"}
+                          rules={[
+                            {
+                              required: true,
+                              message: t("Missing"),
+                            },
+                          ]}
                         >
-                          {t("Missing")}
-                        </b>
+                          <TextEditor></TextEditor>
+                        </Form.Item>
                       </div>
                       <div className="addText">
                         {t("Description")} en
-                        <RichText
-                          value={
-                            descriptionEn === null
-                              ? useWordData.data?.data.find(
-                                  (item: any) => item._id == id
-                                )?.description_en
-                              : descriptionEn
-                          }
-                          // setValue={setDescriptionEn}
-                          defaultValue={
-                            useWordData.data?.data.find(
-                              (item: any) => item._id == id
-                            ).description_en
-                          }
-                        ></RichText>
-                        <b
-                          style={{
-                            color: "red",
-                          }}
+                        <Form.Item
+                          name={"description_en"}
+                          rules={[
+                            {
+                              required: true,
+                              message: t("Missing"),
+                            },
+                          ]}
                         >
-                          {t("Missing")}
-                        </b>
+                          <TextEditor></TextEditor>
+                        </Form.Item>
                       </div>
                     </div>
                   ),
@@ -842,7 +800,12 @@ export function Update(props: {
                   children: (
                     <div className={styles.inputWrapper}>
                       <Form.Item
-                        rules={[{ required: true, message: t("Missing") }]}
+                        rules={[
+                          {
+                            required: fileListWords.length == 0 ? true : false,
+                            message: t("Missing"),
+                          },
+                        ]}
                       >
                         <ImgCrop rotationSlider>
                           <Upload
@@ -855,23 +818,12 @@ export function Update(props: {
                             onChange={onChange}
                             name="photo"
                             onPreview={onPreview}
-                            // onRemove={()=>setPhotoId('')}
+                            onRemove={() => setPhotoId("")}
                           >
                             {fileListWords.length < 1 && "+ Upload"}
                           </Upload>
                         </ImgCrop>
                       </Form.Item>
-                      {fileListWords.length == 0 ? (
-                        <b
-                          style={{
-                            color: "red",
-                          }}
-                        >
-                          {t("MissingPhoto")}
-                        </b>
-                      ) : (
-                        ""
-                      )}
                     </div>
                   ),
                 },

@@ -22,7 +22,6 @@ import { api } from "../../../utils/axios";
 import type { RcFile } from "antd/es/upload/interface";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useQueryClient } from "@tanstack/react-query";
-import { RichText } from "../../RichText";
 import { postUrl } from "../../../types/defaultType";
 import { useTranslation } from "react-i18next";
 import TextEditor from "../../InformationRichText";
@@ -49,10 +48,10 @@ export function Add(props: {
   });
   const [isMain, setIsMain] = useState(false);
   const [photoId, setPhotoId] = useState<string>("");
-  const [descriptionUz, setDescriptionUz] = useState<string>("");
-  const [descriptionEn, setDescriptionEn] = useState<string>("");
-  const [commentUz, setCommentUz] = useState<string>("");
-  const [commentEn, setCommentEn] = useState<string>("");
+  // const [descriptionUz, setDescriptionUz] = useState<string>("");
+  // const [descriptionEn, setDescriptionEn] = useState<string>("");
+  // const [commentUz, setCommentUz] = useState<string>("");
+  // const [commentEn, setCommentEn] = useState<string>("");
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -67,7 +66,6 @@ export function Add(props: {
     setFileList(newFileList);
     setPhotoId(file?.response?._id);
   };
-  console.log(photoId);
 
   const onPreview = async (file: UploadFile) => {
     let src = file.url as string;
@@ -87,8 +85,6 @@ export function Add(props: {
   /* For Upload Change End  */
 
   const onFinish = (values: any) => {
-    console.log(values);
-
     if (fileList.length == 0 && ["/word", "/phrase"].includes(props.postUrl)) {
       return ErrorToastify(t("FillInTheBlanks"));
     } else {
@@ -117,10 +113,7 @@ export function Add(props: {
         usePost.mutate(
           {
             ...values,
-            // comment_uz: commentUz || "",
-            // comment_en: commentEn || "",
-            // description_uz: descriptionUz || "",
-            // description_en: descriptionEn || "",
+
             informations:
               values?.informations?.map((item: any) => ({
                 info_uz: item.info_uz || "",
@@ -148,12 +141,10 @@ export function Add(props: {
       } else if (props.postUrl == "/word") {
         const result = {
           ...values,
-          comment_uz: commentUz,
-          comment_en: commentEn,
-          description_uz: descriptionUz,
-          description_en: descriptionEn,
           image: photoId,
         };
+        console.log(result);
+
         usePost.mutate(result, {
           onSuccess: () => {
             SuccessToastify(t("Success"));
@@ -631,7 +622,7 @@ export function Add(props: {
                           <Upload
                             action={api + "/file/"}
                             listType="picture-card"
-                            name="photo"
+                            name="image"
                             fileList={fileList}
                             onChange={onChange}
                             onPreview={onPreview}
@@ -672,17 +663,31 @@ export function Add(props: {
                   <>
                     <div className="addText">
                       {t("Description")} uz
-                      <RichText
-                        value={descriptionUz}
-                        setValue={setDescriptionUz}
-                      ></RichText>
+                      <Form.Item
+                        name={"description_uz"}
+                        rules={[
+                          {
+                            required: true,
+                            message: t("Missing"),
+                          },
+                        ]}
+                      >
+                        <TextEditor></TextEditor>
+                      </Form.Item>
                     </div>
                     <div className="addText">
                       {t("Description")} en
-                      <RichText
-                        value={descriptionEn}
-                        setValue={setDescriptionEn}
-                      ></RichText>
+                      <Form.Item
+                        name={"description_en"}
+                        rules={[
+                          {
+                            required: true,
+                            message: t("Missing"),
+                          },
+                        ]}
+                      >
+                        <TextEditor></TextEditor>
+                      </Form.Item>
                     </div>
                   </>
                 ),
@@ -694,17 +699,31 @@ export function Add(props: {
                   <>
                     <div className="addText">
                       {t("Comment")} uz
-                      <RichText
-                        value={commentUz}
-                        setValue={setCommentUz}
-                      ></RichText>
+                      <Form.Item
+                        name={"comment_uz"}
+                        rules={[
+                          {
+                            required: true,
+                            message: t("Missing"),
+                          },
+                        ]}
+                      >
+                        <TextEditor></TextEditor>
+                      </Form.Item>
                     </div>
                     <div className="addText">
                       {t("Comment")} en
-                      <RichText
-                        value={commentEn}
-                        setValue={setCommentEn}
-                      ></RichText>
+                      <Form.Item
+                        name={"comment_en"}
+                        rules={[
+                          {
+                            required: true,
+                            message: t("Missing"),
+                          },
+                        ]}
+                      >
+                        <TextEditor></TextEditor>
+                      </Form.Item>
                     </div>
                   </>
                 ),
@@ -714,34 +733,34 @@ export function Add(props: {
                 label: `${t("Image")}`,
                 children: (
                   <>
-                    <ImgCrop rotationSlider>
-                      <Upload
-                        action={api + "/file/"}
-                        listType="picture-card"
-                        name="photo"
-                        fileList={fileList}
-                        onChange={onChange}
-                        onPreview={onPreview}
-                        onRemove={() => setPhotoId("")}
-                      >
-                        {fileList.length < 1 && `+ ${t("Upload")}`}
-                      </Upload>
-                    </ImgCrop>
-                    {photoId == "" && (
-                      <p
-                        style={{
-                          color: "red",
-                        }}
-                      >
-                        {t("MissingPhoto")}
-                      </p>
-                    )}
+                    <Form.Item
+                      name="image"
+                      rules={[
+                        {
+                          required: fileList.length == 0 ? true : false,
+                          message: t("Missing"),
+                        },
+                      ]}
+                    >
+                      <ImgCrop rotationSlider>
+                        <Upload
+                          action={api + "/file/"}
+                          listType="picture-card"
+                          name="photo"
+                          fileList={fileList}
+                          onChange={onChange}
+                          onPreview={onPreview}
+                          onRemove={() => setPhotoId("")}
+                        >
+                          {fileList.length < 1 && `+ ${t("Upload")}`}
+                        </Upload>
+                      </ImgCrop>
+                    </Form.Item>
                   </>
                 ),
               },
             ]}
             bordered={true}
-            // defaultActiveKey={!photoId ? ["3"] : []}
           />
         )}
         <div

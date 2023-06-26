@@ -41,7 +41,7 @@ type Props = {
   value?: string;
   placeholder?: string;
   onChange?: OnChangeHandler;
-  defaultValue?: string;
+  defaultValue?: any;
 };
 
 const TextEditor: React.FC<Props> = ({
