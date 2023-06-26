@@ -36,7 +36,7 @@ export default function Sidebar() {
     <header className={style.header}>
       <nav className={style.navbar}>
         <div className={style.userMe}>
-          <div className={style.ProfilePhoto}>{name?.[0]}</div>
+          <div className={style.ProfilePhoto}>{name?.[0].toUpperCase()}</div>
           <div className={style.userTitles}>
             <h2>{name}</h2>
             <p>admin</p>
