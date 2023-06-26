@@ -51,11 +51,7 @@ export default function Media() {
   return (
     <div className={styles.Main}>
       <div className={styles.container}>
-<<<<<<< HEAD
         <ComponentBreadCrumb url={t("Main")} />
-=======
-        <ComponenBreadCrumb url={`${t("Media")}`} />
->>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
         {isModalOpen && (
           <CRUDNavigator
             postUrl={"/media"}

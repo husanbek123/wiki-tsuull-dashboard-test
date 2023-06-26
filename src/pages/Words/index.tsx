@@ -70,12 +70,7 @@ export default function Words() {
   return (
     <div className={style.Main}>
       <div className={style.container}>
-<<<<<<< HEAD
         <ComponentBreadCrumb url={t("Words")} />
-=======
-        <ComponenBreadCrumb url={`${t("Word")}`} />
-
->>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
         {isModalOpen && (
           <CRUDNavigator
             postUrl={"/word"}

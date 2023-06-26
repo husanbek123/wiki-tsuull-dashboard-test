@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Checkbox, Collapse, Empty, Modal } from "antd";
-=======
 import { Button, Checkbox, Collapse, Modal } from "antd";
->>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
 import { useGetData } from "../../../utils/hooks/useGet";
 import parse from "html-react-parser";
 import style from "./index.module.scss";
@@ -35,21 +30,31 @@ export function Single(props: {
         <>
           {!["/media", "/media-category"].includes(props.postUrl) ? (
             <div className={style.wrapper}>
-              <div className="addText">
-                <div>
-                  <b>{t("title_uz")} </b>: {data?.title_uz}
-                </div>
-                <div>
-                  <b>{t("title_en")}</b> : {data?.title_en}
-                </div>
-              </div>
+              <Collapse
+                items={[
+                  {
+                    key: "1",
+                    label: `${t("title")}`,
+                    children: (
+                      <div className="addText">
+                        <div>
+                          {t("title_uz")} :<b> {data?.title_uz}</b>
+                        </div>
+                        <div>
+                          {t("title_en")} :<b> {data?.title_en}</b>
+                        </div>
+                      </div>
+                    ),
+                  },
+                ]}
+              />
             </div>
           ) : (
-            <div className="addText" style={{ padding: "10px 0" }}>
-              <div style={{ fontSize: "1.1rem", padding: "10px 0" }}>
+            <div className="addText">
+              <div>
                 {t("title_uz")} :<b> {data?.title_uz}</b>
               </div>
-              <div style={{ fontSize: "1.1rem", padding: "10px 0" }}>
+              <div>
                 {t("title_en")} :<b> {data?.title_en}</b>
               </div>
             </div>
@@ -58,10 +63,10 @@ export function Single(props: {
             {props.postUrl == "/media" && (
               <div>
                 <div className="addText">
-                  <div style={{ fontSize: "1.1rem", padding: "10px 0" }} >
+                  <div>
                     <b>{t("Category")} uz</b> : {data.category[0]?.title_uz}
                   </div>
-                  <div style={{ fontSize: "1.1rem" }}>
+                  <div>
                     <b>{t("Category")} en</b> : {data.category[0].title_en}
                   </div>
                 </div>
@@ -91,8 +96,6 @@ export function Single(props: {
             {props.postUrl == "/phrase" && (
               <>
                 <Collapse
-                  accordion
-                  size="large"
                   items={[
                     {
                       key: "1",
@@ -134,32 +137,6 @@ export function Single(props: {
                           {data.writers.map(
                             (
                               item: { name: string; link: string },
-<<<<<<< HEAD
-                              index: any
-                            ) => {
-                              return (
-                                <>
-                                  {
-                                    // !data.writers === undefined ? <p >Malimot Push qilinmagan</p> : null
-
-                                    console.log("item Item ", 12432353, item)
-                                  }
-                                  <Link
-                                    target="_blank"
-                                    key={index}
-                                    className={style.writer}
-                                    to={item.link}
-                                  >
-                                    {item.name.length > 50 ? (
-                                      <Button>{item.name.slice(0, 50)}...</Button>
-                                    ) : (
-                                      <Button>{item.name}</Button>
-                                    )}
-                                  </Link>
-                                </>
-                              )
-                            }
-=======
                               index: number
                             ) => (
                               <Link
@@ -174,7 +151,6 @@ export function Single(props: {
                                 )}
                               </Link>
                             )
->>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
                           )}
                         </div>
                       ),
@@ -230,21 +206,6 @@ export function Single(props: {
                 </div>
               </>
             )}
-<<<<<<< HEAD
-            {url == "/word" && data && (
-              <div className={style.MainWordWrapper}>
-                <div>
-                  <div className="addText">
-                    <div className={style.description}>
-                      <b>Description uz :</b>
-                      {parse(data?.description_uz)}
-                    </div>
-                    <div className={style.description}>
-                      <b>Description en : </b>
-                      {parse(data?.description_en)}
-                    </div>
-                  </div>
-=======
             {props.postUrl == "/word" && (
               <>
                 <Collapse
@@ -283,23 +244,11 @@ export function Single(props: {
                     },
                   ]}
                 />
->>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
 
-                  <div className="addText">
-                    <div className={style.comment}>
-                      <b>Comment uz :</b>
-                      {parse(data?.comment_uz)}
-                    </div>
-                    <div className={style.comment}>
-                      <b>Comment en : </b>
-                      {parse(data?.comment_en)}
-                    </div>
-                  </div>
-                </div>
                 <div className={style.img}>
-                  <img width={150} src={api + "/file/" + data.image.path} alt="" />
+                  <img src={api + "/file/" + data.image.path} alt="" />
                 </div>
-              </div>
+              </>
             )}
           </div>
         </>

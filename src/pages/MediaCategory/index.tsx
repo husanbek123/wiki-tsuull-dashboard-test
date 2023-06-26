@@ -55,13 +55,7 @@ export default function MediaCategory() {
   return (
     <div className={style.Main}>
       <div className={style.container}>
-<<<<<<< HEAD
       <ComponentBreadCrumb url={t("MediaCategory")}/>
-=======
-        <ComponenBreadCrumb
-          url={`${t("MediaCategory")}`.split("-").join(" ")}
-        />
->>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
 
         {isModalOpen && (
           <CRUDNavigator

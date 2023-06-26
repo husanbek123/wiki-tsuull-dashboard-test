@@ -282,23 +282,11 @@ export function Add(props: {
     }
   }
 
-<<<<<<< HEAD
-
-
-  const [activeKey, setActiveKey] = useState<string[]>(['1']);
+  const [activeKey, setActiveKey] = useState<string[]>(["1"]);
 
   function handleClick(key: any) {
     setActiveKey(key);
   }
-=======
-  // colaspaceOnChange
-
-  const colaspaceOnChange = (e: any) => {
-    console.log(e);
-  };
->>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
-
-
 
   return (
     <Modal
@@ -554,12 +542,6 @@ export function Add(props: {
                                 >
                                   <Input placeholder={`${t("name")} en`} />
                                 </Form.Item>
-<<<<<<< HEAD
-                                <Form.Item rules={[{ required: true, message: t("Missing") }]} name={[name, "info_uz"]}>
-                                  <TextEditor></TextEditor>
-                                </Form.Item>
-                                <Form.Item rules={[{ required: true, message: t("Missing") }]} name={[name, "info_en"]}>
-=======
                                 <Form.Item
                                   rules={[
                                     { required: true, message: t("Missing") },
@@ -574,7 +556,6 @@ export function Add(props: {
                                   ]}
                                   name={[name, "info_en"]}
                                 >
->>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
                                   <TextEditor></TextEditor>
                                 </Form.Item>
 
@@ -609,11 +590,7 @@ export function Add(props: {
                               </Button>
                             </Form.Item>
                           </>
-<<<<<<< HEAD
-                        )
-=======
                         );
->>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
                       }}
                     </Form.List>
                   ),
