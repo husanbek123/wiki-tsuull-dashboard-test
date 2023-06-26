@@ -13,7 +13,7 @@ import parse from "html-react-parser";
 import { useLanguage } from "../../utils/zustand/useLanguage";
 import { useTranslation } from "react-i18next";
 import ComponentLoader from "../../components/ComponentLoader";
-import { ComponenBreadCrumb } from "../../components/Breadcrumb";
+import { ComponentBreadCrumb } from "../../components/Breadcrumb";
 interface DataType {
   key: React.Key;
   title: string;
@@ -64,7 +64,7 @@ export default function Phrase() {
           />
         )}
         <div className={styles.container}>
-        <ComponenBreadCrumb url={t("Phrase")} />
+        <ComponentBreadCrumb url={t("Phrase")} />
 
           <div className={styles.Add}>
             <TOOLTIP title={"Add"} key={"Add"} color="blue">

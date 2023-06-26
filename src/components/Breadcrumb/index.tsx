@@ -1,17 +1,14 @@
-import { Breadcrumb } from "antd";
-export const ComponenBreadCrumb = (props: { url: string }) => {
+import { useTheme } from "../../utils/zustand/useTheme";
+export const ComponentBreadCrumb = (props: { url: string }) => {
+  const theme = useTheme(state => state.theme);
   return (
-    <Breadcrumb
-      items={[
-        {
-          title: <b style={{
-            fontSize: "17px",
-            backgroundColor : "lightgray",
-            // paddingBottom: "5px",
-            padding: "2px 20px"
-          }}>{props.url}</b>,
-        },
-      ]}
-    />
-  );
+    <>
+      <h1 style={{
+        color: theme === "light" ? "black" : "white",
+        display: "block",
+        margin: "20px auto",
+        padding: "2px 20px"
+      }}>{props.url}</h1>
+    </>
+  )
 };

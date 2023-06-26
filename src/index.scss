@@ -1,11 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;1,100;1,200;1,300;1,400&display=swap');
 $orange-color: #ec781c;
 $blue-color: #124a85;
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Barlow', sans-serif;
 }
 a {
   text-decoration: none;
@@ -115,6 +115,7 @@ img {
   }
   .addText {
     color: white;
+    margin: 4px 0 !important;
   }
   .quill {
     color: white;

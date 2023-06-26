@@ -2,14 +2,12 @@ import * as React from "react";
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./App.css";
 import {
   Media,
   MediaCategory,
   Pharse,
   Words,
 } from "./utils/routes/dynamicRoutes/Dynamic";
-import Loading from "./components/Loading/Loading";
 import NotFound from "./pages/NotFound/NotFound";
 import Login from "./pages/Login";
 import Protected from "./utils/ProtectedRoute";
@@ -37,7 +35,7 @@ export default function App() {
                 <Media />
               </Protected>
             }
-          ></Route>
+          />
           <Route path="/login" element={<Login />}></Route>
           <Route
             path="/media-category"
@@ -46,7 +44,7 @@ export default function App() {
                 <MediaCategory />
               </Protected>
             }
-          ></Route>
+          />
           <Route
             path="/phrase"
             element={
@@ -54,7 +52,7 @@ export default function App() {
                 <Pharse />
               </Protected>
             }
-          ></Route>
+          />
           <Route
             path="/words"
             element={
@@ -62,7 +60,7 @@ export default function App() {
                 <Words />
               </Protected>
             }
-          ></Route>
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </React.Suspense>

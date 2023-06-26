@@ -109,12 +109,12 @@ export function Update(props: {
             values.title_uz !== undefined
               ? values.title_uz
               : useGetPhrase.data?.data.find((item: any) => item._id == id)
-                  ?.title_uz,
+                ?.title_uz,
           title_en:
             values.title_en !== undefined
               ? values.title_en
               : useGetPhrase?.data?.data.find((item: any) => item._id == id)
-                  ?.title_en,
+                ?.title_en,
           description_uz:
             descriptionUz ||
             useGetPhrase.data?.data.find((item: any) => item._id == id)
@@ -275,7 +275,6 @@ export function Update(props: {
 
   return (
     <Modal
-      title={t("update")}
       open={isModalOpen}
       width={700}
       onOk={handleOk}
@@ -332,6 +331,8 @@ export function Update(props: {
           <>
             <>
               <Collapse
+                accordion={true}
+                
                 defaultActiveKey={["1", "3", "7"]}
                 items={[
                   {
@@ -444,9 +445,10 @@ export function Update(props: {
                   },
                   {
                     key: "3",
-                    label: `${t("informations")}`, 
+                    label: `${t("informations")}`,
                     children: (
-                      <Form.List name="informations">
+                      <Form.List 
+                      name="informations">
                         {(fields, { add, remove }) => (
                           <div>
                             {fields.map(({ key, name, ...restField }) => (
@@ -541,8 +543,8 @@ export function Update(props: {
                             value={
                               descriptionUz == null
                                 ? useGetPhrase.data?.data.find(
-                                    (item: any) => item._id == id
-                                  )?.description_uz
+                                  (item: any) => item._id == id
+                                )?.description_uz
                                 : descriptionUz
                             }
                             setValue={setDescriptionUz}
@@ -559,8 +561,8 @@ export function Update(props: {
                             value={
                               descriptionEn == null
                                 ? useGetPhrase.data?.data.find(
-                                    (item: any) => item._id == id
-                                  )?.description_en
+                                  (item: any) => item._id == id
+                                )?.description_en
                                 : descriptionEn
                             }
                             setValue={setDescriptionEn}
@@ -585,8 +587,8 @@ export function Update(props: {
                             value={
                               comentUz == null
                                 ? useGetPhrase.data?.data.find(
-                                    (item: any) => item._id == id
-                                  )?.comment_uz
+                                  (item: any) => item._id == id
+                                )?.comment_uz
                                 : comentUz
                             }
                             setValue={setComentUz}
@@ -603,8 +605,8 @@ export function Update(props: {
                             value={
                               comentEn == null
                                 ? useGetPhrase.data?.data.find(
-                                    (item: any) => item._id == id
-                                  )?.comment_en
+                                  (item: any) => item._id == id
+                                )?.comment_en
                                 : comentEn
                             }
                             setValue={setComentEn}
@@ -655,6 +657,7 @@ export function Update(props: {
         {props.postUrl == "/word" && (
           <>
             <Collapse
+              accordion
               defaultActiveKey={["1"]}
               items={[
                 {
@@ -700,8 +703,8 @@ export function Update(props: {
                           value={
                             comentUz == null
                               ? useGetPhrase.data?.data.find(
-                                  (item: any) => item._id == id
-                                )?.comment_uz
+                                (item: any) => item._id == id
+                              )?.comment_uz
                               : comentUz
                           }
                           setValue={setComentUz}
@@ -717,8 +720,8 @@ export function Update(props: {
                             value={
                               comentEn == null
                                 ? useGetPhrase.data?.data.find(
-                                    (item: any) => item._id == id
-                                  )?.comment_en
+                                  (item: any) => item._id == id
+                                )?.comment_en
                                 : comentEn
                             }
                             setValue={setComentEn}
@@ -739,8 +742,8 @@ export function Update(props: {
                           value={
                             descriptionUz == null
                               ? useGetPhrase.data?.data.find(
-                                  (item: any) => item._id == id
-                                )?.description_uz
+                                (item: any) => item._id == id
+                              )?.description_uz
                               : descriptionUz
                           }
                           setValue={setDescriptionUz}
@@ -752,8 +755,8 @@ export function Update(props: {
                           value={
                             descriptionEn == null
                               ? useGetPhrase.data?.data.find(
-                                  (item: any) => item._id == id
-                                )?.description_en
+                                (item: any) => item._id == id
+                              )?.description_en
                               : descriptionEn
                           }
                           setValue={setDescriptionEn}

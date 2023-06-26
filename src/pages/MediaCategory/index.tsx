@@ -14,7 +14,7 @@ import { BsFillEyeFill, BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
 import { useGetData } from "../../utils/hooks/useGet";
 import { useTranslation } from "react-i18next";
 import ComponentLoader from "../../components/ComponentLoader";
-import { ComponenBreadCrumb } from "../../components/Breadcrumb";
+import { ComponentBreadCrumb } from "../../components/Breadcrumb";
 
 interface MediaCategoryData {
   _id: string;
@@ -53,7 +53,7 @@ export default function MediaCategory() {
   return (
     <div className={style.Main}>
       <div className={style.container}>
-      <ComponenBreadCrumb url={t("MediaCategory")}/>
+      <ComponentBreadCrumb url={t("MediaCategory")}/>
 
         {isModalOpen && (
           <CRUDNavigator

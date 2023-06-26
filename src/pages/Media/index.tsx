@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import ComponentLoader from "../../components/ComponentLoader";
 import { useTheme } from "../../utils/zustand/useTheme";
 import whiteVideoIcon from "../../../public/whiteVideoIcon.png";
-import { ComponenBreadCrumb } from "../../components/Breadcrumb";
+import { ComponentBreadCrumb } from "../../components/Breadcrumb";
 interface DataType {
   key: React.Key;
 }
@@ -48,7 +48,7 @@ export default function Media() {
   return (
     <div className={styles.Main}>
       <div className={styles.container}>
-        <ComponenBreadCrumb url={t("Main")} />
+        <ComponentBreadCrumb url={t("Main")} />
         {isModalOpen && (
           <CRUDNavigator
             postUrl={"/media"}

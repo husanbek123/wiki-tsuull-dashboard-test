@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 import { ColumnsType } from "antd/es/table";
 import ComponentLoader from "../../components/ComponentLoader";
 import { api } from "../../utils/axios";
-import { ComponenBreadCrumb } from "../../components/Breadcrumb";
+import { ComponentBreadCrumb } from "../../components/Breadcrumb";
 
 type image = {
   _id: string;
@@ -69,8 +69,7 @@ export default function Words() {
   return (
     <div className={style.Main}>
       <div className={style.container}>
-        <ComponenBreadCrumb url={t("Words")} />
-
+        <ComponentBreadCrumb url={t("Words")} />
         {isModalOpen && (
           <CRUDNavigator
             postUrl={"/word"}

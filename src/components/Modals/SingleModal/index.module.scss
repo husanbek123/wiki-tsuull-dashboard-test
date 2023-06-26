@@ -4,6 +4,14 @@
   flex-direction: column;
   gap: 20px;
   width: 90%;
+  .MainWordWrapper > div {
+    margin: 10px 0;
+  }
+  .MainWordWrapper{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+  }
   .writers {
     display: flex;
     gap: 10px;
@@ -12,8 +20,8 @@
   .comment,
   .description {
     display: flex;
-    flex-direction: column;
     gap: 10px;
+    margin: 7px 0;
   }
   .writers {
     display: grid;
@@ -32,9 +40,6 @@
   .checkbox {
     display: flex;
     gap: 12px;
-  }
-  .img {
-    text-align: center;
   }
 }
 

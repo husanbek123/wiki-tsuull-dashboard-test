@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Checkbox, Collapse, Modal } from "antd";
+import { Button, Checkbox, Collapse, Empty, Modal } from "antd";
 import { useGetData } from "../../../utils/hooks/useGet";
 import parse from "html-react-parser";
 import style from "./index.module.scss";
@@ -38,31 +38,21 @@ export function Single(props: {
         <>
           {!["/media", "/media-category"].includes(props.url) ? (
             <div className={style.wrapper}>
-              <Collapse
-                items={[
-                  {
-                    key: "1",
-                    label: `${t("title")}`,
-                    children: (
-                      <div className="addText">
-                        <div>
-                          {t("title_uz")} :<b> {data?.title_uz}</b>
-                        </div>
-                        <div>
-                          {t("title_en")} :<b> {data?.title_en}</b>
-                        </div>
-                      </div>
-                    ),
-                  },
-                ]}
-              />
+              <div className="addText">
+                <div>
+                  <b>{t("title_uz")} </b>: {data?.title_uz}
+                </div>
+                <div>
+                  <b>{t("title_en")}</b> : {data?.title_en}
+                </div>
+              </div>
             </div>
           ) : (
-            <div className="addText">
-              <div>
+            <div className="addText" style={{ padding: "10px 0" }}>
+              <div style={{ fontSize: "1.1rem", padding: "10px 0" }}>
                 {t("title_uz")} :<b> {data?.title_uz}</b>
               </div>
-              <div>
+              <div style={{ fontSize: "1.1rem", padding: "10px 0" }}>
                 {t("title_en")} :<b> {data?.title_en}</b>
               </div>
             </div>
@@ -71,10 +61,10 @@ export function Single(props: {
             {url == "/media" && (
               <div>
                 <div className="addText">
-                  <div>
+                  <div style={{ fontSize: "1.1rem", padding: "10px 0" }} >
                     <b>{t("Category")} uz</b> : {data.category[0]?.title_uz}
                   </div>
-                  <div>
+                  <div style={{ fontSize: "1.1rem" }}>
                     <b>{t("Category")} en</b> : {data.category[0].title_en}
                   </div>
                 </div>
@@ -104,6 +94,8 @@ export function Single(props: {
             {url == "/phrase" && data && (
               <>
                 <Collapse
+                  accordion
+                  size="large"
                   items={[
                     {
                       key: "1",
@@ -146,19 +138,29 @@ export function Single(props: {
                             (
                               item: { name: string; link: string },
                               index: any
-                            ) => (
-                              <Link
-                                key={index}
-                                className={style.writer}
-                                to={item.link}
-                              >
-                                {item.name.length > 50 ? (
-                                  <Button>{item.name.slice(0, 50)}...</Button>
-                                ) : (
-                                  <Button>{item.name}</Button>
-                                )}
-                              </Link>
-                            )
+                            ) => {
+                              return (
+                                <>
+                                  {
+                                    // !data.writers === undefined ? <p >Malimot Push qilinmagan</p> : null
+
+                                    console.log("item Item ", 12432353, item)
+                                  }
+                                  <Link
+                                    target="_blank"
+                                    key={index}
+                                    className={style.writer}
+                                    to={item.link}
+                                  >
+                                    {item.name.length > 50 ? (
+                                      <Button>{item.name.slice(0, 50)}...</Button>
+                                    ) : (
+                                      <Button>{item.name}</Button>
+                                    )}
+                                  </Link>
+                                </>
+                              )
+                            }
                           )}
                         </div>
                       ),
@@ -215,48 +217,34 @@ export function Single(props: {
               </>
             )}
             {url == "/word" && data && (
-              <>
-                <Collapse
-                  items={[
-                    {
-                      key: "1",
-                      label: "Descriptions",
-                      children: (
-                        <div className="addText">
-                          <div className={style.description}>
-                            <b>Description uz :</b>
-                            {parse(data?.description_uz)}
-                          </div>
-                          <div className={style.description}>
-                            <b>Description en : </b>
-                            {parse(data?.description_en)}
-                          </div>
-                        </div>
-                      ),
-                    },
-                    {
-                      key: "2",
-                      label: "Comments",
-                      children: (
-                        <div className="addText">
-                          <div className={style.comment}>
-                            <b>Comment uz :</b>
-                            {parse(data?.comment_uz)}
-                          </div>
-                          <div className={style.comment}>
-                            <b>Comment en : </b>
-                            {parse(data?.comment_en)}
-                          </div>
-                        </div>
-                      ),
-                    },
-                  ]}
-                />
+              <div className={style.MainWordWrapper}>
+                <div>
+                  <div className="addText">
+                    <div className={style.description}>
+                      <b>Description uz :</b>
+                      {parse(data?.description_uz)}
+                    </div>
+                    <div className={style.description}>
+                      <b>Description en : </b>
+                      {parse(data?.description_en)}
+                    </div>
+                  </div>
 
-                <div className={style.img}>
-                  <img src={api + "/file/" + data.image.path} alt="" />
+                  <div className="addText">
+                    <div className={style.comment}>
+                      <b>Comment uz :</b>
+                      {parse(data?.comment_uz)}
+                    </div>
+                    <div className={style.comment}>
+                      <b>Comment en : </b>
+                      {parse(data?.comment_en)}
+                    </div>
+                  </div>
                 </div>
-              </>
+                <div className={style.img}>
+                  <img width={150} src={api + "/file/" + data.image.path} alt="" />
+                </div>
+              </div>
             )}
           </div>
         </>

@@ -32,7 +32,6 @@ interface IData {
   value: string | null;
   isFixed?: boolean;
 }
-
 export function Add(props: {
   setIsModalOpen: (bool: boolean) => void;
   isModalOpen: boolean;
@@ -45,27 +44,25 @@ export function Add(props: {
   const categoryId = useCategoryId((state) => state.id);
   const setCategoryId = useCategoryId((state) => state.setId);
   const usePost = usePostData(`${props.postUrl}`);
-  const [data, setDatas] = useState<IData[] | null>(null);
+  const [data, setData] = useState<IData[] | null>(null);
   const [categoryData, setCategoryData] = useState<IData>({
     value: null,
     label: null,
   });
-  const [isMain, setisMain] = useState(false);
+  const [isMain, setIsMain] = useState(false);
   const [photoId, setPhotoId] = useState<string>("");
-  const [descriptionUz, setDescriptionUz] = useState("");
-  const [descriptionEn, setDescriptionEn] = useState("");
-  const [comentUz, setComentUz] = useState("");
-  const [comentEn, setComentEn] = useState("");
+  const [descriptionUz, setDescriptionUz] = useState<string>("");
+  const [descriptionEn, setDescriptionEn] = useState<string>("");
+  const [commentUz, setCommentUz] = useState<string>("");
+  const [commentEn, setCommentEn] = useState<string>("");
   const handleCancel = () => {
     setIsModalOpen(false);
-    setDatas(null);
+    setData(null);
   };
-
   const language = useLanguage((state) => state.langauge);
   const queryClient = useQueryClient();
   /* For Upload Change  */
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-
   const onChange = ({ fileList: newFileList, file }: any) => {
     setFileList(newFileList);
     setPhotoId(file?.response?._id);
@@ -106,7 +103,7 @@ export function Add(props: {
               onSuccess: () => {
                 SuccessToastify(t("Success"));
                 setIsModalOpen(false);
-                setDatas(null);
+                setData(null);
                 queryClient.invalidateQueries({
                   queryKey: ["media"],
                 });
@@ -128,7 +125,7 @@ export function Add(props: {
                   setCategoryId(data.data._id);
                   SuccessToastify(t("Success"));
                   setIsModalOpen(false);
-                  setDatas(null);
+                  setData(null);
                   queryClient.invalidateQueries({
                     queryKey: ["media-category", "media"],
                   });
@@ -147,7 +144,7 @@ export function Add(props: {
                 onSuccess: () => {
                   SuccessToastify(t("Success"));
                   setIsModalOpen(false);
-                  setDatas(null);
+                  setData(null);
                   queryClient.invalidateQueries({
                     queryKey: ["media-category"],
                   });
@@ -170,7 +167,7 @@ export function Add(props: {
                 onSuccess: () => {
                   SuccessToastify(t("Success"));
                   setIsModalOpen(false);
-                  setDatas(null);
+                  setData(null);
                   queryClient.invalidateQueries({
                     queryKey: ["media"],
                   });
@@ -186,8 +183,8 @@ export function Add(props: {
         usePost.mutate(
           {
             ...values,
-            comment_uz: comentUz || "",
-            comment_en: comentEn || "",
+            comment_uz: commentUz || "",
+            comment_en: commentEn || "",
             description_uz: descriptionUz || "",
             description_en: descriptionEn || "",
             informations:
@@ -217,8 +214,8 @@ export function Add(props: {
       } else if (props.postUrl == "/word") {
         const result = {
           ...values,
-          comment_uz: comentUz,
-          comment_en: comentEn,
+          comment_uz: commentUz,
+          comment_en: commentEn,
           description_uz: descriptionUz,
           description_en: descriptionEn,
           image: photoId,
@@ -265,7 +262,7 @@ export function Add(props: {
   if (useGetCategory.isSuccess && data == null) {
     for (let i = 0; i < useGetCategory.data.data.length; i++) {
       const category = useGetCategory.data.data[i];
-      setDatas((prev: any) =>
+      setData((prev: any) =>
         prev
           ? [
             ...prev,
@@ -287,16 +284,17 @@ export function Add(props: {
   }
 
 
-  // colaspaceOnChange
 
+  const [activeKey, setActiveKey] = useState<string[]>(['1']);
 
-  const colaspaceOnChange = (e: any) => {
-    console.log(e)
+  function handleClick(key: any) {
+    setActiveKey(key);
   }
+
+
 
   return (
     <Modal
-      title={t("add")}
       width={1000}
       open={isModalOpen}
       onCancel={handleCancel}
@@ -343,7 +341,7 @@ export function Add(props: {
           </>
         ) : (
           <Collapse
-            accordion
+            accordion={true}
             items={[
               {
                 key: "1",
@@ -399,7 +397,8 @@ export function Add(props: {
             <Collapse
               defaultActiveKey={photoId === "" ? ["6"] : []}
               accordion
-              onChange={colaspaceOnChange}
+              activeKey={activeKey}
+              onChange={handleClick}
               items={[
                 {
                   key: "1",
@@ -500,82 +499,84 @@ export function Add(props: {
                       }]}
                       name="informations">
                       {(fields, { add, remove }) => {
-                        return  <>
-                        {fields.map(({ key, name, ...restField }) => (
-                          <Space
-                            key={key}
-                            style={{
-                              display: "grid",
-                              marginBottom: 8,
-                              gridTemplateColumns: "repeat(1,1fr)",
-                              margin: "0 auto",
-                              position: "relative",
-                              paddingLeft: "40px",
-                            }}
-                            align="baseline"
-                          >
-                            <Form.Item
-                              {...restField}
-                              name={[name, "name_uz"]}
-                              rules={[
-                                {
-                                  required: true,
-                                  message: t("Missing"),
-                                },
-                              ]}
-                            >
-                              <Input placeholder={`${t("name")} uz`} />
-                            </Form.Item>
-                            <Form.Item
-                              {...restField}
-                              name={[name, "name_en"]}
-                              rules={[
-                                {
-                                  required: true,
-                                  message: t("Missing"),
-                                },
-                              ]}
-                            >
-                              <Input placeholder={`${t("name")} en`} />
-                            </Form.Item>
-                            <Form.Item rules={[{ required: true, message: t("Missing") }]} name={[name, "info_uz"]}>
-                              <TextEditor></TextEditor>
-                            </Form.Item>
-                            <Form.Item rules={[{ required: true, message: t("Missing") }]} name={[name, "info_en"]}>
-                              <TextEditor></TextEditor>
-                            </Form.Item>
+                        return (
+                          <>
+                            {fields.map(({ key, name, ...restField }) => (
+                              <Space
+                                key={key}
+                                style={{
+                                  display: "grid",
+                                  marginBottom: 8,
+                                  gridTemplateColumns: "repeat(1,1fr)",
+                                  margin: "0 auto",
+                                  position: "relative",
+                                  paddingLeft: "40px",
+                                }}
+                                align="baseline"
+                              >
+                                <Form.Item
+                                  {...restField}
+                                  name={[name, "name_uz"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: t("Missing"),
+                                    },
+                                  ]}
+                                >
+                                  <Input placeholder={`${t("name")} uz`} />
+                                </Form.Item>
+                                <Form.Item
+                                  {...restField}
+                                  name={[name, "name_en"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: t("Missing"),
+                                    },
+                                  ]}
+                                >
+                                  <Input placeholder={`${t("name")} en`} />
+                                </Form.Item>
+                                <Form.Item rules={[{ required: true, message: t("Missing") }]} name={[name, "info_uz"]}>
+                                  <TextEditor></TextEditor>
+                                </Form.Item>
+                                <Form.Item rules={[{ required: true, message: t("Missing") }]} name={[name, "info_en"]}>
+                                  <TextEditor></TextEditor>
+                                </Form.Item>
 
-                            <MinusCircleOutlined
+                                <MinusCircleOutlined
+                                  style={{
+                                    position: "absolute",
+                                    right: "20%",
+                                    top: "45%",
+                                    fontSize: "22px",
+                                  }}
+                                  onClick={() => remove(name)}
+                                />
+                              </Space>
+                            ))}
+                            <Form.Item
                               style={{
-                                position: "absolute",
-                                right: "20%",
-                                top: "45%",
-                                fontSize: "22px",
+                                display: "flex",
+                                justifyContent: "center",
                               }}
-                              onClick={() => remove(name)}
-                            />
-                          </Space>
-                        ))}
-                        <Form.Item
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <Button
-                            type="dashed"
-                            onClick={() => add()}
-                            block
-                            style={{
-                              width: "400px",
-                              margin: "0 auto",
-                            }}
-                            icon={<PlusOutlined />}
-                          >
-                            Add information
-                          </Button>
-                        </Form.Item>
-                      </>
+                            >
+                              <Button
+                                type="dashed"
+                                onClick={() => add()}
+                                block
+                                style={{
+                                  width: "400px",
+                                  margin: "0 auto",
+                                }}
+                                icon={<PlusOutlined />}
+                              >
+                                Add information
+                              </Button>
+                            </Form.Item>
+                          </>
+                        )
                       }}
                     </Form.List>
                   ),
@@ -585,7 +586,6 @@ export function Add(props: {
                   label: `${t("Description")}`,
                   children: (
                     <>
-                        
                       <div
                         style={{
                           margin: "20px 0px",
@@ -609,6 +609,7 @@ export function Add(props: {
                         className="addText"
                       >
                         <Form.Item
+                          required={true}
                           rules={[{ required: true, message: t("Missing") }]}
                         >
                           {t("Description")} en
@@ -633,12 +634,13 @@ export function Add(props: {
                         className="addText"
                       >
                         <Form.Item
+                          required={true}
                           rules={[{ required: true, message: t("Missing") }]}
                         >
                           Comment uz
                           <RichText
-                            value={comentUz}
-                            setValue={setComentUz}
+                            value={commentUz}
+                            setValue={setCommentUz}
                           ></RichText>
                         </Form.Item>
                       </div>
@@ -650,8 +652,8 @@ export function Add(props: {
                       >
                         Comment en
                         <RichText
-                          value={comentEn}
-                          setValue={setComentEn}
+                          value={commentEn}
+                          setValue={setCommentEn}
                         ></RichText>
                       </div>
                     </>
@@ -662,7 +664,7 @@ export function Add(props: {
                   label: `${t("isMain")}`,
                   children: (
                     <div>
-                      <Checkbox onChange={(e) => setisMain(e.target.checked)}>
+                      <Checkbox onChange={(e) => setIsMain(e.target.checked)}>
                         <p className="addText">{t("isMain")}</p>
                       </Checkbox>
                     </div>
@@ -737,15 +739,15 @@ export function Add(props: {
                     <div className="addText">
                       {t("Comment")} uz
                       <RichText
-                        value={comentUz}
-                        setValue={setComentUz}
+                        value={commentUz}
+                        setValue={setCommentUz}
                       ></RichText>
                     </div>
                     <div className="addText">
                       {t("Comment")} en
                       <RichText
-                        value={comentEn}
-                        setValue={setComentEn}
+                        value={commentEn}
+                        setValue={setCommentEn}
                       ></RichText>
                     </div>
                   </>
