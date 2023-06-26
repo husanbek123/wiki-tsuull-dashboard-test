@@ -206,7 +206,9 @@ export function Update(props: {
   console.log(descriptionEn, "description en");
   console.log(descriptionUz, "description uz");
 
-  const onFinishFailed = () => {
+  const onFinishFailed = (values: any) => {
+    console.log(values);
+
     ErrorToastify(t("FillInTheBlanks"));
   };
   const dataMedia = useGetMedia?.data?.data?.find(
@@ -303,6 +305,7 @@ export function Update(props: {
               <Form.Item
                 label={`${t("title")} uz`}
                 name="title_uz"
+                initialValue={dataMedia?.title_uz}
                 rules={[{ required: true, message: t("Missing") }]}
               >
                 <Input defaultValue={dataMedia.title_uz} />
@@ -311,8 +314,9 @@ export function Update(props: {
                 label={`${"title"} en`}
                 name="title_en"
                 rules={[{ required: true, message: t("Missing") }]}
+                initialValue={dataMedia?.title_en}
               >
-                <Input defaultValue={dataMedia.title_en} />
+                <Input defaultValue={dataMedia?.title_en} />
               </Form.Item>
             </div>
 
@@ -353,6 +357,11 @@ export function Update(props: {
                           label={`${t("title")} uz`}
                           name="title_uz"
                           className={styles.Input}
+                          initialValue={
+                            useGetPhrase.data?.data.find(
+                              (item: any) => item._id == id
+                            ).title_uz
+                          }
                         >
                           <Input
                             required
@@ -367,6 +376,11 @@ export function Update(props: {
                           label={`${t("title")} en`}
                           name="title_en"
                           className={styles.Input}
+                          initialValue={
+                            useGetPhrase.data?.data.find(
+                              (item: any) => item._id == id
+                            )?.title_en
+                          }
                         >
                           <Input
                             required
@@ -689,21 +703,32 @@ export function Update(props: {
                   label: `${t("title")}`,
                   children: (
                     <div className={styles.inputWrapper}>
-                      <Form.Item name={"title_uz"} className={styles.Input}>
+                      <Form.Item
+                        name={"title_uz"}
+                        className={styles.Input}
+                        initialValue={useWordGetData?.title_uz}
+                      >
                         <Input
                           placeholder={t("title_uz")}
                           defaultValue={useWordGetData?.title_uz}
-                          required
                           style={{
                             width: "100%",
                           }}
                         />
                       </Form.Item>
-                      <Form.Item className={styles.Input} name={"title_en"}>
+                      <Form.Item
+                        className={styles.Input}
+                        name={"title_en"}
+                        rules={[
+                          {
+                            required: true,
+                            message: t("Missing"),
+                          },
+                        ]}
+                        initialValue={useWordGetData?.title_en}
+                      >
                         <Input
                           placeholder={t("title_en")}
-                          defaultValue={useWordGetData?.title_en}
-                          required
                           style={{
                             width: "100%",
                           }}
@@ -837,6 +862,7 @@ export function Update(props: {
             <Form.Item
               name={"title_uz"}
               label={t("title_uz")}
+              initialValue={useMediaCategoryDataId?.title_uz}
               rules={[
                 {
                   required: true,
@@ -861,6 +887,7 @@ export function Update(props: {
                   message: t("Missing"),
                 },
               ]}
+              initialValue={useMediaCategoryDataId?.title_en}
             >
               <Input
                 defaultValue={useMediaCategoryDataId?.title_en}
