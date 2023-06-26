@@ -13,7 +13,7 @@ import {
 } from "antd";
 import SELECT from "../../Select";
 import { useGetData } from "../../../utils/hooks/useGet";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ImgCrop from "antd-img-crop";
 import { usePostData } from "../../../utils/hooks/usePost";
 import SuccessToastify from "../../toastify/Success";
@@ -41,9 +41,7 @@ export function Add(props: {
   const { t } = useTranslation();
   const { setIsModalOpen, isModalOpen } = props;
   const useGetCategory = useGetData(["media-category"], "/media-category", {});
-  const usePostMediaCategory = usePostData("media-category");
-  const categoryId = useCategoryId((state) => state.id);
-  const setCategoryId = useCategoryId((state) => state.setId);
+
   const usePost = usePostData(`${props.postUrl}`);
   const [data, setData] = useState<IData[] | null>(null);
   const [categoryData, setCategoryData] = useState<IData>({
@@ -56,10 +54,12 @@ export function Add(props: {
   const [descriptionEn, setDescriptionEn] = useState<string>("");
   const [commentUz, setCommentUz] = useState<string>("");
   const [commentEn, setCommentEn] = useState<string>("");
+
   const handleCancel = () => {
     setIsModalOpen(false);
     setData(null);
   };
+
   const language = useLanguage((state) => state.langauge);
   const queryClient = useQueryClient();
   /* For Upload Change  */
@@ -85,100 +85,34 @@ export function Add(props: {
   };
 
   /* For Upload Change End  */
-  console.log(categoryData);
 
-  const onFinish = async (values: any) => {
+  const onFinish = (values: any) => {
+    console.log(values);
+
     if (photoId === "" && ["/word", "/phrase"].includes(props.postUrl)) {
       return ErrorToastify(t("FillInTheBlanks"));
     } else {
       // media
       if (props.postUrl == "/media") {
-        if (categoryData.value) {
-          usePost.mutate(
-            {
-              ...values,
-              category: categoryData.value,
+        usePost.mutate(
+          {
+            ...values,
+            category: categoryData.value,
+          },
+          {
+            onSuccess: () => {
+              SuccessToastify(t("Success"));
+              setIsModalOpen(false);
+              setData(null);
+              queryClient.invalidateQueries({
+                queryKey: ["media"],
+              });
             },
-            {
-              onSuccess: () => {
-                SuccessToastify(t("Success"));
-                setIsModalOpen(false);
-                setData(null);
-                queryClient.invalidateQueries({
-                  queryKey: ["media"],
-                });
-              },
-              onError: () => {
-                ErrorToastify(t("Error"));
-              },
-            }
-          );
-        } else {
-          if (categoryId == "") {
-            await usePostMediaCategory.mutate(
-              {
-                title_uz: "Boshqalar",
-                title_en: "Others",
-              },
-              {
-                onSuccess: (data) => {
-                  setCategoryId(data.data._id);
-                  SuccessToastify(t("Success"));
-                  setIsModalOpen(false);
-                  setData(null);
-                  queryClient.invalidateQueries({
-                    queryKey: ["media-category", "media"],
-                  });
-                },
-                onError: () => {
-                  ErrorToastify(t("Error"));
-                },
-              }
-            );
-            await usePost.mutate(
-              {
-                ...values,
-                category: categoryId,
-              },
-              {
-                onSuccess: () => {
-                  SuccessToastify(t("Success"));
-                  setIsModalOpen(false);
-                  setData(null);
-                  queryClient.invalidateQueries({
-                    queryKey: ["media-category"],
-                  });
-                  queryClient.invalidateQueries({
-                    queryKey: ["media"],
-                  });
-                },
-                onError: () => {
-                  ErrorToastify(t("Error"));
-                },
-              }
-            );
-          } else {
-            usePost.mutate(
-              {
-                ...values,
-                category: categoryId,
-              },
-              {
-                onSuccess: () => {
-                  SuccessToastify(t("Success"));
-                  setIsModalOpen(false);
-                  setData(null);
-                  queryClient.invalidateQueries({
-                    queryKey: ["media"],
-                  });
-                },
-                onError: () => {
-                  ErrorToastify(t("Error"));
-                },
-              }
-            );
+            onError: () => {
+              ErrorToastify(t("Error"));
+            },
           }
-        }
+        );
       } else if (props.postUrl == "/phrase") {
         usePost.mutate(
           {
@@ -255,10 +189,6 @@ export function Add(props: {
     return;
   };
 
-  const onFinishFailed = () => {
-    ErrorToastify(t("FillInTheBlanks"));
-  };
-
   if (useGetCategory.isSuccess && data == null) {
     for (let i = 0; i < useGetCategory.data.data.length; i++) {
       const category = useGetCategory.data.data[i];
@@ -283,11 +213,9 @@ export function Add(props: {
     }
   }
 
-  const [activeKey, setActiveKey] = useState<string[]>(["1"]);
-
-  function handleClick(key: any) {
-    setActiveKey(key);
-  }
+  const onFinishFailed = () => {
+    return ErrorToastify(t("FillInTheBlanks"));
+  };
 
   return (
     <Modal
@@ -337,14 +265,17 @@ export function Add(props: {
           </>
         ) : (
           <Collapse
-            accordion={true}
+            expandIcon={() => ""}
+            activeKey={"1"}
             items={[
               {
                 key: "1",
                 label: `${t("title")}`,
+
                 children: (
                   <>
                     <Form.Item
+                      key="title_uz"
                       label={t("title_uz")}
                       name="title_uz"
                       rules={[{ required: true, message: t("Missing") }]}
@@ -397,10 +328,8 @@ export function Add(props: {
         {props.postUrl == "/phrase" && (
           <>
             <Collapse
-              defaultActiveKey={photoId === "" ? ["6"] : []}
-              accordion
-              activeKey={activeKey}
-              onChange={handleClick}
+              expandIcon={() => ""}
+              activeKey={"123456789".split("")}
               items={[
                 {
                   key: "1",
@@ -667,28 +596,29 @@ export function Add(props: {
                   label: `${t("Image")}`,
                   children: (
                     <>
-                      <ImgCrop rotationSlider>
-                        <Upload
-                          action={api + "/file/"}
-                          listType="picture-card"
-                          name="photo"
-                          fileList={fileList}
-                          onChange={onChange}
-                          onPreview={onPreview}
-                          onRemove={() => setPhotoId("")}
-                        >
-                          {fileList.length < 1 && `+ ${t("Upload")}`}
-                        </Upload>
-                      </ImgCrop>
-                      {photoId == "" && (
-                        <p
-                          style={{
-                            color: "red",
-                          }}
-                        >
-                          {t("MissingPhoto")}
-                        </p>
-                      )}
+                      <Form.Item
+                        name="img"
+                        rules={[
+                          {
+                            required: photoId.trim() == "" ? true : false,
+                            message: t("MissingPhoto"),
+                          },
+                        ]}
+                      >
+                        <ImgCrop rotationSlider>
+                          <Upload
+                            action={api + "/file/"}
+                            listType="picture-card"
+                            name="photo"
+                            fileList={fileList}
+                            onChange={onChange}
+                            onPreview={onPreview}
+                            onRemove={() => setPhotoId("")}
+                          >
+                            {fileList.length < 1 && `+ ${t("Upload")}`}
+                          </Upload>
+                        </ImgCrop>
+                      </Form.Item>
                     </>
                   ),
                 },
@@ -699,7 +629,8 @@ export function Add(props: {
 
         {props?.postUrl == "/word" && (
           <Collapse
-            accordion
+            expandIcon={() => ""}
+            activeKey={"123456789".split("")}
             items={[
               {
                 key: "1",

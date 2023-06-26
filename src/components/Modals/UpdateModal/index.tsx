@@ -28,6 +28,7 @@ import styles from "./index.module.scss";
 import ImgCrop from "antd-img-crop";
 import TextEditor from "../../InformationRichText";
 import { useLanguage } from "../../../utils/zustand/useLanguage";
+import ComponentLoader from "../../ComponentLoader";
 interface categorySelect {
   value: string;
   label: string;
@@ -109,12 +110,12 @@ export function Update(props: {
             values.title_uz !== undefined
               ? values.title_uz
               : useGetPhrase.data?.data.find((item: any) => item._id == id)
-                ?.title_uz,
+                  ?.title_uz,
           title_en:
             values.title_en !== undefined
               ? values.title_en
               : useGetPhrase?.data?.data.find((item: any) => item._id == id)
-                ?.title_en,
+                  ?.title_en,
           description_uz:
             descriptionUz ||
             useGetPhrase.data?.data.find((item: any) => item._id == id)
@@ -201,11 +202,16 @@ export function Update(props: {
     setComentUz(null);
     return;
   };
+  console.log(photoId);
 
   const useWordGetData = useWordData?.data?.data?.find(
     (item: { _id: string }) => item._id === id
   );
-
+  if (useWordData.isSuccess) {
+    console.log(
+      useWordData.data?.data.find((item: any) => item._id == id)?.comment_uz
+    );
+  }
   const onFinishFailed = () => {
     ErrorToastify(t("FillInTheBlanks"));
   };
@@ -300,10 +306,18 @@ export function Update(props: {
         {props.postUrl == "/media" && (
           <>
             <div className={[styles.titles, "addText"].join(" ")}>
-              <Form.Item label={`${t("title")} uz`} name="title_uz">
+              <Form.Item
+                label={`${t("title")} uz`}
+                name="title_uz"
+                rules={[{ required: true, message: t("Missing") }]}
+              >
                 <Input defaultValue={dataMedia.title_uz} />
               </Form.Item>
-              <Form.Item label={`${"title"} en`} name="title_en">
+              <Form.Item
+                label={`${"title"} en`}
+                name="title_en"
+                rules={[{ required: true, message: t("Missing") }]}
+              >
                 <Input defaultValue={dataMedia.title_en} />
               </Form.Item>
             </div>
@@ -331,9 +345,8 @@ export function Update(props: {
           <>
             <>
               <Collapse
-                accordion={true}
-                
-                defaultActiveKey={["1", "3", "7"]}
+                activeKey={"123456789".split("")}
+                expandIcon={() => ""}
                 items={[
                   {
                     key: "1",
@@ -346,6 +359,7 @@ export function Update(props: {
                           label={`${t("title")} uz`}
                           name="title_uz"
                           className={styles.Input}
+                          rules={[{ required: true, message: t("Missing") }]}
                         >
                           <Input
                             defaultValue={
@@ -359,6 +373,7 @@ export function Update(props: {
                           label={`${t("title")} en`}
                           name="title_en"
                           className={styles.Input}
+                          rules={[{ required: true, message: t("Missing") }]}
                         >
                           <Input
                             defaultValue={
@@ -447,8 +462,7 @@ export function Update(props: {
                     key: "3",
                     label: `${t("informations")}`,
                     children: (
-                      <Form.List 
-                      name="informations">
+                      <Form.List name="informations">
                         {(fields, { add, remove }) => (
                           <div>
                             {fields.map(({ key, name, ...restField }) => (
@@ -469,7 +483,7 @@ export function Update(props: {
                                   {...restField}
                                   name={[name, "name_uz"]}
                                   rules={[
-                                    { required: true, message: "Missing" },
+                                    { required: true, message: t("Missing") },
                                   ]}
                                 >
                                   <Input placeholder={`${t("name")} uz`} />
@@ -538,13 +552,13 @@ export function Update(props: {
                           }}
                           className="addText"
                         >
-                          UZ
+                          {t("Description")} uz
                           <RichText
                             value={
-                              descriptionUz == null
+                              !descriptionUz
                                 ? useGetPhrase.data?.data.find(
-                                  (item: any) => item._id == id
-                                )?.description_uz
+                                    (item: any) => item._id == id
+                                  )?.description_uz
                                 : descriptionUz
                             }
                             setValue={setDescriptionUz}
@@ -556,13 +570,13 @@ export function Update(props: {
                           }}
                           className="addText"
                         >
-                          EN
+                          {t("Description")} en
                           <RichText
                             value={
-                              descriptionEn == null
+                              !descriptionEn
                                 ? useGetPhrase.data?.data.find(
-                                  (item: any) => item._id == id
-                                )?.description_en
+                                    (item: any) => item._id == id
+                                  )?.description_en
                                 : descriptionEn
                             }
                             setValue={setDescriptionEn}
@@ -585,10 +599,10 @@ export function Update(props: {
                           {t("Comment")} uz
                           <RichText
                             value={
-                              comentUz == null
+                              !comentUz
                                 ? useGetPhrase.data?.data.find(
-                                  (item: any) => item._id == id
-                                )?.comment_uz
+                                    (item: any) => item._id == id
+                                  )?.comment_uz
                                 : comentUz
                             }
                             setValue={setComentUz}
@@ -603,10 +617,10 @@ export function Update(props: {
                           {t("Comment")} en
                           <RichText
                             value={
-                              comentEn == null
+                              !comentEn
                                 ? useGetPhrase.data?.data.find(
-                                  (item: any) => item._id == id
-                                )?.comment_en
+                                    (item: any) => item._id == id
+                                  )?.comment_en
                                 : comentEn
                             }
                             setValue={setComentEn}
@@ -657,8 +671,8 @@ export function Update(props: {
         {props.postUrl == "/word" && (
           <>
             <Collapse
-              accordion
-              defaultActiveKey={["1"]}
+              activeKey={"123456789".split("")}
+              expandIcon={() => ""}
               items={[
                 {
                   key: "1",
@@ -669,6 +683,7 @@ export function Update(props: {
                         <Input
                           placeholder={t("title_uz")}
                           defaultValue={useWordGetData?.title_uz}
+                          required
                           style={{
                             width: "100%",
                           }}
@@ -678,10 +693,10 @@ export function Update(props: {
                         <Input
                           placeholder={t("title_en")}
                           defaultValue={useWordGetData?.title_en}
+                          required
                           style={{
                             width: "100%",
                           }}
-                          required
                         />
                       </Form.Item>
                     </div>
@@ -702,31 +717,50 @@ export function Update(props: {
                         <RichText
                           value={
                             comentUz == null
-                              ? useGetPhrase.data?.data.find(
-                                (item: any) => item._id == id
-                              )?.comment_uz
+                              ? useWordData.data?.data.find(
+                                  (item: any) => item._id == id
+                                )?.comment_uz
                               : comentUz
                           }
                           setValue={setComentUz}
+                          defaultValue={
+                            useWordData.data?.data.find(
+                              (item: any) => item._id == id
+                            )?.comment_uz
+                          }
                         ></RichText>
-                        <div
+                        <b
                           style={{
-                            margin: "20px 0px",
+                            color: "red",
                           }}
-                          className="addText"
                         >
-                          {t("Comment")} en
-                          <RichText
-                            value={
-                              comentEn == null
-                                ? useGetPhrase.data?.data.find(
+                          {t("Missing")}
+                        </b>
+                      </div>
+                      <div
+                        style={{
+                          margin: "20px 0px",
+                        }}
+                        className="addText"
+                      >
+                        {t("Comment")} en
+                        <RichText
+                          value={
+                            comentEn == null
+                              ? useWordData.data?.data.find(
                                   (item: any) => item._id == id
                                 )?.comment_en
-                                : comentEn
-                            }
-                            setValue={setComentEn}
-                          ></RichText>
-                        </div>
+                              : comentEn
+                          }
+                          setValue={setComentEn}
+                        ></RichText>
+                        <b
+                          style={{
+                            color: "red",
+                          }}
+                        >
+                          {t("Missing")}
+                        </b>
                       </div>
                     </div>
                   ),
@@ -737,30 +771,54 @@ export function Update(props: {
                   children: (
                     <div className={styles.inputWrapper}>
                       <div className="addText">
-                        UZ
+                        {t("Description")} uz
                         <RichText
                           value={
-                            descriptionUz == null
-                              ? useGetPhrase.data?.data.find(
-                                (item: any) => item._id == id
-                              )?.description_uz
+                            descriptionUz === null
+                              ? useWordData.data?.data.find(
+                                  (item: any) => item._id == id
+                                )?.description_uz
                               : descriptionUz
                           }
                           setValue={setDescriptionUz}
+                          defaultValue={
+                            useWordData.data?.data.find(
+                              (item: any) => item._id == id
+                            ).description_uz
+                          }
                         ></RichText>
+                        <b
+                          style={{
+                            color: "red",
+                          }}
+                        >
+                          {t("Missing")}
+                        </b>
                       </div>
                       <div className="addText">
-                        EN
+                        {t("Description")} en
                         <RichText
                           value={
-                            descriptionEn == null
-                              ? useGetPhrase.data?.data.find(
-                                (item: any) => item._id == id
-                              )?.description_en
+                            descriptionEn === null
+                              ? useWordData.data?.data.find(
+                                  (item: any) => item._id == id
+                                )?.description_en
                               : descriptionEn
                           }
                           setValue={setDescriptionEn}
+                          defaultValue={
+                            useWordData.data?.data.find(
+                              (item: any) => item._id == id
+                            ).description_en
+                          }
                         ></RichText>
+                        <b
+                          style={{
+                            color: "red",
+                          }}
+                        >
+                          {t("Missing")}
+                        </b>
                       </div>
                     </div>
                   ),
@@ -771,8 +829,7 @@ export function Update(props: {
                   children: (
                     <div className={styles.inputWrapper}>
                       <Form.Item
-                        required
-                        rules={[{ required: true, message: "Missing" }]}
+                        rules={[{ required: true, message: t("Missing") }]}
                       >
                         <ImgCrop rotationSlider>
                           <Upload
@@ -785,11 +842,23 @@ export function Update(props: {
                             onChange={onChange}
                             name="photo"
                             onPreview={onPreview}
+                            // onRemove={()=>setPhotoId('')}
                           >
                             {fileListWords.length < 1 && "+ Upload"}
                           </Upload>
                         </ImgCrop>
                       </Form.Item>
+                      {fileListWords.length == 0 ? (
+                        <b
+                          style={{
+                            color: "red",
+                          }}
+                        >
+                          {t("MissingPhoto")}
+                        </b>
+                      ) : (
+                        ""
+                      )}
                     </div>
                   ),
                 },
@@ -800,20 +869,36 @@ export function Update(props: {
 
         {props?.postUrl == "/media-category" && (
           <>
-            <Form.Item name={"title_uz"} label={t("title_uz")} required>
+            <Form.Item
+              name={"title_uz"}
+              label={t("title_uz")}
+              rules={[
+                {
+                  required: true,
+                  message: t("Missing"),
+                },
+              ]}
+            >
               <Input
                 defaultValue={useMediaCategoryDataId?.title_uz}
-                required
                 style={{
                   width: "100%",
                 }}
               />
             </Form.Item>
 
-            <Form.Item name={"title_en"} label={t("title_en")} required>
+            <Form.Item
+              name={"title_en"}
+              label={t("title_en")}
+              rules={[
+                {
+                  required: true,
+                  message: t("Missing"),
+                },
+              ]}
+            >
               <Input
                 defaultValue={useMediaCategoryDataId?.title_en}
-                required
                 style={{
                   width: "100%",
                 }}

@@ -31,7 +31,11 @@ const formats = [
   "code",
 ];
 
-export function RichText(props: { value: any; setValue: (str: any) => void }) {
+export function RichText(props: {
+  value?: any;
+  setValue: (str: any) => void;
+  defaultValue?: string;
+}) {
   const { value, setValue } = props;
   function handleChange(newValue: string) {
     setValue(newValue);
@@ -43,6 +47,7 @@ export function RichText(props: { value: any; setValue: (str: any) => void }) {
       onChange={handleChange}
       modules={modules}
       formats={formats}
+      defaultValue={props.defaultValue}
     />
   );
 }
