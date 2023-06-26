@@ -28,12 +28,10 @@ import styles from "./index.module.scss";
 import ImgCrop from "antd-img-crop";
 import TextEditor from "../../InformationRichText";
 import { useLanguage } from "../../../utils/zustand/useLanguage";
-import parse from "html-react-parser";
 interface categorySelect {
   value: string;
   label: string;
 }
-
 export function Update(props: {
   id: string | number;
   isModalOpen: boolean;
@@ -106,56 +104,56 @@ export function Update(props: {
     if (props.postUrl === "/phrase") {
       console.log(values);
 
-      // usePhrasePatch.mutate(
-      //   {
-      //     title_uz:
-      //       values.title_uz !== undefined
-      //         ? values.title_uz
-      //         : useGetPhrase.data?.data.find((item: any) => item._id == id)
-      //             ?.title_uz,
-      //     title_en:
-      //       values.title_en !== undefined
-      //         ? values.title_en
-      //         : useGetPhrase?.data?.data.find((item: any) => item._id == id)
-      //             ?.title_en,
-      //     description_uz:
-      //       descriptionUz ||
-      //       useGetPhrase.data?.data.find((item: any) => item._id == id)
-      //         ?.description_uz,
-      //     description_en:
-      //       descriptionEn ||
-      //       useGetPhrase.data?.data.find((item: any) => item._id == id)
-      //         ?.description_en,
-      //     comment_uz:
-      //       comentUz ||
-      //       useGetPhrase.data?.data.find((item: any) => item._id == id)
-      //         ?.comment_uz,
-      //     comment_en:
-      //       comentEn ||
-      //       useGetPhrase.data?.data.find((item: any) => item._id == id)
-      //         ?.comment_en,
-      //     writers:
-      //       values.writers ||
-      //       useGetPhrase?.data?.data.find((item: any) => item._id == id)
-      //         ?.writers,
-      //     informations:
-      //       values.informations ||
-      //       useGetPhrase?.data?.data.find((item: any) => item._id == id)
-      //         ?.informations,
-      //     image: photoId,
-      //     isMain: isMain,
-      //   },
-      //   {
-      //     onSuccess: () => {
-      //       SuccessToastify(t("Success"));
-      //       queryClient.invalidateQueries({ queryKey: ["phrase"] });
-      //       setIsModalOpen(false);
-      //     },
-      //     onError: () => {
-      //       ErrorToastify(t("Error"));
-      //     },
-      //   }
-      // );
+      usePhrasePatch.mutate(
+        {
+          title_uz:
+            values.title_uz !== undefined
+              ? values.title_uz
+              : useGetPhrase.data?.data.find((item: any) => item._id == id)
+                  ?.title_uz,
+          title_en:
+            values.title_en !== undefined
+              ? values.title_en
+              : useGetPhrase?.data?.data.find((item: any) => item._id == id)
+                  ?.title_en,
+          description_uz:
+            values.description_uz ||
+            useGetPhrase.data?.data.find((item: any) => item._id == id)
+              ?.description_uz,
+          description_en:
+          values.description_en ||
+            useGetPhrase.data?.data.find((item: any) => item._id == id)
+              ?.description_en,
+          comment_uz:
+          values.comment_uz ||
+            useGetPhrase.data?.data.find((item: any) => item._id == id)
+              ?.comment_uz,
+          comment_en:
+          values.comment_en ||
+            useGetPhrase.data?.data.find((item: any) => item._id == id)
+              ?.comment_en,
+          writers:
+            values.writers ||
+            useGetPhrase?.data?.data.find((item: any) => item._id == id)
+              ?.writers,
+          informations:
+            values.informations ||
+            useGetPhrase?.data?.data.find((item: any) => item._id == id)
+              ?.informations,
+          image: photoId,
+          isMain: isMain,
+        },
+        {
+          onSuccess: () => {
+            SuccessToastify(t("Success"));
+            queryClient.invalidateQueries({ queryKey: ["phrase"] });
+            setIsModalOpen(false);
+          },
+          onError: () => {
+            ErrorToastify(t("Error"));
+          },
+        }
+      );
     }
     if (props.postUrl === "/word") {
       useWordPatch.mutate(
