@@ -23,14 +23,22 @@ export function Single(props: {
   const data = useGet?.data?.data?.find(
     (item: { _id: string }) => item._id == id
   );
+  console.log(data);
 
   return (
     <Modal width={800} open={isModalOpen} footer={null} onCancel={handleOk}>
       {data ? (
         <>
           {!["/media", "/media-category"].includes(props.postUrl) ? (
-            <div className={style.wrapper}>
+            <div
+              className={style.wrapper}
+              style={{
+                margin: "40px 40px",
+              }}
+            >
               <Collapse
+                activeKey={"123456789".split("")}
+                expandIcon={() => ""}
                 items={[
                   {
                     key: "1",
@@ -38,10 +46,10 @@ export function Single(props: {
                     children: (
                       <div className="addText">
                         <div>
-                          {t("title_uz")} :<b> {data?.title_uz}</b>
+                          <b>{t("title_uz")}</b> : {data?.title_uz}
                         </div>
                         <div>
-                          {t("title_en")} :<b> {data?.title_en}</b>
+                          <b>{t("title_en")}</b> : {data?.title_en}
                         </div>
                       </div>
                     ),
@@ -87,6 +95,7 @@ export function Single(props: {
                       ?.find((item: string[]) => item.includes("src"))
                       ?.split("src=")[1]
                       .slice(1, -1)}
+                    target="_blank"
                   >
                     {t("OpenVideo")}
                   </Button>
@@ -96,18 +105,28 @@ export function Single(props: {
             {props.postUrl == "/phrase" && (
               <>
                 <Collapse
+                  activeKey={"123456789".split("")}
+                  expandIcon={() => ""}
                   items={[
                     {
                       key: "1",
                       label: `${t("Description")}`,
                       children: (
                         <div className="addText">
-                          <div className={style.description}>
-                            <b>{t("Description")} uz</b>
+                          <div
+                            style={{
+                              margin: "30px 0",
+                            }}
+                          >
+                            <b>{t("Description")} uz : </b>
                             {parse(data?.description_uz)}
                           </div>
-                          <div>
-                            <b>{t("Description")} en</b>
+                          <div
+                            style={{
+                              margin: "30px 0",
+                            }}
+                          >
+                            <b>{t("Description")} en :</b>
                             {parse(data?.description_en)}
                           </div>
                         </div>
@@ -118,12 +137,20 @@ export function Single(props: {
                       label: `${t("Comment")}`,
                       children: (
                         <div className="addText">
-                          <div className={style.comment}>
-                            <b> {t("Comment")} uz </b>
+                          <div
+                            style={{
+                              margin: "30px 0",
+                            }}
+                          >
+                            <b> {t("Comment")} uz : </b>
                             {parse(data?.comment_uz)}
                           </div>
-                          <div>
-                            <b> {t("Comment")} en </b>
+                          <div
+                            style={{
+                              margin: "30px 0",
+                            }}
+                          >
+                            <b> {t("Comment")} en :</b>
                             {parse(data?.comment_en)}
                           </div>
                         </div>
@@ -143,6 +170,7 @@ export function Single(props: {
                                 key={index}
                                 className={style.writer}
                                 to={item.link}
+                                target="_blank"
                               >
                                 {item.name.length > 50 ? (
                                   <Button>{item.name.slice(0, 50)}...</Button>
@@ -209,6 +237,8 @@ export function Single(props: {
             {props.postUrl == "/word" && (
               <>
                 <Collapse
+                  activeKey={"123456789".split("")}
+                  expandIcon={() => ""}
                   items={[
                     {
                       key: "1",
