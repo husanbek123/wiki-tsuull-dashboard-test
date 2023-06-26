@@ -60,10 +60,10 @@ export function Single(props: {
           ) : (
             <div className="addText">
               <div>
-                {t("title_uz")} :<b> {data?.title_uz}</b>
+                <b>{t("title_uz")} :</b> {data?.title_uz}
               </div>
               <div>
-                {t("title_en")} :<b> {data?.title_en}</b>
+                <b>{t("title_en")} :</b> {data?.title_en}
               </div>
             </div>
           )}
