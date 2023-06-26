@@ -85,10 +85,9 @@ export function Add(props: {
   };
 
   /* For Upload Change End  */
+  console.log(categoryData);
 
   const onFinish = async (values: any) => {
-    console.log(photoId);
-
     if (photoId === "" && ["/word", "/phrase"].includes(props.postUrl)) {
       return ErrorToastify(t("FillInTheBlanks"));
     } else {
@@ -319,7 +318,7 @@ export function Add(props: {
             <Form.Item
               label={t("title_uz")}
               name="title_uz"
-              rules={[{ required: true, message: "Please enter" }]}
+              rules={[{ required: true, message: t("Missing") }]}
             >
               <Input />
             </Form.Item>
@@ -327,7 +326,7 @@ export function Add(props: {
             <Form.Item
               label={t("title_en")}
               name="title_en"
-              rules={[{ required: true, message: "Please enter" }]}
+              rules={[{ required: true, message: t("Missing") }]}
             >
               <Input
                 style={{
@@ -348,7 +347,7 @@ export function Add(props: {
                     <Form.Item
                       label={t("title_uz")}
                       name="title_uz"
-                      rules={[{ required: true, message: "Please enter" }]}
+                      rules={[{ required: true, message: t("Missing") }]}
                     >
                       <Input />
                     </Form.Item>
@@ -356,7 +355,7 @@ export function Add(props: {
                     <Form.Item
                       label={t("title_en")}
                       name="title_en"
-                      rules={[{ required: true, message: "Please enter" }]}
+                      rules={[{ required: true, message: t("Missing") }]}
                     >
                       <Input
                         style={{
@@ -376,11 +375,20 @@ export function Add(props: {
             <Form.Item
               label="Frame"
               name="frame"
-              rules={[{ required: true, message: "Please enter" }]}
+              rules={[{ required: true, message: t("Missing") }]}
             >
               <Input />
             </Form.Item>
-            <Form.Item required={true} label="Category" name="category">
+            <Form.Item
+              rules={[
+                {
+                  required: categoryData.value == null ? true : false,
+                  message: t("Missing"),
+                },
+              ]}
+              label="Category"
+              name="category"
+            >
               <SELECT data={data} setData={setCategoryData} />
             </Form.Item>
           </>
@@ -400,7 +408,6 @@ export function Add(props: {
                   children: (
                     <Form.List name="writers">
                       {(fields, { add, remove }) => {
-                        console.log("add Function", add);
                         return (
                           <>
                             {fields.map(({ key, name, ...restField }) => {
