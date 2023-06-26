@@ -13,7 +13,7 @@ import {
 } from "antd";
 import SELECT from "../../Select";
 import { useGetData } from "../../../utils/hooks/useGet";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import ImgCrop from "antd-img-crop";
 import { usePostData } from "../../../utils/hooks/usePost";
 import SuccessToastify from "../../toastify/Success";
@@ -27,7 +27,6 @@ import { postUrl } from "../../../types/defaultType";
 import { useTranslation } from "react-i18next";
 import TextEditor from "../../InformationRichText";
 import { useLanguage } from "../../../utils/zustand/useLanguage";
-import { useCategoryId } from "../../../utils/zustand/useMediaCategoryId";
 interface IData {
   label: string | null;
   value: string | null;
