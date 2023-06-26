@@ -28,6 +28,7 @@ import styles from "./index.module.scss";
 import ImgCrop from "antd-img-crop";
 import TextEditor from "../../InformationRichText";
 import { useLanguage } from "../../../utils/zustand/useLanguage";
+import parse from "html-react-parser";
 interface categorySelect {
   value: string;
   label: string;
@@ -103,56 +104,58 @@ export function Update(props: {
       );
     }
     if (props.postUrl === "/phrase") {
-      usePhrasePatch.mutate(
-        {
-          title_uz:
-            values.title_uz !== undefined
-              ? values.title_uz
-              : useGetPhrase.data?.data.find((item: any) => item._id == id)
-                  ?.title_uz,
-          title_en:
-            values.title_en !== undefined
-              ? values.title_en
-              : useGetPhrase?.data?.data.find((item: any) => item._id == id)
-                  ?.title_en,
-          description_uz:
-            descriptionUz ||
-            useGetPhrase.data?.data.find((item: any) => item._id == id)
-              ?.description_uz,
-          description_en:
-            descriptionEn ||
-            useGetPhrase.data?.data.find((item: any) => item._id == id)
-              ?.description_en,
-          comment_uz:
-            comentUz ||
-            useGetPhrase.data?.data.find((item: any) => item._id == id)
-              ?.comment_uz,
-          comment_en:
-            comentEn ||
-            useGetPhrase.data?.data.find((item: any) => item._id == id)
-              ?.comment_en,
-          writers:
-            values.writers ||
-            useGetPhrase?.data?.data.find((item: any) => item._id == id)
-              ?.writers,
-          informations:
-            values.informations ||
-            useGetPhrase?.data?.data.find((item: any) => item._id == id)
-              ?.informations,
-          image: photoId,
-          isMain: isMain,
-        },
-        {
-          onSuccess: () => {
-            SuccessToastify(t("Success"));
-            queryClient.invalidateQueries({ queryKey: ["phrase"] });
-            setIsModalOpen(false);
-          },
-          onError: () => {
-            ErrorToastify(t("Error"));
-          },
-        }
-      );
+      console.log(values);
+
+      // usePhrasePatch.mutate(
+      //   {
+      //     title_uz:
+      //       values.title_uz !== undefined
+      //         ? values.title_uz
+      //         : useGetPhrase.data?.data.find((item: any) => item._id == id)
+      //             ?.title_uz,
+      //     title_en:
+      //       values.title_en !== undefined
+      //         ? values.title_en
+      //         : useGetPhrase?.data?.data.find((item: any) => item._id == id)
+      //             ?.title_en,
+      //     description_uz:
+      //       descriptionUz ||
+      //       useGetPhrase.data?.data.find((item: any) => item._id == id)
+      //         ?.description_uz,
+      //     description_en:
+      //       descriptionEn ||
+      //       useGetPhrase.data?.data.find((item: any) => item._id == id)
+      //         ?.description_en,
+      //     comment_uz:
+      //       comentUz ||
+      //       useGetPhrase.data?.data.find((item: any) => item._id == id)
+      //         ?.comment_uz,
+      //     comment_en:
+      //       comentEn ||
+      //       useGetPhrase.data?.data.find((item: any) => item._id == id)
+      //         ?.comment_en,
+      //     writers:
+      //       values.writers ||
+      //       useGetPhrase?.data?.data.find((item: any) => item._id == id)
+      //         ?.writers,
+      //     informations:
+      //       values.informations ||
+      //       useGetPhrase?.data?.data.find((item: any) => item._id == id)
+      //         ?.informations,
+      //     image: photoId,
+      //     isMain: isMain,
+      //   },
+      //   {
+      //     onSuccess: () => {
+      //       SuccessToastify(t("Success"));
+      //       queryClient.invalidateQueries({ queryKey: ["phrase"] });
+      //       setIsModalOpen(false);
+      //     },
+      //     onError: () => {
+      //       ErrorToastify(t("Error"));
+      //     },
+      //   }
+      // );
     }
     if (props.postUrl === "/word") {
       useWordPatch.mutate(
@@ -201,16 +204,13 @@ export function Update(props: {
     setComentUz(null);
     return;
   };
-  console.log(photoId);
 
   const useWordGetData = useWordData?.data?.data?.find(
     (item: { _id: string }) => item._id === id
   );
-  if (useWordData.isSuccess) {
-    console.log(
-      useWordData.data?.data.find((item: any) => item._id == id)?.comment_uz
-    );
-  }
+  console.log(descriptionEn, "description en");
+  console.log(descriptionUz, "description uz");
+
   const onFinishFailed = () => {
     ErrorToastify(t("FillInTheBlanks"));
   };
@@ -358,9 +358,9 @@ export function Update(props: {
                           label={`${t("title")} uz`}
                           name="title_uz"
                           className={styles.Input}
-                          rules={[{ required: true, message: t("Missing") }]}
                         >
                           <Input
+                            required
                             defaultValue={
                               useGetPhrase.data?.data.find(
                                 (item: any) => item._id == id
@@ -372,9 +372,9 @@ export function Update(props: {
                           label={`${t("title")} en`}
                           name="title_en"
                           className={styles.Input}
-                          rules={[{ required: true, message: t("Missing") }]}
                         >
                           <Input
+                            required
                             defaultValue={
                               useGetPhrase.data?.data.find(
                                 (item: any) => item._id == id
@@ -415,6 +415,12 @@ export function Update(props: {
                                   {...restField}
                                   name={[name, "name"]}
                                   label={`name`}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: t("Missing"),
+                                    },
+                                  ]}
                                 >
                                   <Input placeholder="Name" />
                                 </Form.Item>
@@ -422,6 +428,12 @@ export function Update(props: {
                                   {...restField}
                                   label={`link`}
                                   name={[name, "link"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: t("Missing"),
+                                    },
+                                  ]}
                                 >
                                   <Input placeholder="Link" />
                                 </Form.Item>
@@ -552,16 +564,17 @@ export function Update(props: {
                           className="addText"
                         >
                           {t("Description")} uz
-                          <RichText
-                            value={
-                              !descriptionUz
-                                ? useGetPhrase.data?.data.find(
-                                    (item: any) => item._id == id
-                                  )?.description_uz
-                                : descriptionUz
-                            }
-                            setValue={setDescriptionUz}
-                          ></RichText>
+                          <Form.Item
+                            name="description_uz"
+                            rules={[
+                              {
+                                required: true,
+                                message: t("Missing"),
+                              },
+                            ]}
+                          >
+                            <TextEditor></TextEditor>
+                          </Form.Item>
                         </div>
                         <div
                           style={{
@@ -570,16 +583,17 @@ export function Update(props: {
                           className="addText"
                         >
                           {t("Description")} en
-                          <RichText
-                            value={
-                              !descriptionEn
-                                ? useGetPhrase.data?.data.find(
-                                    (item: any) => item._id == id
-                                  )?.description_en
-                                : descriptionEn
-                            }
-                            setValue={setDescriptionEn}
-                          ></RichText>
+                          <Form.Item
+                            name="description_en"
+                            rules={[
+                              {
+                                required: true,
+                                message: t("Missing"),
+                              },
+                            ]}
+                          >
+                            <TextEditor></TextEditor>
+                          </Form.Item>
                         </div>
                       </>
                     ),
@@ -596,16 +610,17 @@ export function Update(props: {
                           className="addText"
                         >
                           {t("Comment")} uz
-                          <RichText
-                            value={
-                              !comentUz
-                                ? useGetPhrase.data?.data.find(
-                                    (item: any) => item._id == id
-                                  )?.comment_uz
-                                : comentUz
-                            }
-                            setValue={setComentUz}
-                          ></RichText>
+                          <Form.Item
+                            name="comment_uz"
+                            rules={[
+                              {
+                                required: true,
+                                message: t("Missing"),
+                              },
+                            ]}
+                          >
+                            <TextEditor></TextEditor>
+                          </Form.Item>
                         </div>
                         <div
                           style={{
@@ -614,16 +629,17 @@ export function Update(props: {
                           className="addText"
                         >
                           {t("Comment")} en
-                          <RichText
-                            value={
-                              !comentEn
-                                ? useGetPhrase.data?.data.find(
-                                    (item: any) => item._id == id
-                                  )?.comment_en
-                                : comentEn
-                            }
-                            setValue={setComentEn}
-                          ></RichText>
+                          <Form.Item
+                            name="comment_en"
+                            rules={[
+                              {
+                                required: true,
+                                message: t("Missing"),
+                              },
+                            ]}
+                          >
+                            <TextEditor></TextEditor>
+                          </Form.Item>
                         </div>
                       </>
                     ),
@@ -721,7 +737,7 @@ export function Update(props: {
                                 )?.comment_uz
                               : comentUz
                           }
-                          setValue={setComentUz}
+                          // setValue={setComentUz}
                           defaultValue={
                             useWordData.data?.data.find(
                               (item: any) => item._id == id
@@ -751,7 +767,7 @@ export function Update(props: {
                                 )?.comment_en
                               : comentEn
                           }
-                          setValue={setComentEn}
+                          // setValue={setComentEn}
                         ></RichText>
                         <b
                           style={{
@@ -779,7 +795,7 @@ export function Update(props: {
                                 )?.description_uz
                               : descriptionUz
                           }
-                          setValue={setDescriptionUz}
+                          // setValue={setDescriptionUz}
                           defaultValue={
                             useWordData.data?.data.find(
                               (item: any) => item._id == id
@@ -804,7 +820,7 @@ export function Update(props: {
                                 )?.description_en
                               : descriptionEn
                           }
-                          setValue={setDescriptionEn}
+                          // setValue={setDescriptionEn}
                           defaultValue={
                             useWordData.data?.data.find(
                               (item: any) => item._id == id

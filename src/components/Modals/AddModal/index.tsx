@@ -67,6 +67,7 @@ export function Add(props: {
     setFileList(newFileList);
     setPhotoId(file?.response?._id);
   };
+  console.log(photoId);
 
   const onPreview = async (file: UploadFile) => {
     let src = file.url as string;
@@ -88,7 +89,7 @@ export function Add(props: {
   const onFinish = (values: any) => {
     console.log(values);
 
-    if (photoId === "" && ["/word", "/phrase"].includes(props.postUrl)) {
+    if (fileList.length == 0 && ["/word", "/phrase"].includes(props.postUrl)) {
       return ErrorToastify(t("FillInTheBlanks"));
     } else {
       // media
@@ -116,10 +117,10 @@ export function Add(props: {
         usePost.mutate(
           {
             ...values,
-            comment_uz: commentUz || "",
-            comment_en: commentEn || "",
-            description_uz: descriptionUz || "",
-            description_en: descriptionEn || "",
+            // comment_uz: commentUz || "",
+            // comment_en: commentEn || "",
+            // description_uz: descriptionUz || "",
+            // description_en: descriptionEn || "",
             informations:
               values?.informations?.map((item: any) => ({
                 info_uz: item.info_uz || "",
@@ -404,7 +405,7 @@ export function Add(props: {
                                   margin: "0 auto",
                                 }}
                               >
-                                Add writer
+                                {t("writers")}
                               </Button>
                             </Form.Item>
                           </>
@@ -458,10 +459,26 @@ export function Add(props: {
                                 >
                                   <Input placeholder={`${t("name")} en`} />
                                 </Form.Item>
-                                <Form.Item name={[name, "info_uz"]}>
+                                <Form.Item
+                                  name={[name, "info_uz"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: t("Missing"),
+                                    },
+                                  ]}
+                                >
                                   <TextEditor></TextEditor>
                                 </Form.Item>
-                                <Form.Item name={[name, "info_en"]}>
+                                <Form.Item
+                                  name={[name, "info_en"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: t("Missing"),
+                                    },
+                                  ]}
+                                >
                                   <TextEditor></TextEditor>
                                 </Form.Item>
 
@@ -492,7 +509,7 @@ export function Add(props: {
                                 }}
                                 icon={<PlusOutlined />}
                               >
-                                Add information
+                                {t("informations")}
                               </Button>
                             </Form.Item>
                           </>
@@ -512,14 +529,17 @@ export function Add(props: {
                         }}
                         className="addText"
                       >
+                        {t("Description")} uz
                         <Form.Item
-                          rules={[{ required: true, message: t("Missing") }]}
+                          name={"description_uz"}
+                          rules={[
+                            {
+                              required: true,
+                              message: t("Missing"),
+                            },
+                          ]}
                         >
-                          {t("Description")} uz
-                          <RichText
-                            value={descriptionUz}
-                            setValue={setDescriptionUz}
-                          ></RichText>
+                          <TextEditor></TextEditor>
                         </Form.Item>
                       </div>
                       <div
@@ -528,15 +548,17 @@ export function Add(props: {
                         }}
                         className="addText"
                       >
+                        {t("Description")} en
                         <Form.Item
-                          required={true}
-                          rules={[{ required: true, message: t("Missing") }]}
+                          name={"description_en"}
+                          rules={[
+                            {
+                              required: true,
+                              message: t("Missing"),
+                            },
+                          ]}
                         >
-                          {t("Description")} en
-                          <RichText
-                            value={descriptionEn}
-                            setValue={setDescriptionEn}
-                          ></RichText>
+                          <TextEditor></TextEditor>
                         </Form.Item>
                       </div>
                     </>
@@ -553,15 +575,17 @@ export function Add(props: {
                         }}
                         className="addText"
                       >
+                        {t("Comment")} uz
                         <Form.Item
-                          required={true}
-                          rules={[{ required: true, message: t("Missing") }]}
+                          name={"comment_uz"}
+                          rules={[
+                            {
+                              required: true,
+                              message: t("Missing"),
+                            },
+                          ]}
                         >
-                          Comment uz
-                          <RichText
-                            value={commentUz}
-                            setValue={setCommentUz}
-                          ></RichText>
+                          <TextEditor></TextEditor>
                         </Form.Item>
                       </div>
                       <div
@@ -570,11 +594,18 @@ export function Add(props: {
                         }}
                         className="addText"
                       >
-                        Comment en
-                        <RichText
-                          value={commentEn}
-                          setValue={setCommentEn}
-                        ></RichText>
+                        {t("Missing")} en
+                        <Form.Item
+                          name={"comment_en"}
+                          rules={[
+                            {
+                              required: true,
+                              message: t("Missing"),
+                            },
+                          ]}
+                        >
+                          <TextEditor></TextEditor>
+                        </Form.Item>
                       </div>
                     </>
                   ),
@@ -595,15 +626,7 @@ export function Add(props: {
                   label: `${t("Image")}`,
                   children: (
                     <>
-                      <Form.Item
-                        name="img"
-                        rules={[
-                          {
-                            required: photoId.trim() == "" ? true : false,
-                            message: t("MissingPhoto"),
-                          },
-                        ]}
-                      >
+                      <Form.Item>
                         <ImgCrop rotationSlider>
                           <Upload
                             action={api + "/file/"}
@@ -612,12 +635,23 @@ export function Add(props: {
                             fileList={fileList}
                             onChange={onChange}
                             onPreview={onPreview}
-                            onRemove={() => setPhotoId("")}
+                            onRemove={() => {
+                              setPhotoId("");
+                            }}
                           >
                             {fileList.length < 1 && `+ ${t("Upload")}`}
                           </Upload>
                         </ImgCrop>
                       </Form.Item>
+                      {photoId == "" && (
+                        <p
+                          style={{
+                            color: "red",
+                          }}
+                        >
+                          {t("MissingPhoto")}
+                        </p>
+                      )}
                     </>
                   ),
                 },

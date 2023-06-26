@@ -30,24 +30,23 @@ const formats = [
   "link",
   "code",
 ];
-
+interface OnChangeHandler {
+  (e: any): void;
+}
 export function RichText(props: {
   value?: any;
-  setValue: (str: any) => void;
+  // setValue: (str: any) => void;
   defaultValue?: string;
+  onChange?: OnChangeHandler;
 }) {
-  const { value, setValue } = props;
-  function handleChange(newValue: string) {
-    setValue(newValue);
-  }
+  // const { value, setValue } = props;
 
   return (
     <ReactQuill
-      value={value}
-      onChange={handleChange}
+      value={props.value}
+      onChange={props.onChange}
       modules={modules}
       formats={formats}
-      defaultValue={props.defaultValue}
     />
   );
 }
