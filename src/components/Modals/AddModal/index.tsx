@@ -87,6 +87,8 @@ export function Add(props: {
   /* For Upload Change End  */
 
   const onFinish = async (values: any) => {
+    console.log(photoId);
+
     if (photoId === "" && ["/word", "/phrase"].includes(props.postUrl)) {
       return ErrorToastify(t("FillInTheBlanks"));
     } else {
@@ -396,23 +398,12 @@ export function Add(props: {
                   key: "1",
                   label: `${t("writers")}`,
                   children: (
-                    <Form.List
-                      rules={[
-                        {
-                          validator(rule, _value, _callback) {
-                            (rule.required = true),
-                              (this.message = t("Missing"));
-                          },
-                        },
-                      ]}
-                      name="writers"
-                    >
+                    <Form.List name="writers">
                       {(fields, { add, remove }) => {
                         console.log("add Function", add);
                         return (
                           <>
                             {fields.map(({ key, name, ...restField }) => {
-                              console.log(key, name);
                               return (
                                 <Space
                                   key={key}
@@ -491,17 +482,7 @@ export function Add(props: {
                   key: "2",
                   label: "Information",
                   children: (
-                    <Form.List
-                      rules={[
-                        {
-                          validator(rule, _value, _callback) {
-                            (rule.required = true),
-                              (this.message = t("Missing"));
-                          },
-                        },
-                      ]}
-                      name="informations"
-                    >
+                    <Form.List name="informations">
                       {(fields, { add, remove }) => {
                         return (
                           <>
@@ -542,20 +523,10 @@ export function Add(props: {
                                 >
                                   <Input placeholder={`${t("name")} en`} />
                                 </Form.Item>
-                                <Form.Item
-                                  rules={[
-                                    { required: true, message: t("Missing") },
-                                  ]}
-                                  name={[name, "info_uz"]}
-                                >
+                                <Form.Item name={[name, "info_uz"]}>
                                   <TextEditor></TextEditor>
                                 </Form.Item>
-                                <Form.Item
-                                  rules={[
-                                    { required: true, message: t("Missing") },
-                                  ]}
-                                  name={[name, "info_en"]}
-                                >
+                                <Form.Item name={[name, "info_en"]}>
                                   <TextEditor></TextEditor>
                                 </Form.Item>
 
