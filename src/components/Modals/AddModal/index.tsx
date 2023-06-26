@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Button,
@@ -88,9 +89,7 @@ export function Add(props: {
   const onFinish = async (values: any) => {
     if (photoId === "" && ["/word", "/phrase"].includes(props.postUrl)) {
       return ErrorToastify(t("FillInTheBlanks"));
-    }
-
-    else {
+    } else {
       // media
       if (props.postUrl == "/media") {
         if (categoryData.value) {
@@ -265,24 +264,25 @@ export function Add(props: {
       setData((prev: any) =>
         prev
           ? [
-            ...prev,
-            {
-              value: category._id,
-              label:
-                language === "uz" ? category.title_uz : category.title_en,
-            },
-          ]
+              ...prev,
+              {
+                value: category._id,
+                label:
+                  language === "uz" ? category.title_uz : category.title_en,
+              },
+            ]
           : [
-            {
-              value: category._id,
-              label:
-                language === "uz" ? category.title_uz : category.title_en,
-            },
-          ]
+              {
+                value: category._id,
+                label:
+                  language === "uz" ? category.title_uz : category.title_en,
+              },
+            ]
       );
     }
   }
 
+<<<<<<< HEAD
 
 
   const [activeKey, setActiveKey] = useState<string[]>(['1']);
@@ -290,6 +290,13 @@ export function Add(props: {
   function handleClick(key: any) {
     setActiveKey(key);
   }
+=======
+  // colaspaceOnChange
+
+  const colaspaceOnChange = (e: any) => {
+    console.log(e);
+  };
+>>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
 
 
 
@@ -389,9 +396,6 @@ export function Add(props: {
           </>
         )}
 
-
-
-
         {props.postUrl == "/phrase" && (
           <>
             <Collapse
@@ -404,84 +408,93 @@ export function Add(props: {
                   key: "1",
                   label: `${t("writers")}`,
                   children: (
-                    <Form.List rules={[{
-                      validator(rule, _value, _callback) {
-                        rule.required = true,
-                          this.message = t("Missing")
-                      },
-                    }]} name="writers">
+                    <Form.List
+                      rules={[
+                        {
+                          validator(rule, _value, _callback) {
+                            (rule.required = true),
+                              (this.message = t("Missing"));
+                          },
+                        },
+                      ]}
+                      name="writers"
+                    >
                       {(fields, { add, remove }) => {
-                        console.log("add Function", add)
-                        return <>
-                          {fields.map(({ key, name, ...restField }) => {
-                            console.log(key, name);
-                            return <Space
-                              key={key}
-                              style={{
-                                display: "grid",
-                                marginBottom: 8,
-                                justifyContent: "center",
-                                alignItems: "center",
-                                gridTemplateColumns: "repeat(1,1fr)",
-                                position: "relative",
-                                paddingLeft: "40px",
-                              }}
-                              align="baseline"
-                            >
-                              <Form.Item
-                                {...restField}
-                                name={[name, "name"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: t("Missing"),
-                                  },
-                                ]}
-                              >
-                                <Input
+                        console.log("add Function", add);
+                        return (
+                          <>
+                            {fields.map(({ key, name, ...restField }) => {
+                              console.log(key, name);
+                              return (
+                                <Space
+                                  key={key}
                                   style={{
-                                    width: "100%",
+                                    display: "grid",
+                                    marginBottom: 8,
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    gridTemplateColumns: "repeat(1,1fr)",
+                                    position: "relative",
+                                    paddingLeft: "40px",
                                   }}
-                                  placeholder="Name"
-                                />
-                              </Form.Item>
-                              <Form.Item
-                                {...restField}
-                                name={[name, "link"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: t("Missing"),
-                                  },
-                                ]}
-                              >
-                                <Input placeholder="Link" />
-                              </Form.Item>
-                              <MinusCircleOutlined
-                                onClick={() => remove(name)}
-                              />
-                            </Space>
-                          })}
-                          <Form.Item
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Button
-                              type="dashed"
-                              onClick={() => add()}
-                              block
-                              icon={<PlusOutlined />}
+                                  align="baseline"
+                                >
+                                  <Form.Item
+                                    {...restField}
+                                    name={[name, "name"]}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: t("Missing"),
+                                      },
+                                    ]}
+                                  >
+                                    <Input
+                                      style={{
+                                        width: "100%",
+                                      }}
+                                      placeholder="Name"
+                                    />
+                                  </Form.Item>
+                                  <Form.Item
+                                    {...restField}
+                                    name={[name, "link"]}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: t("Missing"),
+                                      },
+                                    ]}
+                                  >
+                                    <Input placeholder="Link" />
+                                  </Form.Item>
+                                  <MinusCircleOutlined
+                                    onClick={() => remove(name)}
+                                  />
+                                </Space>
+                              );
+                            })}
+                            <Form.Item
                               style={{
-                                width: "400px",
-                                margin: "0 auto",
+                                display: "flex",
+                                justifyContent: "center",
                               }}
                             >
-                              Add writer
-                            </Button>
-                          </Form.Item>
-                        </>
+                              <Button
+                                type="dashed"
+                                onClick={() => add()}
+                                block
+                                icon={<PlusOutlined />}
+                                style={{
+                                  width: "400px",
+                                  margin: "0 auto",
+                                }}
+                              >
+                                Add writer
+                              </Button>
+                            </Form.Item>
+                          </>
+                        );
                       }}
                     </Form.List>
                   ),
@@ -491,13 +504,16 @@ export function Add(props: {
                   label: "Information",
                   children: (
                     <Form.List
-                      rules={[{
-                        validator(rule, _value, _callback) {
-                          rule.required = true,
-                            this.message = t("Missing")
+                      rules={[
+                        {
+                          validator(rule, _value, _callback) {
+                            (rule.required = true),
+                              (this.message = t("Missing"));
+                          },
                         },
-                      }]}
-                      name="informations">
+                      ]}
+                      name="informations"
+                    >
                       {(fields, { add, remove }) => {
                         return (
                           <>
@@ -538,10 +554,27 @@ export function Add(props: {
                                 >
                                   <Input placeholder={`${t("name")} en`} />
                                 </Form.Item>
+<<<<<<< HEAD
                                 <Form.Item rules={[{ required: true, message: t("Missing") }]} name={[name, "info_uz"]}>
                                   <TextEditor></TextEditor>
                                 </Form.Item>
                                 <Form.Item rules={[{ required: true, message: t("Missing") }]} name={[name, "info_en"]}>
+=======
+                                <Form.Item
+                                  rules={[
+                                    { required: true, message: t("Missing") },
+                                  ]}
+                                  name={[name, "info_uz"]}
+                                >
+                                  <TextEditor></TextEditor>
+                                </Form.Item>
+                                <Form.Item
+                                  rules={[
+                                    { required: true, message: t("Missing") },
+                                  ]}
+                                  name={[name, "info_en"]}
+                                >
+>>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
                                   <TextEditor></TextEditor>
                                 </Form.Item>
 
@@ -576,7 +609,11 @@ export function Add(props: {
                               </Button>
                             </Form.Item>
                           </>
+<<<<<<< HEAD
                         )
+=======
+                        );
+>>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
                       }}
                     </Form.List>
                   ),
@@ -785,7 +822,7 @@ export function Add(props: {
               },
             ]}
             bordered={true}
-            defaultActiveKey={!photoId ? ["3"] : []}
+            // defaultActiveKey={!photoId ? ["3"] : []}
           />
         )}
         <div

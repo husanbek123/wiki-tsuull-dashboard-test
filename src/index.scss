@@ -23,12 +23,31 @@ img {
     color: white !important;
     background: black !important;
   }
+  .bredcrumb {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px 0px;
+  }
 }
 [data-theme="dark"] {
   background-color: #00013d;
   color: #fff;
   background-repeat: no-repeat;
   background-size: cover;
+  .bredcrumb {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px 0px;
+    b {
+      color: white;
+    }
+  }
   .ant-table-content {
     width: 100%;
     height: 100%;
@@ -144,7 +163,6 @@ img {
   code {
     color: black;
   }
-
 }
 .active {
   color: #ec781c;

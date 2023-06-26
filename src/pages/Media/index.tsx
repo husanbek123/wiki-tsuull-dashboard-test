@@ -32,7 +32,7 @@ export default function Media() {
   });
   const { t } = useTranslation();
   const theme = useTheme((state) => state.theme);
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<DataType | any> = [
     { title: t("title_uz"), dataIndex: "title_uz", key: "title_uz" },
     { title: t("title_en"), dataIndex: "title_en", key: "title_uz" },
     { title: t("frame"), dataIndex: "frame", key: "frame" },
@@ -44,11 +44,18 @@ export default function Media() {
       width: 100,
     },
   ];
+  const data =
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    useGet?.data?.data == undefined ? [] : [...useGet?.data?.data]?.reverse();
 
   return (
     <div className={styles.Main}>
       <div className={styles.container}>
+<<<<<<< HEAD
         <ComponentBreadCrumb url={t("Main")} />
+=======
+        <ComponenBreadCrumb url={`${t("Media")}`} />
+>>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
         {isModalOpen && (
           <CRUDNavigator
             postUrl={"/media"}
@@ -97,143 +104,145 @@ export default function Media() {
                   <ComponentLoader />
                 </div>
               ),
-              spinning: !useGet.data?.data,
+              spinning: !data.length,
             }}
-            dataSource={useGet.data?.data
-              ?.reverse()
-              .map((item: any, index: any) => ({
-                key: index + 1,
-                title_uz: <p>{item.title_uz}</p>,
-                title_en: <p>{item.title_en}</p>,
+            dataSource={
+              data.length
+                ? data?.map((item: any, index: any) => ({
+                    key: index + 1,
+                    title_uz: <p>{item.title_uz}</p>,
+                    title_en: <p>{item.title_en}</p>,
 
-                frame: (
-                  <div
-                    style={{
-                      width: "50px",
-                      height: "50px",
-                    }}
-                    onClick={() => {
-                      setModalParametrs({ status: "Frame", id: item._id });
-                      setIsModalOpen(true);
-                    }}
-                  >
-                    <img
-                      src={theme === "dark" ? whiteVideoIcon : videoIcon}
-                      alt=""
-                      style={{
-                        cursor: "pointer",
-                        background: "transparent",
-                      }}
-                    />
-                  </div>
-                ),
-                category_uz: (
-                  <div>
-                    {useGet?.data?.data[index]?.category?.map(
-                      (item: any, index: any) => (
-                        <p key={index}>
-                          {item.title_uz.substring(0, 15) + "..."}
-                        </p>
-                      )
-                    )}
-                  </div>
-                ),
-                category_en: (
-                  <div>
-                    {useGet.data?.data[index]?.category?.map(
-                      (item: any, index: any) => (
-                        <p key={index}>
-                          {item.title_en.substring(0, 15) + "..."}
-                        </p>
-                      )
-                    )}
-                  </div>
-                ),
-                buttons: (
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "5px",
-                      justifyContent: "center",
-                    }}
-                    className="dark-buttons"
-                  >
-                    <TOOLTIP color="red" title={"Delete"} key={"1"}>
-                      <Button
+                    frame: (
+                      <div
                         style={{
-                          width: "40px",
-                          height: "40px",
-                          color: "red",
-                          borderColor: "red",
-                          fontSize: "15px",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          alignItems: "center",
+                          width: "50px",
+                          height: "50px",
                         }}
                         onClick={() => {
-                          setModalParametrs({
-                            status: "Delete",
-                            id: item._id,
-                          });
+                          setModalParametrs({ status: "Frame", id: item._id });
                           setIsModalOpen(true);
                         }}
                       >
-                        <BsFillTrashFill></BsFillTrashFill>
-                      </Button>
-                    </TOOLTIP>
-                    <TOOLTIP title={`Change`} color={"orange"} key={"2"}>
-                      <Button
+                        <img
+                          src={theme === "dark" ? whiteVideoIcon : videoIcon}
+                          alt=""
+                          style={{
+                            cursor: "pointer",
+                            background: "transparent",
+                          }}
+                        />
+                      </div>
+                    ),
+                    category_uz: (
+                      <div>
+                        {useGet?.data?.data[index]?.category?.map(
+                          (item: any, index: any) => (
+                            <p key={index}>
+                              {item.title_uz.substring(0, 15) + "..."}
+                            </p>
+                          )
+                        )}
+                      </div>
+                    ),
+                    category_en: (
+                      <div>
+                        {useGet.data?.data[index]?.category?.map(
+                          (item: any, index: any) => (
+                            <p key={index}>
+                              {item.title_en.substring(0, 15) + "..."}
+                            </p>
+                          )
+                        )}
+                      </div>
+                    ),
+                    buttons: (
+                      <div
                         style={{
-                          width: "40px",
-                          height: "40px",
-                          color: "orange",
-                          borderColor: "orange",
-                          fontSize: "15px",
                           display: "flex",
-                          flexDirection: "column",
+                          gap: "5px",
                           justifyContent: "center",
-                          alignItems: "center",
                         }}
-                        onClick={() => {
-                          setModalParametrs({
-                            status: "Update",
-                            id: item._id,
-                          });
-                          setIsModalOpen(true);
-                        }}
+                        className="dark-buttons"
                       >
-                        <BsPencilSquare />
-                      </Button>
-                    </TOOLTIP>
-                    <TOOLTIP title={`Single`} color={"green"} key={"3"}>
-                      <Button
-                        style={{
-                          width: "40px",
-                          height: "40px",
-                          fontSize: "15px",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          borderColor: "green",
-                          color: "green",
-                        }}
-                        onClick={() => {
-                          setModalParametrs({
-                            status: "Single",
-                            id: item._id,
-                            url: "/media",
-                          });
-                          setIsModalOpen(true);
-                        }}
-                      >
-                        <BsFillEyeFill />
-                      </Button>
-                    </TOOLTIP>
-                  </div>
-                ),
-              }))}
+                        <TOOLTIP color="red" title={"Delete"} key={"1"}>
+                          <Button
+                            style={{
+                              width: "40px",
+                              height: "40px",
+                              color: "red",
+                              borderColor: "red",
+                              fontSize: "15px",
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                            onClick={() => {
+                              setModalParametrs({
+                                status: "Delete",
+                                id: item._id,
+                              });
+                              setIsModalOpen(true);
+                            }}
+                          >
+                            <BsFillTrashFill></BsFillTrashFill>
+                          </Button>
+                        </TOOLTIP>
+                        <TOOLTIP title={`Change`} color={"orange"} key={"2"}>
+                          <Button
+                            style={{
+                              width: "40px",
+                              height: "40px",
+                              color: "orange",
+                              borderColor: "orange",
+                              fontSize: "15px",
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                            onClick={() => {
+                              setModalParametrs({
+                                status: "Update",
+                                id: item._id,
+                              });
+                              setIsModalOpen(true);
+                            }}
+                          >
+                            <BsPencilSquare />
+                          </Button>
+                        </TOOLTIP>
+                        <TOOLTIP title={`Single`} color={"green"} key={"3"}>
+                          <Button
+                            style={{
+                              width: "40px",
+                              height: "40px",
+                              fontSize: "15px",
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              borderColor: "green",
+                              color: "green",
+                            }}
+                            onClick={() => {
+                              setModalParametrs({
+                                status: "Single",
+                                id: item._id,
+                                url: "/media",
+                              });
+                              setIsModalOpen(true);
+                            }}
+                          >
+                            <BsFillEyeFill />
+                          </Button>
+                        </TOOLTIP>
+                      </div>
+                    ),
+                  }))
+                : []
+            }
           />
         </div>
       </div>

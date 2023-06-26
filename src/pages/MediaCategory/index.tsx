@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { Breadcrumb, Button, Table } from "antd";
+import { Button, Table } from "antd";
 import style from "./index.module.scss";
 import { CRUDNavigator } from "../../components/CRUDNavigator";
 // TOOLTIP
@@ -49,11 +49,19 @@ export default function MediaCategory() {
     { title: "", dataIndex: "buttons" },
   ];
 
-  const dataResult: MediaCategoryData[] = useGet.data?.data;
+  const dataResult: MediaCategoryData[] =
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    useGet?.data?.data == undefined ? [] : [...useGet?.data?.data]?.reverse();
   return (
     <div className={style.Main}>
       <div className={style.container}>
+<<<<<<< HEAD
       <ComponentBreadCrumb url={t("MediaCategory")}/>
+=======
+        <ComponenBreadCrumb
+          url={`${t("MediaCategory")}`.split("-").join(" ")}
+        />
+>>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
 
         {isModalOpen && (
           <CRUDNavigator
@@ -101,10 +109,10 @@ export default function MediaCategory() {
                   <ComponentLoader />
                 </div>
               ),
-              spinning: !useGet.data?.data,
+              spinning: !dataResult.length,
             }}
             columns={columns}
-            dataSource={dataResult?.reverse()?.map((item: any, index: any) => ({
+            dataSource={dataResult?.map((item: any, index: any) => ({
               key: index + 1,
               title_uz: <p>{item.title_uz}</p>,
               title_en: <p>{item.title_en}</p>,

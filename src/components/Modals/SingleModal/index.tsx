@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Checkbox, Collapse, Empty, Modal } from "antd";
+=======
+import { Button, Checkbox, Collapse, Modal } from "antd";
+>>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
 import { useGetData } from "../../../utils/hooks/useGet";
 import parse from "html-react-parser";
 import style from "./index.module.scss";
@@ -9,34 +13,27 @@ import { api } from "../../../utils/axios";
 import { useTranslation } from "react-i18next";
 import ComponentLoader from "../../ComponentLoader";
 export function Single(props: {
-  url: postUrl;
+  postUrl: postUrl;
   id: string;
   isModalOpen: boolean;
   setIsModalOpen: (bool: boolean) => void;
 }) {
-  const { url, id, isModalOpen, setIsModalOpen } = props;
-  const useGet = useGetData([`single-${url}`], url.toString());
+  const { id, isModalOpen, setIsModalOpen } = props;
+  const { t } = useTranslation();
+  const useGet = useGetData([`single-${props.postUrl}`], `${props.postUrl}`);
   const handleOk = () => {
     setIsModalOpen(false);
   };
 
-  const data = useGet.data?.data.find(
+  const data = useGet?.data?.data?.find(
     (item: { _id: string }) => item._id == id
-  );
-  const { t } = useTranslation();
-  console.log(
-    data?.frame
-      ?.split(" ")
-      ?.find((item: any) => item.includes("src"))
-      ?.split("src=")[1]
-      .slice(1, -1)
   );
 
   return (
     <Modal width={800} open={isModalOpen} footer={null} onCancel={handleOk}>
       {data ? (
         <>
-          {!["/media", "/media-category"].includes(props.url) ? (
+          {!["/media", "/media-category"].includes(props.postUrl) ? (
             <div className={style.wrapper}>
               <div className="addText">
                 <div>
@@ -58,7 +55,7 @@ export function Single(props: {
             </div>
           )}
           <div className={style.wrapper}>
-            {url == "/media" && (
+            {props.postUrl == "/media" && (
               <div>
                 <div className="addText">
                   <div style={{ fontSize: "1.1rem", padding: "10px 0" }} >
@@ -82,7 +79,7 @@ export function Single(props: {
                   <Button
                     href={data?.frame
                       ?.split(" ")
-                      ?.find((item: any) => item.includes("src"))
+                      ?.find((item: string[]) => item.includes("src"))
                       ?.split("src=")[1]
                       .slice(1, -1)}
                   >
@@ -91,7 +88,7 @@ export function Single(props: {
                 </div>
               </div>
             )}
-            {url == "/phrase" && data && (
+            {props.postUrl == "/phrase" && (
               <>
                 <Collapse
                   accordion
@@ -103,11 +100,11 @@ export function Single(props: {
                       children: (
                         <div className="addText">
                           <div className={style.description}>
-                            <b>UZ :</b>
+                            <b>{t("Description")} uz</b>
                             {parse(data?.description_uz)}
                           </div>
                           <div>
-                            <b>EN : </b>
+                            <b>{t("Description")} en</b>
                             {parse(data?.description_en)}
                           </div>
                         </div>
@@ -119,11 +116,11 @@ export function Single(props: {
                       children: (
                         <div className="addText">
                           <div className={style.comment}>
-                            <b> UZ :</b>
+                            <b> {t("Comment")} uz </b>
                             {parse(data?.comment_uz)}
                           </div>
                           <div>
-                            <b>EN: </b>
+                            <b> {t("Comment")} en </b>
                             {parse(data?.comment_en)}
                           </div>
                         </div>
@@ -137,6 +134,7 @@ export function Single(props: {
                           {data.writers.map(
                             (
                               item: { name: string; link: string },
+<<<<<<< HEAD
                               index: any
                             ) => {
                               return (
@@ -161,6 +159,22 @@ export function Single(props: {
                                 </>
                               )
                             }
+=======
+                              index: number
+                            ) => (
+                              <Link
+                                key={index}
+                                className={style.writer}
+                                to={item.link}
+                              >
+                                {item.name.length > 50 ? (
+                                  <Button>{item.name.slice(0, 50)}...</Button>
+                                ) : (
+                                  <Button>{item.name}</Button>
+                                )}
+                              </Link>
+                            )
+>>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
                           )}
                         </div>
                       ),
@@ -179,7 +193,7 @@ export function Single(props: {
                                   info_uz: string;
                                   info_en: string;
                                 },
-                                index: any
+                                index: number
                               ) => (
                                 <div key={index} className={style.information}>
                                   <p>
@@ -216,6 +230,7 @@ export function Single(props: {
                 </div>
               </>
             )}
+<<<<<<< HEAD
             {url == "/word" && data && (
               <div className={style.MainWordWrapper}>
                 <div>
@@ -229,6 +244,46 @@ export function Single(props: {
                       {parse(data?.description_en)}
                     </div>
                   </div>
+=======
+            {props.postUrl == "/word" && (
+              <>
+                <Collapse
+                  items={[
+                    {
+                      key: "1",
+                      label: t("Description"),
+                      children: (
+                        <div className="addText">
+                          <div className={style.description}>
+                            <b>{t("Description")} uz :</b>
+                            {parse(data?.description_uz)}
+                          </div>
+                          <div className={style.description}>
+                            <b>{t("Description")} en : </b>
+                            {parse(data?.description_en)}
+                          </div>
+                        </div>
+                      ),
+                    },
+                    {
+                      key: "2",
+                      label: t("Comment"),
+                      children: (
+                        <div className="addText">
+                          <div className={style.comment}>
+                            <b>{t("Comment")} uz :</b>
+                            {parse(data?.comment_uz)}
+                          </div>
+                          <div className={style.comment}>
+                            <b>{t("Comment")} en : </b>
+                            {parse(data?.comment_en)}
+                          </div>
+                        </div>
+                      ),
+                    },
+                  ]}
+                />
+>>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
 
                   <div className="addText">
                     <div className={style.comment}>

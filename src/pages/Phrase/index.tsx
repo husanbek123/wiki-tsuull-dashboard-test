@@ -32,7 +32,7 @@ export default function Phrase() {
 
   const { t } = useTranslation();
   // Table data
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<DataType | any> = [
     { title: t("title_uz"), dataIndex: "title_uz", key: "title_uz" },
     { title: t("title_en"), dataIndex: "title_en", key: "title_uz" },
     { title: t("writers"), dataIndex: "writers", key: "writers" },
@@ -49,6 +49,10 @@ export default function Phrase() {
     },
   ];
 
+  const dataResult =
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    useGet?.data?.data == undefined ? [] : [...useGet?.data?.data]?.reverse();
+
   const language = useLanguage((state) => state.langauge);
   return (
     <>
@@ -64,7 +68,11 @@ export default function Phrase() {
           />
         )}
         <div className={styles.container}>
+<<<<<<< HEAD
         <ComponentBreadCrumb url={t("Phrase")} />
+=======
+          <ComponenBreadCrumb url={`${t("Phrase")}`} />
+>>>>>>> c373c7a4588ea36ab26d5f88e246a8db66791ca2
 
           <div className={styles.Add}>
             <TOOLTIP title={"Add"} key={"Add"} color="blue">
@@ -102,10 +110,10 @@ export default function Phrase() {
                     <ComponentLoader />
                   </div>
                 ),
-                spinning: !useGet.data?.data,
+                spinning: !dataResult.length,
               }}
               columns={columns}
-              dataSource={useGet.data?.data.reverse().map((item: any, index: any) => ({
+              dataSource={dataResult.map((item: any, index: any) => ({
                 key: `${index + 1}`,
                 title_uz: <p>{item.title_uz}</p>,
                 title_en: <p>{item.title_en}</p>,
