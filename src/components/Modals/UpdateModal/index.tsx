@@ -28,7 +28,6 @@ import styles from "./index.module.scss";
 import ImgCrop from "antd-img-crop";
 import TextEditor from "../../InformationRichText";
 import { useLanguage } from "../../../utils/zustand/useLanguage";
-import ComponentLoader from "../../ComponentLoader";
 interface categorySelect {
   value: string;
   label: string;
