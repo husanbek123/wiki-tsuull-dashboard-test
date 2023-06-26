@@ -67,7 +67,7 @@ export function Single(props: {
                     <b>{t("Category")} uz</b> : {data.category[0]?.title_uz}
                   </div>
                   <div>
-                    <b>{t("Category")} en</b> : {data.category[0].title_en}
+                    <b>{t("Category")} en</b> : {data.category[0]?.title_en}
                   </div>
                 </div>
                 <div
