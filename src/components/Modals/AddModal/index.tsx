@@ -83,6 +83,7 @@ export function Add(props: {
   };
 
   /* For Upload Change End  */
+  console.log("debugged image name");
 
   const onFinish = (values: any) => {
     if (fileList.length == 0 && ["/word", "/phrase"].includes(props.postUrl)) {
@@ -622,7 +623,7 @@ export function Add(props: {
                           <Upload
                             action={api + "/file/"}
                             listType="picture-card"
-                            name="image"
+                            name="photo"
                             fileList={fileList}
                             onChange={onChange}
                             onPreview={onPreview}
