@@ -1,17 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Card, Input, Row } from "antd";
-import React, { useRef, useState } from "react";
+import { Card, Row } from "antd";
+import { useRef, useState } from "react";
 import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css";
 
 const RichTextEditor = ({
-  initialTemplateName = "",
   initialTempVar = [],
   defaultValue = "",
   onChange,
 }: any) => {
-  const [templateName, setTemplateName] = useState(initialTemplateName);
-  const [tempVar, setTempVar] = useState(initialTempVar);
+  const [tempVar] = useState(initialTempVar);
 
   /**
    * @type {React.MutableRefObject<SunEditor>} get type definitions for editor

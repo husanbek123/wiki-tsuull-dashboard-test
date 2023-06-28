@@ -19,7 +19,6 @@ import { ColumnsType } from "antd/es/table";
 import ComponentLoader from "../../components/ComponentLoader";
 import { api } from "../../utils/axios";
 import { ComponentBreadCrumb } from "../../components/Breadcrumb";
-import Overview from "../../components/MyEditor";
 
 type image = {
   _id: string;
