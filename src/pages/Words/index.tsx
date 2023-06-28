@@ -19,6 +19,7 @@ import { ColumnsType } from "antd/es/table";
 import ComponentLoader from "../../components/ComponentLoader";
 import { api } from "../../utils/axios";
 import { ComponentBreadCrumb } from "../../components/Breadcrumb";
+import Overview from "../../components/MyEditor";
 
 type image = {
   _id: string;
@@ -81,6 +82,7 @@ export default function Words() {
             url={""}
           />
         )}
+
         <div className={style.Add}>
           <TOOLTIP title={"Add"} key={"Add"} color="blue">
             <Button

@@ -1,21 +1,23 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Select from "react-select";
+import CreateTable from "react-select";
 import makeAnimated from "react-select/animated";
 
 const animatedComponents = makeAnimated();
 
 export default function SELECT(props: {
   data: any;
-  defaultValue?: { value: string; label: string }[];
+  defaultValue?: any;
   setData: any;
 }) {
   return (
-    <Select
-      options={props.data}
+    <CreateTable
+      isClearable
       components={animatedComponents}
+      options={props.data}
       defaultValue={props.defaultValue || []}
       onChange={(e) => props.setData(e)}
+      className="select"
     />
   );
 }

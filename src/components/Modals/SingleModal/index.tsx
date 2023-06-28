@@ -23,7 +23,6 @@ export function Single(props: {
   const data = useGet?.data?.data?.find(
     (item: { _id: string }) => item._id == id
   );
-  console.log(data);
 
   return (
     <Modal width={800} open={isModalOpen} footer={null} onCancel={handleOk}>

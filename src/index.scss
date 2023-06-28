@@ -7,6 +7,7 @@ $blue-color: #124a85;
   box-sizing: border-box;
   font-family: "Barlow", sans-serif;
 }
+
 a {
   text-decoration: none;
 }
@@ -109,10 +110,6 @@ img {
       background: #00013d;
       color: white;
     }
-    svg {
-      color: white;
-      font-size: 18px;
-    }
   }
   .ant-table-pagination {
     li {
@@ -165,6 +162,12 @@ img {
   code {
     color: black;
   }
+  .ant-modal-close-x{
+    svg{
+      color: white;
+      font-size: 22px;
+    }
+  }
 }
 .active {
   color: #ec781c;
@@ -172,6 +175,42 @@ img {
 a {
   color: white;
 }
-.quill {
-  max-width: 450px;
+.richtext {
+  width: 100%;
+  svg {
+    color: black !important;
+  }
+}
+.accardion_styles {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  color: rgba(0, 0, 0, 0.88);
+  font-size: 14px;
+  line-height: 1.5714285714285714;
+  list-style: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  background-color: rgba(0, 0, 0, 0.02);
+  border: 1px solid #d9d9d9;
+  border-bottom: 0;
+  border-radius: 8px;
+}
+.errorText {
+  color: red;
+  font-weight: 600;
+}
+.addText {
+  
+  span {
+    display: block;
+  }
+}
+
+.select {
+  color: black;
+  svg{
+    stroke: black;
+  }
 }

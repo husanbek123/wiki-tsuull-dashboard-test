@@ -44,10 +44,11 @@ export default function Sidebar() {
         </div>
         <div className={style.links}>
           {listItems.map((item, index) => {
-            console.log(item)
-            return <NavLink to={`${item.url}`} key={index}>
-              {t(item.title)}
-            </NavLink>
+            return (
+              <NavLink to={`${item.url}`} key={index}>
+                {t(item.title)}
+              </NavLink>
+            );
           })}
         </div>
         <div className={style.params}>
@@ -93,4 +94,3 @@ export default function Sidebar() {
     </header>
   );
 }
-

@@ -44,5 +44,7 @@
   "Main": "Media",
   "Phrase" : "Phrase",
   "OpenVideo" : "Open video",
-  "Missing" : "Fill"
+  "Missing" : "Fill",
+  "PhotoIsFilled" : "Photo is filled",
+  "addWriter" : "Add writer"
 }

@@ -7,7 +7,6 @@ import {
   Input,
   Upload,
   Modal,
-  Space,
   UploadFile,
   Collapse,
 } from "antd";
@@ -20,12 +19,12 @@ import SuccessToastify from "../../toastify/Success";
 import ErrorToastify from "../../toastify/Error";
 import { api } from "../../../utils/axios";
 import type { RcFile } from "antd/es/upload/interface";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { postUrl } from "../../../types/defaultType";
 import { useTranslation } from "react-i18next";
-import TextEditor from "../../InformationRichText";
 import { useLanguage } from "../../../utils/zustand/useLanguage";
+import RichTextEditor from "../../RichTextEditor";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 interface IData {
   label: string | null;
   value: string | null;
@@ -39,19 +38,34 @@ export function Add(props: {
   const { t } = useTranslation();
   const { setIsModalOpen, isModalOpen } = props;
   const useGetCategory = useGetData(["media-category"], "/media-category", {});
-
   const usePost = usePostData(`${props.postUrl}`);
   const [data, setData] = useState<IData[] | null>(null);
   const [categoryData, setCategoryData] = useState<IData>({
     value: null,
     label: null,
   });
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const {
+    fields: writers,
+    prepend: writersAppend,
+    remove: writersRemove,
+  } = useFieldArray({ control, name: "writers" });
+  const {
+    fields: informations,
+    append: informationsAppend,
+    remove: informationsRemove,
+  } = useFieldArray({
+    control,
+    name: "informations",
+  });
+
   const [isMain, setIsMain] = useState(false);
   const [photoId, setPhotoId] = useState<string>("");
-  // const [descriptionUz, setDescriptionUz] = useState<string>("");
-  // const [descriptionEn, setDescriptionEn] = useState<string>("");
-  // const [commentUz, setCommentUz] = useState<string>("");
-  // const [commentEn, setCommentEn] = useState<string>("");
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -60,7 +74,7 @@ export function Add(props: {
 
   const language = useLanguage((state) => state.langauge);
   const queryClient = useQueryClient();
-  /* For Upload Change  */
+
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const onChange = ({ fileList: newFileList, file }: any) => {
     setFileList(newFileList);
@@ -80,104 +94,6 @@ export function Add(props: {
     image.src = src;
     const imgWindow = window.open(src);
     imgWindow?.document.write(image.outerHTML);
-  };
-
-  /* For Upload Change End  */
-
-  const onFinish = (values: any) => {
-    if (fileList.length == 0 && ["/word", "/phrase"].includes(props.postUrl)) {
-      return ErrorToastify(t("FillInTheBlanks"));
-    } else {
-      // media
-      if (props.postUrl == "/media") {
-        usePost.mutate(
-          {
-            ...values,
-            category: categoryData.value,
-          },
-          {
-            onSuccess: () => {
-              SuccessToastify(t("Success"));
-              setIsModalOpen(false);
-              setData(null);
-              queryClient.invalidateQueries({
-                queryKey: ["media"],
-              });
-            },
-            onError: () => {
-              ErrorToastify(t("Error"));
-            },
-          }
-        );
-      } else if (props.postUrl == "/phrase") {
-        usePost.mutate(
-          {
-            ...values,
-
-            informations:
-              values?.informations?.map((item: any) => ({
-                info_uz: item.info_uz || "",
-                info_en: item.info_en || "",
-                name_uz: item.name_uz || "",
-                name_en: item.name_en || "",
-              })) || [],
-            writers: values.writers || [],
-            isMain,
-            image: photoId,
-          },
-          {
-            onSuccess: () => {
-              SuccessToastify(t("Success"));
-              setIsModalOpen(false);
-              queryClient.invalidateQueries({
-                queryKey: ["phrase"],
-              });
-            },
-            onError: () => {
-              ErrorToastify(t("Error"));
-            },
-          }
-        );
-      } else if (props.postUrl == "/word") {
-        const result = {
-          ...values,
-          image: photoId,
-        };
-        console.log(result);
-
-        usePost.mutate(result, {
-          onSuccess: () => {
-            SuccessToastify(t("Success"));
-            setIsModalOpen(false);
-            queryClient.invalidateQueries({
-              queryKey: ["word"],
-            });
-          },
-          onError: () => {
-            ErrorToastify(t("Error"));
-          },
-        });
-      } else if (props.postUrl == "/media-category") {
-        usePost.mutate(
-          {
-            ...values,
-          },
-          {
-            onSuccess: () => {
-              SuccessToastify(t("Success"));
-              setIsModalOpen(false);
-              queryClient.invalidateQueries({
-                queryKey: ["media-category"],
-              });
-            },
-            onError: () => {
-              ErrorToastify(t("Error"));
-            },
-          }
-        );
-      }
-    }
-    return;
   };
 
   if (useGetCategory.isSuccess && data == null) {
@@ -204,56 +120,145 @@ export function Add(props: {
     }
   }
 
-  const onFinishFailed = () => {
-    return ErrorToastify(t("FillInTheBlanks"));
-  };
-
   return (
     <Modal
       width={1000}
       open={isModalOpen}
       onCancel={handleCancel}
       footer={null}
+      wrapClassName="modal"
     >
-      <Form
-        name="add_media"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        style={{
-          maxWidth: 700,
-          display: "flex",
-          flexDirection: "column",
-          gap: "20px",
-          justifyContent: "center",
-          alignContent: "center",
-          margin: "0 auto",
-        }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
+      <form
+        onSubmit={handleSubmit((values: any) => {
+          if (
+            fileList.length == 0 &&
+            ["/word", "/phrase"].includes(props.postUrl)
+          ) {
+            return ErrorToastify(t("FillInTheBlanks"));
+          } else {
+            if (props.postUrl == "/media") {
+              usePost.mutate(
+                {
+                  ...values,
+                  category: categoryData.value,
+                },
+                {
+                  onSuccess: () => {
+                    SuccessToastify(t("Success"));
+                    setIsModalOpen(false);
+                    setData(null);
+                    queryClient.invalidateQueries({
+                      queryKey: ["media"],
+                    });
+                  },
+                  onError: () => {
+                    ErrorToastify(t("Error"));
+                  },
+                }
+              );
+            } else if (props.postUrl == "/phrase") {
+              usePost.mutate(
+                {
+                  ...values,
+
+                  informations:
+                    values?.informations?.map((item: any) => ({
+                      info_uz: item.info_uz || "",
+                      info_en: item.info_en || "",
+                      name_uz: item.name_uz || "",
+                      name_en: item.name_en || "",
+                    })) || [],
+                  writers: values.writers || [],
+                  isMain,
+                  image: photoId,
+                },
+                {
+                  onSuccess: () => {
+                    SuccessToastify(t("Success"));
+                    setIsModalOpen(false);
+                    queryClient.invalidateQueries({
+                      queryKey: ["phrase"],
+                    });
+                  },
+                  onError: () => {
+                    ErrorToastify(t("Error"));
+                  },
+                }
+              );
+            } else if (props.postUrl == "/word") {
+              const result = {
+                ...values,
+                image: photoId,
+              };
+
+              usePost.mutate(result, {
+                onSuccess: () => {
+                  SuccessToastify(t("Success"));
+                  setIsModalOpen(false);
+                  queryClient.invalidateQueries({
+                    queryKey: ["word"],
+                  });
+                },
+                onError: () => {
+                  ErrorToastify(t("Error"));
+                },
+              });
+            } else if (props.postUrl == "/media-category") {
+              usePost.mutate(
+                {
+                  ...values,
+                },
+                {
+                  onSuccess: () => {
+                    SuccessToastify(t("Success"));
+                    setIsModalOpen(false);
+                    queryClient.invalidateQueries({
+                      queryKey: ["media-category"],
+                    });
+                  },
+                  onError: () => {
+                    ErrorToastify(t("Error"));
+                  },
+                }
+              );
+            }
+          }
+          return;
+        })}
       >
         {["/media", "/media-category"].includes(props.postUrl) ? (
-          <>
-            <Form.Item
-              label={t("title_uz")}
-              name="title_uz"
-              rules={[{ required: true, message: t("Missing") }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label={t("title_en")}
-              name="title_en"
-              rules={[{ required: true, message: t("Missing") }]}
-            >
-              <Input
-                style={{
-                  width: "100%",
-                }}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              marginTop: "30px",
+            }}
+          >
+            <label>
+              <Controller
+                render={({ field }) => (
+                  <Input {...field} placeholder={`${t("title")} uz`} />
+                )}
+                name={`title_uz`}
+                control={control}
+                rules={{ required: true }}
               />
-            </Form.Item>
-          </>
+              {errors.title_uz && <p className="errorText">{t("Missing")}</p>}
+            </label>
+
+            <label>
+              <Controller
+                render={({ field }) => (
+                  <Input {...field} placeholder={`${t("title")} en`} />
+                )}
+                name={`title_en`}
+                control={control}
+                rules={{ required: true }}
+              />
+              {errors.title_en && <p className="errorText">{t("Missing")}</p>}
+            </label>
+          </div>
         ) : (
           <Collapse
             expandIcon={() => ""}
@@ -264,28 +269,41 @@ export function Add(props: {
                 label: `${t("title")}`,
 
                 children: (
-                  <>
-                    <Form.Item
-                      key="title_uz"
-                      label={t("title_uz")}
-                      name="title_uz"
-                      rules={[{ required: true, message: t("Missing") }]}
-                    >
-                      <Input />
-                    </Form.Item>
-
-                    <Form.Item
-                      label={t("title_en")}
-                      name="title_en"
-                      rules={[{ required: true, message: t("Missing") }]}
-                    >
-                      <Input
-                        style={{
-                          width: "100%",
-                        }}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "20px",
+                    }}
+                  >
+                    <label>
+                      <Controller
+                        render={({ field }) => (
+                          <Input {...field} placeholder={`${t("title")} uz`} />
+                        )}
+                        name={`title_uz`}
+                        control={control}
+                        rules={{ required: true }}
                       />
-                    </Form.Item>
-                  </>
+                      {errors.title_uz && (
+                        <p className="errorText">{t("Missing")}</p>
+                      )}
+                    </label>
+
+                    <label>
+                      <Controller
+                        render={({ field }) => (
+                          <Input {...field} placeholder={`${t("title")} en`} />
+                        )}
+                        name={`title_en`}
+                        control={control}
+                        rules={{ required: true }}
+                      />
+                      {errors.title_en && (
+                        <p className="errorText">{t("Missing")}</p>
+                      )}
+                    </label>
+                  </div>
                 ),
               },
             ]}
@@ -293,27 +311,39 @@ export function Add(props: {
         )}
 
         {props.postUrl == "/media" && (
-          <>
-            <Form.Item
-              label="Frame"
-              name="frame"
-              rules={[{ required: true, message: t("Missing") }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              rules={[
-                {
-                  required: categoryData.value == null ? true : false,
-                  message: t("Missing"),
-                },
-              ]}
-              label="Category"
-              name="category"
-            >
-              <SELECT data={data} setData={setCategoryData} />
-            </Form.Item>
-          </>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              marginTop: "30px",
+            }}
+          >
+            <label>
+              <Controller
+                render={({ field }) => <Input {...field} placeholder="frame" />}
+                name={`frame`}
+                control={control}
+                rules={{ required: true }}
+              />
+              {errors.frame && <p className="errorText">{t("Missing")}</p>}
+            </label>
+            <label>
+              <Controller
+                render={({ field }) => (
+                  <SELECT data={data} setData={setCategoryData} {...field} />
+                )}
+                rules={{
+                  required: categoryData?.value == null ? true : false,
+                }}
+                name={`category`}
+                control={control}
+              />
+              {categoryData?.value == null && (
+                <p className="errorText">{t("Missing")}</p>
+              )}
+            </label>
+          </div>
         )}
 
         {props.postUrl == "/phrase" && (
@@ -326,187 +356,173 @@ export function Add(props: {
                   key: "1",
                   label: `${t("writers")}`,
                   children: (
-                    <Form.List name="writers">
-                      {(fields, { add, remove }) => {
-                        return (
-                          <>
-                            {fields.map(({ key, name, ...restField }) => {
-                              return (
-                                <Space
-                                  key={key}
-                                  style={{
-                                    display: "grid",
-                                    marginBottom: 8,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    gridTemplateColumns: "repeat(1,1fr)",
-                                    position: "relative",
-                                    paddingLeft: "40px",
-                                  }}
-                                  align="baseline"
-                                >
-                                  <Form.Item
-                                    {...restField}
-                                    name={[name, "name"]}
-                                    rules={[
-                                      {
-                                        required: true,
-                                        message: t("Missing"),
-                                      },
-                                    ]}
-                                  >
-                                    <Input
-                                      style={{
-                                        width: "100%",
-                                      }}
-                                      placeholder="Name"
-                                    />
-                                  </Form.Item>
-                                  <Form.Item
-                                    {...restField}
-                                    name={[name, "link"]}
-                                    rules={[
-                                      {
-                                        required: true,
-                                        message: t("Missing"),
-                                      },
-                                    ]}
-                                  >
-                                    <Input placeholder="Link" />
-                                  </Form.Item>
-                                  <MinusCircleOutlined
-                                    onClick={() => remove(name)}
+                    <ul
+                      style={{
+                        display: "flex",
+                        gap: "20px",
+                        flexDirection: "column",
+                      }}
+                    >
+                      {writers.map((item, index) => (
+                        <li key={item.id}>
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: "20px",
+                            }}
+                          >
+                            <label style={{ width: "100%" }}>
+                              <Controller
+                                render={({ field }) => (
+                                  <Input
+                                    {...field}
+                                    placeholder={`${t("name")}`}
                                   />
-                                </Space>
-                              );
-                            })}
-                            <Form.Item
+                                )}
+                                name={`writers.${index}.name`}
+                                control={control}
+                              />
+                            </label>
+                            <label style={{ width: "100%" }}>
+                              <Controller
+                                render={({ field }) => (
+                                  <Input {...field} placeholder={`link`} />
+                                )}
+                                name={`writers.${index}.link`}
+                                control={control}
+                                rules={{ required: true }}
+                              />
+                            </label>
+                            <Button
+                              type="primary"
+                              htmlType="button"
+                              onClick={() => writersRemove(index)}
                               style={{
-                                display: "flex",
-                                justifyContent: "center",
+                                background: "red",
                               }}
                             >
-                              <Button
-                                type="dashed"
-                                onClick={() => add()}
-                                block
-                                icon={<PlusOutlined />}
-                                style={{
-                                  width: "400px",
-                                  margin: "0 auto",
-                                }}
-                              >
-                                {t("writers")}
-                              </Button>
-                            </Form.Item>
-                          </>
-                        );
-                      }}
-                    </Form.List>
+                              {t("delete")}
+                            </Button>
+                          </div>
+                        </li>
+                      ))}
+                      <Button
+                        type="primary"
+                        htmlType="button"
+                        onClick={() =>
+                          writersAppend({
+                            name: "",
+                            link: "",
+                          })
+                        }
+                        style={{
+                          background: "#ec781c",
+                        }}
+                      >
+                        {t("addWriter")}
+                      </Button>
+                    </ul>
                   ),
                 },
                 {
                   key: "2",
                   label: "Information",
                   children: (
-                    <Form.List name="informations">
-                      {(fields, { add, remove }) => {
-                        return (
-                          <>
-                            {fields.map(({ key, name, ...restField }) => (
-                              <Space
-                                key={key}
-                                style={{
-                                  display: "grid",
-                                  marginBottom: 8,
-                                  gridTemplateColumns: "repeat(1,1fr)",
-                                  margin: "0 auto",
-                                  position: "relative",
-                                  paddingLeft: "40px",
-                                }}
-                                align="baseline"
-                              >
-                                <Form.Item
-                                  {...restField}
-                                  name={[name, "name_uz"]}
-                                  rules={[
-                                    {
-                                      required: true,
-                                      message: t("Missing"),
-                                    },
-                                  ]}
-                                >
-                                  <Input placeholder={`${t("name")} uz`} />
-                                </Form.Item>
-                                <Form.Item
-                                  {...restField}
-                                  name={[name, "name_en"]}
-                                  rules={[
-                                    {
-                                      required: true,
-                                      message: t("Missing"),
-                                    },
-                                  ]}
-                                >
-                                  <Input placeholder={`${t("name")} en`} />
-                                </Form.Item>
-                                <Form.Item
-                                  name={[name, "info_uz"]}
-                                  rules={[
-                                    {
-                                      required: true,
-                                      message: t("Missing"),
-                                    },
-                                  ]}
-                                >
-                                  <TextEditor></TextEditor>
-                                </Form.Item>
-                                <Form.Item
-                                  name={[name, "info_en"]}
-                                  rules={[
-                                    {
-                                      required: true,
-                                      message: t("Missing"),
-                                    },
-                                  ]}
-                                >
-                                  <TextEditor></TextEditor>
-                                </Form.Item>
-
-                                <MinusCircleOutlined
-                                  style={{
-                                    position: "absolute",
-                                    right: "20%",
-                                    top: "45%",
-                                    fontSize: "22px",
-                                  }}
-                                  onClick={() => remove(name)}
-                                />
-                              </Space>
-                            ))}
-                            <Form.Item
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <Button
-                                type="dashed"
-                                onClick={() => add()}
-                                block
-                                style={{
-                                  width: "400px",
-                                  margin: "0 auto",
-                                }}
-                                icon={<PlusOutlined />}
-                              >
-                                {t("informations")}
-                              </Button>
-                            </Form.Item>
-                          </>
-                        );
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "20px",
+                        flexDirection: "column",
                       }}
-                    </Form.List>
+                    >
+                      {informations.map((item, index) => (
+                        <div
+                          key={item.id}
+                          style={{
+                            display: "flex",
+                            gap: "20px",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <label style={{ width: "100%" }}>
+                            <Controller
+                              render={({ field }) => (
+                                <Input
+                                  {...field}
+                                  placeholder={`${t("name")} uz`}
+                                />
+                              )}
+                              name={`informations.${index}.name_uz`}
+                              control={control}
+                            />
+                          </label>
+                          <label style={{ width: "100%" }}>
+                            <Controller
+                              render={({ field }) => (
+                                <Input
+                                  {...field}
+                                  placeholder={`${t("name")} en`}
+                                />
+                              )}
+                              name={`informations.${index}.name_en`}
+                              control={control}
+                            />
+                          </label>
+                          <Controller
+                            render={({ field }) => (
+                              <RichTextEditor
+                                {...field}
+                                placeholder={`${t("Informations")} uz`}
+                                onChange={field.onChange}
+                              />
+                            )}
+                            name={`informations.${index}.info_uz`}
+                            control={control}
+                          />
+                          <label style={{ width: "100%" }}>
+                            <Controller
+                              render={({ field }) => (
+                                <RichTextEditor
+                                  {...field}
+                                  placeholder={`${t("Informations")} en`}
+                                  onChange={field.onChange}
+                                />
+                              )}
+                              name={`informations.${index}.info_en`}
+                              control={control}
+                            />
+                          </label>
+                          <Button
+                            type="primary"
+                            htmlType="button"
+                            onClick={() => informationsRemove(index)}
+                            style={{
+                              background: "red",
+                              marginBottom: "30px",
+                            }}
+                          >
+                            {t("delete")}
+                          </Button>
+                        </div>
+                      ))}
+                      <Button
+                        type="primary"
+                        htmlType="button"
+                        style={{
+                          background: "#ec781c",
+                        }}
+                        onClick={() =>
+                          informationsAppend({
+                            name_uz: "",
+                            name_en: "",
+                            info_uz: "",
+                            info_en: "",
+                          })
+                        }
+                      >
+                        {t("add")}
+                      </Button>
+                    </div>
                   ),
                 },
                 {
@@ -514,43 +530,35 @@ export function Add(props: {
                   label: `${t("Description")}`,
                   children: (
                     <>
-                      <div
-                        style={{
-                          margin: "20px 0px",
-                        }}
-                        className="addText"
-                      >
-                        {t("Description")} uz
-                        <Form.Item
-                          name={"description_uz"}
-                          rules={[
-                            {
-                              required: true,
-                              message: t("Missing"),
-                            },
-                          ]}
-                        >
-                          <TextEditor></TextEditor>
-                        </Form.Item>
+                      <div>
+                        <p className="addText"> {t("Description")} uz</p>
+                        <Controller
+                          render={({ field }) => (
+                            <RichTextEditor
+                              {...field}
+                              placeholder={`${t("Informations")} uz`}
+                              onChange={field.onChange}
+                            />
+                          )}
+                          name={`description_uz`}
+                          control={control}
+                          rules={{ required: true }}
+                        />
                       </div>
-                      <div
-                        style={{
-                          margin: "20px 0px",
-                        }}
-                        className="addText"
-                      >
-                        {t("Description")} en
-                        <Form.Item
-                          name={"description_en"}
-                          rules={[
-                            {
-                              required: true,
-                              message: t("Missing"),
-                            },
-                          ]}
-                        >
-                          <TextEditor></TextEditor>
-                        </Form.Item>
+                      <div>
+                        <p className="addText"> {t("Description")} en</p>
+                        <Controller
+                          render={({ field }) => (
+                            <RichTextEditor
+                              {...field}
+                              placeholder={`${t("Informations")} en`}
+                              onChange={field.onChange}
+                            />
+                          )}
+                          name={`description_en`}
+                          control={control}
+                          rules={{ required: true }}
+                        />
                       </div>
                     </>
                   ),
@@ -559,46 +567,52 @@ export function Add(props: {
                   key: "4",
                   label: `${t("Comment")}`,
                   children: (
-                    <>
-                      <div
+                    <div>
+                      <label
                         style={{
-                          margin: "20px 0px",
+                          width: "100%",
                         }}
-                        className="addText"
                       >
-                        {t("Comment")} uz
-                        <Form.Item
-                          name={"comment_uz"}
-                          rules={[
-                            {
-                              required: true,
-                              message: t("Missing"),
-                            },
-                          ]}
-                        >
-                          <TextEditor></TextEditor>
-                        </Form.Item>
-                      </div>
-                      <div
+                        <p className="addText"> {t("Comment")} uz</p>
+                        <Controller
+                          render={({ field }) => (
+                            <RichTextEditor
+                              {...field}
+                              placeholder={`${t("Informations")} uz`}
+                              onChange={field.onChange}
+                            />
+                          )}
+                          name={`comment_uz`}
+                          control={control}
+                          rules={{ required: true }}
+                        />
+                        {errors.comment_uz && (
+                          <p className="errorText">{t("Missing")}</p>
+                        )}
+                      </label>
+                      <label
                         style={{
-                          margin: "20px 0px",
+                          width: "100%",
                         }}
-                        className="addText"
                       >
-                        {t("Missing")} en
-                        <Form.Item
-                          name={"comment_en"}
-                          rules={[
-                            {
-                              required: true,
-                              message: t("Missing"),
-                            },
-                          ]}
-                        >
-                          <TextEditor></TextEditor>
-                        </Form.Item>
-                      </div>
-                    </>
+                        <p className="addText"> {t("Comment")} en</p>
+                        <Controller
+                          render={({ field }) => (
+                            <RichTextEditor
+                              {...field}
+                              placeholder={`${t("Informations")} en`}
+                              onChange={field.onChange}
+                            />
+                          )}
+                          name={`comment_en`}
+                          control={control}
+                          rules={{ required: true }}
+                        />
+                        {errors.comment_en && (
+                          <p className="errorText">{t("Missing")}</p>
+                        )}
+                      </label>
+                    </div>
                   ),
                 },
                 {
@@ -622,7 +636,7 @@ export function Add(props: {
                           <Upload
                             action={api + "/file/"}
                             listType="picture-card"
-                            name="image"
+                            name="photo"
                             fileList={fileList}
                             onChange={onChange}
                             onPreview={onPreview}
@@ -634,15 +648,16 @@ export function Add(props: {
                           </Upload>
                         </ImgCrop>
                       </Form.Item>
-                      {photoId == "" && (
-                        <p
-                          style={{
-                            color: "red",
-                          }}
-                        >
-                          {t("MissingPhoto")}
-                        </p>
-                      )}
+
+                      <p
+                        style={{
+                          color: fileList.length == 0 ? "red" : "green",
+                        }}
+                      >
+                        {fileList.length == 0
+                          ? t("MissingPhoto")
+                          : t("PhotoIsFilled")}
+                      </p>
                     </>
                   ),
                 },
@@ -651,7 +666,7 @@ export function Add(props: {
           </>
         )}
 
-        {props?.postUrl == "/word" && (
+        {props.postUrl == "/word" && (
           <Collapse
             expandIcon={() => ""}
             activeKey={"123456789".split("")}
@@ -662,33 +677,42 @@ export function Add(props: {
                 children: (
                   <>
                     <div className="addText">
-                      {t("Description")} uz
-                      <Form.Item
-                        name={"description_uz"}
-                        rules={[
-                          {
-                            required: true,
-                            message: t("Missing"),
-                          },
-                        ]}
-                      >
-                        <TextEditor></TextEditor>
-                      </Form.Item>
+                      <label>
+                        <p className="addText"> {t("Description")} uz</p>
+                        <Controller
+                          render={({ field }) => (
+                            <RichTextEditor
+                              {...field}
+                              placeholder={`${t("Description")} uz`}
+                              onChange={field.onChange}
+                            />
+                          )}
+                          name={`description_uz`}
+                          control={control}
+                          rules={{ required: true }}
+                        />
+                        {errors.description_uz && (
+                          <p className="errorText">{t("Missing")}</p>
+                        )}
+                      </label>
                     </div>
-                    <div className="addText">
-                      {t("Description")} en
-                      <Form.Item
-                        name={"description_en"}
-                        rules={[
-                          {
-                            required: true,
-                            message: t("Missing"),
-                          },
-                        ]}
-                      >
-                        <TextEditor></TextEditor>
-                      </Form.Item>
-                    </div>
+                    <label>
+                      <p className="addText"> {t("Description")} en </p>
+                      <Controller
+                        render={({ field }) => (
+                          <RichTextEditor
+                            {...field}
+                            onChange={field.onChange}
+                          />
+                        )}
+                        name={`description_en`}
+                        control={control}
+                        rules={{ required: true }}
+                      />
+                      {errors.description_en && (
+                        <p className="errorText">{t("Missing")}</p>
+                      )}
+                    </label>
                   </>
                 ),
               },
@@ -697,34 +721,40 @@ export function Add(props: {
                 label: `${t("Comment")}`,
                 children: (
                   <>
-                    <div className="addText">
-                      {t("Comment")} uz
-                      <Form.Item
-                        name={"comment_uz"}
-                        rules={[
-                          {
-                            required: true,
-                            message: t("Missing"),
-                          },
-                        ]}
-                      >
-                        <TextEditor></TextEditor>
-                      </Form.Item>
-                    </div>
-                    <div className="addText">
-                      {t("Comment")} en
-                      <Form.Item
-                        name={"comment_en"}
-                        rules={[
-                          {
-                            required: true,
-                            message: t("Missing"),
-                          },
-                        ]}
-                      >
-                        <TextEditor></TextEditor>
-                      </Form.Item>
-                    </div>
+                    <label>
+                      <p className="addText"> {t("Comment")} uz</p>
+                      <Controller
+                        render={({ field }) => (
+                          <RichTextEditor
+                            {...field}
+                            onChange={field.onChange}
+                          />
+                        )}
+                        name={`comment_uz`}
+                        control={control}
+                        rules={{ required: true }}
+                      />
+                      {errors.comment_uz && (
+                        <p className="errorText">{t("Missing")}</p>
+                      )}
+                    </label>
+                    <label>
+                      <p className="addText"> {t("Comment")} en</p>
+                      <Controller
+                        render={({ field }) => (
+                          <RichTextEditor
+                            {...field}
+                            onChange={field.onChange}
+                          />
+                        )}
+                        name={`comment_en`}
+                        control={control}
+                        rules={{ required: true }}
+                      />
+                      {errors.comment_en && (
+                        <p className="errorText">{t("Missing")}</p>
+                      )}
+                    </label>
                   </>
                 ),
               },
@@ -733,15 +763,7 @@ export function Add(props: {
                 label: `${t("Image")}`,
                 children: (
                   <>
-                    <Form.Item
-                      name="image"
-                      rules={[
-                        {
-                          required: fileList.length == 0 ? true : false,
-                          message: t("Missing"),
-                        },
-                      ]}
-                    >
+                    <label>
                       <ImgCrop rotationSlider>
                         <Upload
                           action={api + "/file/"}
@@ -755,7 +777,10 @@ export function Add(props: {
                           {fileList.length < 1 && `+ ${t("Upload")}`}
                         </Upload>
                       </ImgCrop>
-                    </Form.Item>
+                      {fileList.length == 0 && (
+                        <p className="errorText">{t("MissingPhoto")}</p>
+                      )}
+                    </label>
                   </>
                 ),
               },
@@ -763,28 +788,18 @@ export function Add(props: {
             bordered={true}
           />
         )}
-        <div
+        <Button
+          type="primary"
+          // onClick={onFinish}
+          htmlType="submit"
           style={{
-            display: "flex",
-            gap: "10px",
             width: "100%",
-            height: "50px",
-            justifyContent: "end",
-            alignItems: "center",
-            marginTop: "50px",
+            marginTop: "30px",
           }}
         >
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{
-              width: "100%",
-            }}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form>
+          Submit
+        </Button>
+      </form>
     </Modal>
   );
 }
