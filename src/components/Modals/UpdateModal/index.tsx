@@ -3,7 +3,6 @@ import {
   Button,
   Checkbox,
   Collapse,
-  Form,
   Input,
   Modal,
   Upload,
@@ -100,6 +99,7 @@ export function Update(props: {
         description_en: dataPhrase?.description_en,
         comment_uz: dataPhrase?.comment_uz,
         comment_en: dataPhrase?.comment_en,
+        isMain: dataPhrase?.isMain,
       },
       media: {
         title_uz: dataMedia?.title_uz,
@@ -232,15 +232,17 @@ export function Update(props: {
             useMediaPatch.mutate(
               {
                 title_uz:
-                  values.title_uz !== undefined
-                    ? values.title_uz
+                  values.media.title_uz !== undefined
+                    ? values.media.title_uz
                     : dataMedia.title_uz,
                 title_en:
-                  values.title_en !== undefined
-                    ? values.title_en
-                    : dataMedia.title_en,
+                  values.media.title_en !== undefined
+                    ? values.media.title_en
+                    : dataMedia.media.title_en,
                 frame:
-                  values.frame !== undefined ? values.frame : dataMedia.frame,
+                  values.media.frame !== undefined
+                    ? values.media.frame
+                    : dataMedia.media.frame,
                 category: categoryData
                   ? categoryData.value
                   : dataMedia.category[0]._id,
@@ -260,31 +262,31 @@ export function Update(props: {
             usePhrasePatch.mutate(
               {
                 title_uz:
-                  values.title_uz !== undefined
-                    ? values.title_uz
+                  values.phrase.title_uz !== undefined
+                    ? values.phrase.title_uz
                     : useGetPhrase.data?.data.find(
                         (item: any) => item._id == id
                       )?.title_uz,
                 title_en:
-                  values.title_en !== undefined
-                    ? values.title_en
+                  values.phrase.title_en !== undefined
+                    ? values.phrase.title_en
                     : useGetPhrase?.data?.data.find(
                         (item: any) => item._id == id
                       )?.title_en,
                 description_uz:
-                  values.description_uz ||
+                  values.phrase.description_uz ||
                   useGetPhrase.data?.data.find((item: any) => item._id == id)
                     ?.description_uz,
                 description_en:
-                  values.description_en ||
+                  values.phrase.description_en ||
                   useGetPhrase.data?.data.find((item: any) => item._id == id)
                     ?.description_en,
                 comment_uz:
-                  values.comment_uz ||
+                  values.phrase.comment_uz ||
                   useGetPhrase.data?.data.find((item: any) => item._id == id)
                     ?.comment_uz,
                 comment_en:
-                  values.comment_en ||
+                  values.phrase.comment_en ||
                   useGetPhrase.data?.data.find((item: any) => item._id == id)
                     ?.comment_en,
                 writers:
@@ -315,12 +317,12 @@ export function Update(props: {
           } else if (props.postUrl === "/word") {
             useWordPatch.mutate(
               {
-                title_uz: values.title_uz,
-                title_en: values.title_en,
-                description_uz: values?.description_uz,
-                description_en: values?.description_en,
-                comment_uz: values?.comment_uz,
-                comment_en: values?.comment_en,
+                title_uz: values?.word?.title_uz,
+                title_en: values?.word?.title_en,
+                description_uz: values?.word?.description_uz,
+                description_en: values?.word?.description_en,
+                comment_uz: values?.word?.comment_uz,
+                comment_en: values?.word?.comment_en,
                 image: photoId || dataWord.image._id,
               },
               {
@@ -377,11 +379,21 @@ export function Update(props: {
                     ? dataMedia?.title_uz
                     : dataMediaCategory?.title_uz
                 }
-                name="title_uz"
                 control={control}
                 rules={{ required: true }}
+                name={
+                  props.postUrl === "/media"
+                    ? `media.title_uz`
+                    : `mediaCategory.title_uz`
+                }
               />
-              {errors?.title_uz && <p className="errorText">{t("Missing")}</p>}
+              {props.postUrl === "/media"
+                ? errors.media?.title_uz && (
+                    <p className="errorText">{t("Missing")}</p>
+                  )
+                : errors.mediaCategory?.title_uz && (
+                    <p className="errorText">{t("Missing")}</p>
+                  )}
             </label>
 
             <label>
@@ -394,15 +406,21 @@ export function Update(props: {
                     ? dataMedia?.title_en
                     : dataMediaCategory?.title_en
                 }
-                name={`title_en`}
+                name={
+                  props.postUrl === "/media"
+                    ? `media.title_en`
+                    : `mediaCategory.title_en`
+                }
                 control={control}
                 rules={{ required: true }}
               />
-              {errors?.title_en ? (
-                <p className="errorText">{t("Missing")}</p>
-              ) : (
-                ""
-              )}
+              {props.postUrl === "/media"
+                ? errors.media?.title_en && (
+                    <p className="errorText">{t("Missing")}</p>
+                  )
+                : errors.mediaCategory?.title_en && (
+                    <p className="errorText">{t("Missing")}</p>
+                  )}
             </label>
           </div>
         ) : (
@@ -432,13 +450,21 @@ export function Update(props: {
                             ? dataPhrase?.title_uz
                             : dataWord?.title_uz
                         }
-                        name={`title_uz`}
+                        name={
+                          props.postUrl === "/phrase"
+                            ? `phrase.title_uz`
+                            : `word.title_uz`
+                        }
                         control={control}
                         rules={{ required: true }}
                       />
-                      {errors.title_uz && (
-                        <p className="errorText">{t("Missing")}</p>
-                      )}
+                      {props.postUrl === "/phrase"
+                        ? errors.phrase?.title_uz && (
+                            <p className="errorText">{t("Missing")}</p>
+                          )
+                        : errors.word?.title_uz && (
+                            <p className="errorText">{t("Missing")}</p>
+                          )}
                     </label>
 
                     <label>
@@ -451,13 +477,21 @@ export function Update(props: {
                             ? dataPhrase?.title_en
                             : dataWord?.title_en
                         }
-                        name={`title_en`}
+                        name={
+                          props.postUrl === "/phrase"
+                            ? `phrase.title_en`
+                            : `word.title_en`
+                        }
                         control={control}
                         rules={{ required: true }}
                       />
-                      {errors.title_en && (
-                        <p className="errorText">{t("Missing")}</p>
-                      )}
+                      {props.postUrl === "/phrase"
+                        ? errors.phrase?.title_en && (
+                            <p className="errorText">{t("Missing")}</p>
+                          )
+                        : errors.word?.title_en && (
+                            <p className="errorText">{t("Missing")}</p>
+                          )}
                     </label>
                   </div>
                 ),
@@ -483,7 +517,9 @@ export function Update(props: {
                 rules={{ required: true }}
                 defaultValue={dataMedia?.frame}
               />
-              {errors?.frame && <p className="errorText">{t("Missing")}</p>}
+              {errors?.media?.frame && (
+                <p className="errorText">{t("Missing")}</p>
+              )}
             </label>
             <label>
               <Controller
@@ -601,7 +637,7 @@ export function Update(props: {
                         flexDirection: "column",
                       }}
                     >
-                      {informations.map((item, index) => (
+                      {informations.map((item: any, index) => (
                         <div
                           key={item.id}
                           style={{
@@ -640,7 +676,7 @@ export function Update(props: {
                                 {...field}
                                 placeholder={`${t("Informations")} uz`}
                                 onChange={field.onChange}
-                                defaultValue={item?.info_uz}
+                                defaultValue={item.info_uz}
                               />
                             )}
                             name={`informations.${index}.info_uz`}
@@ -653,7 +689,7 @@ export function Update(props: {
                                   {...field}
                                   placeholder={`${t("Informations")} en`}
                                   onChange={field.onChange}
-                                  defaultValue={item?.info_en}
+                                  defaultValue={item.info_en}
                                 />
                               )}
                               name={`informations.${index}.info_en`}
@@ -710,7 +746,7 @@ export function Update(props: {
                             />
                           )}
                           defaultValue={dataPhrase.description_uz}
-                          name={`description_uz`}
+                          name={`phrase.description_uz`}
                           control={control}
                           rules={{ required: true }}
                         />
@@ -727,7 +763,7 @@ export function Update(props: {
                             />
                           )}
                           defaultValue={dataPhrase.description_en}
-                          name={`description_en`}
+                          name={`phrase.description_en`}
                           control={control}
                           rules={{ required: true }}
                         />
@@ -756,11 +792,11 @@ export function Update(props: {
                             />
                           )}
                           defaultValue={dataPhrase.comment_uz}
-                          name={`comment_uz`}
+                          name={`phrase.comment_uz`}
                           control={control}
                           rules={{ required: true }}
                         />
-                        {errors.comment_uz && (
+                        {errors.phrase?.comment_uz && (
                           <p className="errorText">{t("Missing")}</p>
                         )}
                       </label>
@@ -780,11 +816,11 @@ export function Update(props: {
                             />
                           )}
                           defaultValue={dataPhrase.comment_en}
-                          name={`comment_en`}
+                          name={`phrase.comment_en`}
                           control={control}
                           rules={{ required: true }}
                         />
-                        {errors.comment_en && (
+                        {errors.phrase?.comment_en && (
                           <p className="errorText">{t("Missing")}</p>
                         )}
                       </label>
@@ -797,7 +833,7 @@ export function Update(props: {
                   children: (
                     <div>
                       <Controller
-                        name="isMain"
+                        name="phrase.isMain"
                         control={control}
                         render={({ field }) => (
                           <Checkbox
@@ -871,12 +907,12 @@ export function Update(props: {
                               defaultValue={dataWord.description_uz}
                             />
                           )}
-                          name={`description_uz`}
+                          name={`word.description_uz`}
                           defaultValue={dataWord.description_uz}
                           control={control}
                           rules={{ required: true }}
                         />
-                        {errors.description_uz && (
+                        {errors.word?.description_uz && (
                           <p className="errorText">{t("Missing")}</p>
                         )}
                       </label>
@@ -892,11 +928,11 @@ export function Update(props: {
                           />
                         )}
                         defaultValue={dataWord.description_en}
-                        name={`description_en`}
+                        name={`word.description_en`}
                         control={control}
                         rules={{ required: true }}
                       />
-                      {errors.description_en && (
+                      {errors.word?.description_en && (
                         <p className="errorText">{t("Missing")}</p>
                       )}
                     </label>
@@ -919,11 +955,11 @@ export function Update(props: {
                           />
                         )}
                         defaultValue={dataWord.comment_uz}
-                        name={`comment_uz`}
+                        name={`word.comment_uz`}
                         control={control}
                         rules={{ required: true }}
                       />
-                      {errors.comment_uz && (
+                      {errors.word?.comment_uz && (
                         <p className="errorText">{t("Missing")}</p>
                       )}
                     </label>
@@ -938,11 +974,11 @@ export function Update(props: {
                           />
                         )}
                         defaultValue={dataWord.comment_en}
-                        name={`comment_en`}
+                        name={`word.comment_en`}
                         control={control}
                         rules={{ required: true }}
                       />
-                      {errors.comment_en && (
+                      {errors.word?.comment_en && (
                         <p className="errorText">{t("Missing")}</p>
                       )}
                     </label>
