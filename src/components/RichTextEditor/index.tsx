@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { dialogClose } from "@syncfusion/ej2-react-richtexteditor";
 import { Card, Row } from "antd";
 import { useRef, useState } from "react";
 import SunEditor from "suneditor-react";
