@@ -51,7 +51,7 @@ const RichTextEditor = ({
             //   check_new_window : 'noreferrer noopener',
             //   check_bookmark : 'bookmark'
             // }
-            linkRel : []
+            linkRel: [],
           }}
           getSunEditorInstance={getSunEditorInstance}
           height="60vh"
