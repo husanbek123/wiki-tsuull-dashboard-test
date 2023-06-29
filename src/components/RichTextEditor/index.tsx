@@ -46,12 +46,6 @@ const RichTextEditor = ({
               ["preview"],
               ["fullScreen", "showBlocks", "codeView"],
             ],
-            // linkRelDefault : {
-            //   default : 'nofollow',
-            //   check_new_window : 'noreferrer noopener',
-            //   check_bookmark : 'bookmark'
-            // }
-            linkRel: [],
           }}
           getSunEditorInstance={getSunEditorInstance}
           height="60vh"
