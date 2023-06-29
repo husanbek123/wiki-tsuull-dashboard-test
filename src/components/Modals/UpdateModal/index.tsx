@@ -225,7 +225,7 @@ export function Update(props: {
         onSubmit={handleSubmit((values: any) => {
           if (["/phrase", "/word"].includes(props.postUrl)) {
             if (fileListPhrase.length == 0 || fileListWords.length == 0) {
-              return ErrorToastify("FillInTheBlanks");
+              return ErrorToastify(t("FillInTheBlanks"));
             }
           }
           if (props.postUrl === "/media") {
