@@ -1,0 +1,80 @@
+.header {
+  background: #124a85;
+  width: 100%;
+  height: 80px;
+}
+.header nav {
+  width: 90%;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  color: white;
+  justify-content: space-between;
+  align-items: center;
+}
+.header nav .userMe {
+  display: flex;
+  gap: 10px;
+}
+.header nav .userMe .ProfilePhoto {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #ec781c;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header nav .links {
+  display: flex;
+  gap: 20px;
+}
+.header nav .links a {
+  cursor: pointer;
+  font-size: 17px;
+}
+.header nav .links a:hover {
+  transition: 0.3s;
+  color: #ec781c;
+}
+.header nav .params {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.header nav .params .languages {
+  margin-top: 4px;
+  cursor: pointer;
+}
+.header nav .theme .ThemContainerSun {
+  background-color: #022c58;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 10px;
+}
+.header nav .theme .ThemContainerSun .SunIcon {
+  font-size: 1.7rem;
+}
+.header nav .theme .ThemeContainerMoon {
+  background-color: #022c58;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 10px;
+}
+.header nav .theme .ThemeContainerMoon .MoonIcon {
+  font-size: 1.6rem;
+}
+
+[data-theme=dark] .header {
+  background: #00013d;
+}
+[data-theme=dark] .header button:hover {
+  border-color: #ec781c;
+}/*# sourceMappingURL=sidebar.module.css.map */

@@ -1,0 +1,193 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;1,100;1,200;1,300;1,400&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Barlow", sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style-type: none;
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+[data-theme=light] code {
+  color: white !important;
+  background: black !important;
+}
+[data-theme=light] .bredcrumb {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  padding: 10px 0px;
+}
+
+[data-theme=dark] {
+  background-color: #00013d;
+  color: #fff;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+[data-theme=dark] .bredcrumb {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  padding: 10px 0px;
+}
+[data-theme=dark] .bredcrumb b {
+  color: white;
+}
+[data-theme=dark] .ant-table-content {
+  width: 100%;
+  height: 100%;
+  background: black;
+  color: white;
+  border: none;
+}
+[data-theme=dark] .ant-table-content .ant-table-wrapper .ant-table-tbody > tr > th.ant-table-cell-row-hover,
+[data-theme=dark] .ant-table-content .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+  background: #00013d;
+  color: #ec781c;
+}
+[data-theme=dark] .ant-table-content .ant-table-thead .ant-table-cell {
+  background: black;
+  color: white;
+  border-bottom: 1px solid #00013d;
+}
+[data-theme=dark] .ant-table-content .ant-table-tbody .ant-table-cell-fix-right {
+  background: black;
+}
+[data-theme=dark] .ant-table-content .ant-table-tbody tr > td {
+  border-bottom: 1px solid #00013d;
+}
+[data-theme=dark] .ant-btn {
+  background: black;
+  box-shadow: none;
+  color: white;
+}
+[data-theme=dark] .ant-btn:hover {
+  background: #ec781c;
+  color: white;
+}
+[data-theme=dark] .dark-buttons button:hover {
+  background: transparent;
+}
+[data-theme=dark] .ant-modal-content {
+  background: #00013d;
+}
+[data-theme=dark] .ant-modal-content label {
+  color: white;
+}
+[data-theme=dark] .ant-modal-content .ant-collapse label {
+  color: black;
+}
+[data-theme=dark] .ant-modal-content .ant-collapse .ant-collapse-header {
+  color: white;
+}
+[data-theme=dark] .ant-modal-content .ant-modal-title {
+  background: #00013d;
+  color: white;
+}
+[data-theme=dark] .ant-table-pagination li {
+  border: 1px solid black;
+  background: white;
+}
+[data-theme=dark] .ant-collapse-content {
+  background: black;
+}
+[data-theme=dark] .ant-collapse-content .ant-form-item-label label {
+  color: white;
+}
+[data-theme=dark] .ant-collapse-content .ant-upload {
+  overflow: hidden;
+  background: white;
+}
+[data-theme=dark] .addText {
+  color: white;
+  margin: 4px 0 !important;
+}
+[data-theme=dark] .quill {
+  color: white;
+  max-width: 450px;
+}
+[data-theme=dark] .quill .ql-toolbar span {
+  color: white;
+}
+[data-theme=dark] .quill .ql-toolbar .ql-formats .ql-header span {
+  color: black;
+}
+[data-theme=dark] .quill .ql-toolbar .ql-formats .ql-header .ql-picker-label {
+  color: white;
+}
+[data-theme=dark] .quill .ql-toolbar .ql-formats button {
+  color: white;
+}
+[data-theme=dark] .quill .ql-toolbar .ql-formats button svg {
+  color: white;
+}
+[data-theme=dark] code {
+  color: black;
+}
+[data-theme=dark] .ant-modal-close-x svg {
+  color: white;
+  font-size: 22px;
+}
+
+.active {
+  color: #ec781c;
+}
+
+a {
+  color: white;
+}
+
+.richtext {
+  width: 100%;
+}
+.richtext svg {
+  color: black !important;
+}
+
+.accardion_styles {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  color: rgba(0, 0, 0, 0.88);
+  font-size: 14px;
+  line-height: 1.5714285714;
+  list-style: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  background-color: rgba(0, 0, 0, 0.02);
+  border: 1px solid #d9d9d9;
+  border-bottom: 0;
+  border-radius: 8px;
+}
+
+.errorText {
+  color: red;
+  font-weight: 600;
+}
+
+.addText span {
+  display: block;
+}
+
+.select {
+  color: black;
+}
+.select svg {
+  stroke: black;
+}/*# sourceMappingURL=index.css.map */

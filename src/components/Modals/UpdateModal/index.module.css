@@ -1,0 +1,7 @@
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+}
+.inputWrapper .Input {
+  height: 100%;
+}/*# sourceMappingURL=index.module.css.map */
