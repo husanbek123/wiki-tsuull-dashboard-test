@@ -377,7 +377,6 @@ export function Add(props: {
                                   <Input
                                     {...field}
                                     placeholder={`${t("name")}`}
-                                    
                                   />
                                 )}
                                 name={`writers.${index}.name`}
