@@ -188,10 +188,10 @@ export function Update(props: {
   if (useMediaCategory.isSuccess && data == null) {
     setCategoryData({
       value: dataMedia?.category?.[0]?._id,
-      label: language === "uz" ? dataMedia?.title_uz : dataMedia.title_en,
+      label: language === "uz" ? dataMedia?.title_uz : dataMedia?.title_en,
     });
-    for (let i = 0; i < useMediaCategory.data.data.length; i++) {
-      const category = useMediaCategory.data.data[i];
+    for (let i = 0; i < useMediaCategory?.data?.data?.length; i++) {
+      const category = useMediaCategory?.data?.data?.[i];
       setData((prev: any) =>
         prev
           ? [
@@ -339,8 +339,8 @@ export function Update(props: {
           } else if (props.postUrl === "/media-category") {
             useMediaCategoryPatch.mutate(
               {
-                title_uz: values.title_uz,
-                title_en: values.title_en,
+                title_uz: values.mediaCategory.title_uz,
+                title_en: values.mediaCategory.title_en,
               },
               {
                 onSuccess: () => {
