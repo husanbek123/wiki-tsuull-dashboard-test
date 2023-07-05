@@ -15,8 +15,6 @@ import { useGetData } from "../../utils/hooks/useGet";
 import { useTranslation } from "react-i18next";
 import ComponentLoader from "../../components/ComponentLoader";
 import { ComponentBreadCrumb } from "../../components/Breadcrumb";
-import { useLanguage } from "../../utils/zustand/useLanguage";
-
 interface MediaCategoryData {
   _id: string;
   title_uz: string;
@@ -49,7 +47,7 @@ export default function MediaCategory() {
     { title: t("title_en"), dataIndex: "title_en", key: "title_uz" },
     { title: "", dataIndex: "buttons" },
   ];
-  const language = useLanguage(state => state.langauge)
+  
   const [searchData, setSearchData] = useState<string>('')
   const dataResult: MediaCategoryData[] =
     // eslint-disable-next-line no-unsafe-optional-chaining

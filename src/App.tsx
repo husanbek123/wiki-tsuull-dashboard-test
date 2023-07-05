@@ -12,7 +12,6 @@ import NotFound from "./pages/NotFound/NotFound";
 import Login from "./pages/Login";
 import Protected from "./utils/ProtectedRoute";
 export default function App() {
-
   return (
     <>
       <ToastContainer

@@ -15,11 +15,9 @@ import ComponentLoader from "../../components/ComponentLoader";
 import { useTheme } from "../../utils/zustand/useTheme";
 import whiteVideoIcon from "../../../public/whiteVideoIcon.png";
 import { ComponentBreadCrumb } from "../../components/Breadcrumb";
-import { useLanguage } from "../../utils/zustand/useLanguage";
 interface DataType {
   key: React.Key;
 }
-
 export default function Media() {
   const useGet = useGetData(["media"], `/media`, {});
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,7 +48,6 @@ export default function Media() {
     // eslint-disable-next-line no-unsafe-optional-chaining
     useGet?.data?.data == undefined ? [] : [...useGet?.data?.data]?.reverse();
 
-  const language = useLanguage(state => state.langauge);
 
   return (
     <div className={styles.Main}>
