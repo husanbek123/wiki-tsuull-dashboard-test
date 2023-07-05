@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { Button, Table } from "antd";
+import { Button, Input, Table } from "antd";
 import { useGetData } from "../../utils/hooks/useGet";
 import styles from "./index.module.scss";
 import { BsFillEyeFill, BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
@@ -49,6 +49,8 @@ export default function Phrase() {
     },
   ];
 
+  const [searchData, setSearchData] = useState<string>('')
+
   const dataResult =
     // eslint-disable-next-line no-unsafe-optional-chaining
     useGet?.data?.data == undefined ? [] : [...useGet?.data?.data]?.reverse();
@@ -96,6 +98,8 @@ export default function Phrase() {
               </Button>
             </TOOLTIP>
           </div>
+
+          <Input type="text" onChange={(e) => setSearchData(e?.target.value)} placeholder={t("search")}/>
           <div className={styles.table}>
             <Table
               scroll={{ x: 1000 }}
@@ -109,7 +113,17 @@ export default function Phrase() {
                 spinning: !dataResult.length,
               }}
               columns={columns}
-              dataSource={dataResult.map((item: any, index: any) => ({
+              dataSource={dataResult?.filter((item) => {
+                if (searchData.length == 0) {
+                  return item
+                }
+                else if (item?.title_uz.toLowerCase()?.includes(searchData.toLowerCase()) && language == "uz") {
+                  return item;
+                }
+                if (item?.title_en?.toLowerCase()?.includes(searchData.toLowerCase()) && language == "en") {
+                  return item;
+                }
+              })?.map((item: any, index: any) => ({
                 key: `${index + 1}`,
                 title_uz: <p>{item.title_uz}</p>,
                 title_en: <p>{item.title_en}</p>,

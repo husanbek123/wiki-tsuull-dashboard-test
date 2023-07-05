@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { Button, Table } from "antd";
+import { Button, Table, Input } from "antd";
 import style from "./index.module.scss";
 import { CRUDNavigator } from "../../components/CRUDNavigator";
 // TOOLTIP
@@ -15,6 +15,7 @@ import { useGetData } from "../../utils/hooks/useGet";
 import { useTranslation } from "react-i18next";
 import ComponentLoader from "../../components/ComponentLoader";
 import { ComponentBreadCrumb } from "../../components/Breadcrumb";
+import { useLanguage } from "../../utils/zustand/useLanguage";
 
 interface MediaCategoryData {
   _id: string;
@@ -48,14 +49,15 @@ export default function MediaCategory() {
     { title: t("title_en"), dataIndex: "title_en", key: "title_uz" },
     { title: "", dataIndex: "buttons" },
   ];
-
+  const language = useLanguage(state => state.langauge)
+  const [searchData, setSearchData] = useState<string>('')
   const dataResult: MediaCategoryData[] =
     // eslint-disable-next-line no-unsafe-optional-chaining
     useGet?.data?.data == undefined ? [] : [...useGet?.data?.data]?.reverse();
   return (
     <div className={style.Main}>
       <div className={style.container}>
-      <ComponentBreadCrumb url={t("MediaCategory")}/>
+        <ComponentBreadCrumb url={t("MediaCategory")} />
 
         {isModalOpen && (
           <CRUDNavigator
@@ -67,6 +69,8 @@ export default function MediaCategory() {
             url={""}
           />
         )}
+
+
         <div className={style.Add}>
           <TOOLTIP title={t("add")} key={"Add"} color="blue">
             <Button
@@ -94,6 +98,7 @@ export default function MediaCategory() {
           </TOOLTIP>
         </div>
 
+        <Input type="text" onChange={(e) => setSearchData(e.target.value)} placeholder={t("search")} />
         <div className={style.table}>
           <Table
             className="dark-buttons "
@@ -106,7 +111,17 @@ export default function MediaCategory() {
               spinning: !dataResult.length,
             }}
             columns={columns}
-            dataSource={dataResult?.map((item: any, index: any) => ({
+            dataSource={dataResult?.filter((item) => {
+              if (searchData.length == 0) {
+                return item
+              }
+              else if (item?.title_uz?.toLowerCase()?.includes(searchData.toLowerCase()) && language == "uz") {
+                return item;
+              }
+              else if (item?.title_en?.toLowerCase()?.includes(searchData?.toLowerCase()) && language == "en") {
+                return item;
+              }
+            })?.map((item: any, index: any) => ({
               key: index + 1,
               title_uz: <p>{item.title_uz}</p>,
               title_en: <p>{item.title_en}</p>,

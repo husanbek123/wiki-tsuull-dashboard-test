@@ -1,7 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 export const zapros: AxiosInstance = axios.create({
-  baseURL: "https://xodjakov.uz/", //api
+  baseURL: "https://wikidashboard.uz",
   timeout: Infinity,
 });
-
-export const api = "https://xodjakov.uz";
+export const api = "https://wikidashboard.uz";

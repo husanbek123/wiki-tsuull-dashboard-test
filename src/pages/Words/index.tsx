@@ -3,7 +3,7 @@
 // useState Hook
 import { useState } from "react";
 //  Button Table  Image Antd
-import { Button, Table } from "antd";
+import { Button, Input, Table } from "antd";
 // Crud Navigator
 import { CRUDNavigator } from "../../components/CRUDNavigator";
 // style
@@ -19,7 +19,7 @@ import { ColumnsType } from "antd/es/table";
 import ComponentLoader from "../../components/ComponentLoader";
 import { api } from "../../utils/axios";
 import { ComponentBreadCrumb } from "../../components/Breadcrumb";
-
+import { useLanguage } from "../../utils/zustand/useLanguage";
 type image = {
   _id: string;
   path: string;
@@ -64,9 +64,14 @@ export default function Words() {
   const columns: ColumnsType<DataType> = [
     { title: t("title_uz"), dataIndex: "title_uz", key: "title_uz" },
     { title: t("title_en"), dataIndex: "title_en", key: "title_uz" },
+    { title: "", dataIndex: "Input", key: 'Input' },
     { title: "Img", dataIndex: "image" },
     { title: "", dataIndex: "buttons", fixed: "right" },
   ];
+
+  const [searchData, setSearchData] = useState<string>('');
+  const language = useLanguage(state=>state.langauge)
+
   return (
     <div className={style.Main}>
       <div className={style.container}>
@@ -109,6 +114,8 @@ export default function Words() {
           </TOOLTIP>
         </div>
 
+        <Input onChange={(e) => setSearchData(e?.target?.value)} placeholder={t("search")} />
+
         <div className={style.table}>
           <Table
             className="dark-buttons "
@@ -121,7 +128,17 @@ export default function Words() {
               spinning: !dataResult.length,
             }}
             columns={columns}
-            dataSource={dataResult.map((item: WordProps, index: any) => ({
+            dataSource={dataResult?.filter((item) => {
+              if (searchData.length == 0) {
+                return item
+              }
+              if (item?.title_en?.includes(searchData.toLowerCase()) && language == "en") {
+                return item;
+              }
+              else if (item?.title_uz.toLowerCase()?.includes(searchData.toLowerCase()) && language == "uz") {
+                return item;
+              }
+            })?.map((item: WordProps, index: any) => ({
               key: index + 1,
               title_uz: <p>{item?.title_uz}</p>,
               title_en: <p>{item?.title_en}</p>,

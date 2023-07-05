@@ -183,7 +183,6 @@ export function Update(props: {
     }
     setPhotoId(file?.response?._id);
   };
-  console.log(categoryData);
 
   if (useMediaCategory.isSuccess && data == null) {
     setCategoryData({

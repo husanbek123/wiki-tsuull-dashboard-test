@@ -37,14 +37,15 @@
   "Success": "Success",
   "Error": "Error",
   "NotDeleted": "Not deleted",
+  "search": "Search",
   "FillInTheBlanks": "Fill in the blanks",
   "MissingPhoto": "Missing photo",
   "YouAreNotAdmin": "You should be an admin",
   "ErrorInPost": "Not posted",
   "Main": "Media",
-  "Phrase" : "Phrase",
-  "OpenVideo" : "Open video",
-  "Missing" : "Fill",
-  "PhotoIsFilled" : "Photo is filled",
-  "addWriter" : "Add writer"
+  "Phrase": "Phrase",
+  "OpenVideo": "Open video",
+  "Missing": "Fill",
+  "PhotoIsFilled": "Photo is filled",
+  "addWriter": "Add writer"
 }

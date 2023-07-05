@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { Button } from "antd";
+import { Button, Input } from "antd";
 import { useGetData } from "../../utils/hooks/useGet";
 import styles from "./index.module.scss";
 import { BsFillEyeFill, BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
@@ -15,6 +15,7 @@ import ComponentLoader from "../../components/ComponentLoader";
 import { useTheme } from "../../utils/zustand/useTheme";
 import whiteVideoIcon from "../../../public/whiteVideoIcon.png";
 import { ComponentBreadCrumb } from "../../components/Breadcrumb";
+import { useLanguage } from "../../utils/zustand/useLanguage";
 interface DataType {
   key: React.Key;
 }
@@ -30,6 +31,7 @@ export default function Media() {
     status: null,
     id: null,
   });
+  const [searchData, setSearchData] = useState<string>('')
   const { t } = useTranslation();
   const theme = useTheme((state) => state.theme);
   const columns: ColumnsType<DataType | any> = [
@@ -47,6 +49,8 @@ export default function Media() {
   const data =
     // eslint-disable-next-line no-unsafe-optional-chaining
     useGet?.data?.data == undefined ? [] : [...useGet?.data?.data]?.reverse();
+
+  const language = useLanguage(state => state.langauge);
 
   return (
     <div className={styles.Main}>
@@ -90,6 +94,8 @@ export default function Media() {
           </TOOLTIP>
         </div>
 
+        <Input type="text" onChange={(e) => setSearchData(e.target.value)} placeholder={t("search")} />
+
         <div className={styles.table}>
           <Table
             columns={columns}
@@ -104,11 +110,20 @@ export default function Media() {
             }}
             dataSource={
               data.length
-                ? data?.map((item: any, index: any) => ({
+                ? data?.filter((item) => {
+                  if (searchData.length == 0) {
+                    return item
+                  }
+                  else if (item?.title_uz.toLowerCase()?.includes(searchData?.toLowerCase()) && language == "uz") {
+                    return item;
+                  }
+                  else if (item?.title_en.toLowerCase()?.includes(searchData.toLowerCase()) && language == "en") {
+                    return item;
+                  }
+                })?.map((item: any, index: any) => ({
                     key: index + 1,
                     title_uz: <p>{item.title_uz}</p>,
                     title_en: <p>{item.title_en}</p>,
-
                     frame: (
                       <div
                         style={{
