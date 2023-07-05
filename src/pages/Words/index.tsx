@@ -70,7 +70,6 @@ export default function Words() {
   ];
 
   const [searchData, setSearchData] = useState<string>('');
-  const language = useLanguage(state=>state.langauge)
 
   return (
     <div className={style.Main}>
@@ -132,10 +131,7 @@ export default function Words() {
               if (searchData.length == 0) {
                 return item
               }
-              if (item?.title_en?.includes(searchData.toLowerCase()) && language == "en") {
-                return item;
-              }
-              else if (item?.title_uz.toLowerCase()?.includes(searchData.toLowerCase()) && language == "uz") {
+              if (item?.title_en?.toLowerCase()?.includes(searchData.toLowerCase()) || item?.title_uz.toLowerCase()?.includes(searchData.toLowerCase())) {
                 return item;
               }
             })?.map((item: WordProps, index: any) => ({

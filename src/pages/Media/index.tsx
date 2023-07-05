@@ -114,10 +114,7 @@ export default function Media() {
                   if (searchData.length == 0) {
                     return item
                   }
-                  else if (item?.title_uz.toLowerCase()?.includes(searchData?.toLowerCase()) && language == "uz") {
-                    return item;
-                  }
-                  else if (item?.title_en.toLowerCase()?.includes(searchData.toLowerCase()) && language == "en") {
+                  if (item?.title_en?.toLowerCase()?.includes(searchData.toLowerCase()) || item?.title_uz.toLowerCase()?.includes(searchData.toLowerCase())) {
                     return item;
                   }
                 })?.map((item: any, index: any) => ({

@@ -54,7 +54,6 @@ export default function Phrase() {
   const dataResult =
     // eslint-disable-next-line no-unsafe-optional-chaining
     useGet?.data?.data == undefined ? [] : [...useGet?.data?.data]?.reverse();
-
   const language = useLanguage((state) => state.langauge);
   return (
     <>
@@ -117,10 +116,7 @@ export default function Phrase() {
                 if (searchData.length == 0) {
                   return item
                 }
-                else if (item?.title_uz.toLowerCase()?.includes(searchData.toLowerCase()) && language == "uz") {
-                  return item;
-                }
-                if (item?.title_en?.toLowerCase()?.includes(searchData.toLowerCase()) && language == "en") {
+                else if (item?.title_en?.toLowerCase()?.includes(searchData.toLowerCase()) || item?.title_uz.toLowerCase()?.includes(searchData.toLowerCase())) {
                   return item;
                 }
               })?.map((item: any, index: any) => ({

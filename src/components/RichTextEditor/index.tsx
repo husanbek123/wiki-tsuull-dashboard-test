@@ -37,7 +37,6 @@ const RichTextEditor = ({
                 "superscript",
               ],
               ["align", "horizontalRule", "list", "table"],
-              ["fontColor", "hiliteColor"],
               ["outdent", "indent"],
               ["undo", "redo"],
               ["removeFormat"],

@@ -190,7 +190,6 @@ export function Add(props: {
                 ...values,
                 image: photoId,
               };
-
               usePost.mutate(result, {
                 onSuccess: () => {
                   SuccessToastify(t("Success"));
